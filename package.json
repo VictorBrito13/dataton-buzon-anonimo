@@ -1,0 +1,19 @@
+{
+  "name": "dataton",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/backend",
+    "apps/frontend/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:backend": "npm run dev -w @dataton/backend",
+    "dev:frontend": "npm run dev -w @dataton/dashboard",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}
