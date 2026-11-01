@@ -13,8 +13,7 @@ export const errorHandler = (
   _next: NextFunction,
 ): void => {
   const status = error instanceof HttpError ? error.status : 500;
-  const message =
-    error instanceof HttpError ? error.message : "Internal server error";
+  const message = error instanceof HttpError ? error.message : "Internal server error";
 
   if (status >= 500) {
     console.error("[backend] unhandled error", error);

@@ -18,10 +18,21 @@ const parseList = (value: string | undefined, fallback: string[]): string[] => {
   return items.length > 0 ? items : fallback;
 };
 
+const nodeEnv = process.env.NODE_ENV ?? "development";
+export const isProduction = nodeEnv === "production";
+
+const parseDatabaseUrl = (value: string | undefined): string => {
+  const fallback = "postgres://dataton:dataton@localhost:5432/dataton";
+  const url = value ?? (isProduction ? undefined : fallback);
+  if (!url) {
+    throw new Error("DATABASE_URL is required in production");
+  }
+  return url;
+};
+
 export const env = {
-  nodeEnv: process.env.NODE_ENV ?? "development",
+  nodeEnv,
   port: parsePort(process.env.PORT, 4000),
   corsOrigins: parseList(process.env.CORS_ORIGIN, ["http://localhost:3000"]),
+  databaseUrl: parseDatabaseUrl(process.env.DATABASE_URL),
 } as const;
-
-export const isProduction = env.nodeEnv === "production";
