@@ -15,7 +15,7 @@ import { PASOS, anuncioPaso, numeroPaso, tituloPaso } from "@/lib/denuncia/pasos
 import { almacenLocal } from "@/lib/infraestructura/navegador";
 import { cancelarModeloNer } from "@/lib/privacidad";
 import { PantallaFinal } from "./pantalla-final";
-import { PasoEnvio } from "./paso-envio";
+import { PasoEnvio, adelantarEnvio } from "./paso-envio";
 import { PasoEvidencias } from "./paso-evidencias";
 import { PasoFrase } from "./paso-frase";
 import { PasoHechos } from "./paso-hechos";
@@ -76,6 +76,10 @@ export function Asistente({ modeloDisponible }: { modeloDisponible: boolean }) {
   useEffect(() => {
     if (guardarActivo) guardarBorrador(almacenLocal(), { hechos, personas });
   }, [guardarActivo, hechos, personas]);
+
+  useEffect(() => {
+    if (paso === "frase") adelantarEnvio();
+  }, [paso]);
 
   // Al enviar se libera el modelo: el reductor vuelve a apagar la opción.
   useEffect(() => {

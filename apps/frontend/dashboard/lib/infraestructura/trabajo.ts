@@ -47,6 +47,14 @@ const encargar = (peticion: PeticionSinId): Promise<string> =>
     obtenerTrabajador().postMessage({ ...peticion, id: siguienteId });
   });
 
+/**
+ * Arranca el Worker antes de necesitarlo. Bajar su código tarda más que Argon2id con mala señal,
+ * y esa espera no debe caer después de que la persona pulsa enviar.
+ */
+export const prepararTrabajador = (): void => {
+  obtenerTrabajador();
+};
+
 export const trabajoEnWorker: PuertoTrabajo = {
   derivarAccesoId: (frase) => encargar({ tipo: "derivar", frase }),
   resolverPow: async () => {

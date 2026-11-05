@@ -1,7 +1,8 @@
 import { aBase64Url, solicitudMensajeDenunciante, type Credencial } from "@dataton/shared";
 import type { PuertoBuzon, PuertoTrabajo, Sellar } from "@/lib/denuncia/puertos";
+import { MAX_MENSAJE } from "./limites";
 
-export const MAX_MENSAJE = 5000;
+export { MAX_MENSAJE };
 
 export interface DependenciasMensaje {
   buzon: Pick<PuertoBuzon, "obtenerConfiguracion" | "enviarMensaje">;
