@@ -4,5 +4,7 @@ export default defineConfig({
   test: {
     include: ["src/**/*.test.ts"],
     exclude: ["node_modules", "dist"],
+    // Las pruebas de ataque con muchas publicaciones rebasan 5 s en los ejecutores de CI.
+    testTimeout: 30_000,
   },
 });

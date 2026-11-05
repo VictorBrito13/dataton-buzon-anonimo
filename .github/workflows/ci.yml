@@ -126,6 +126,55 @@ jobs:
             test-results/
           if-no-files-found: warn
 
+  tablero:
+    name: Tablero con datos sintéticos
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17.11-alpine3.24
+        env:
+          POSTGRES_USER: dataton
+          POSTGRES_PASSWORD: dataton
+          POSTGRES_DB: dataton
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dataton -d dataton"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgres://dataton:dataton@localhost:5432/dataton
+      API_INTERNA: http://localhost:4000
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm run migrate
+      - name: Datos sintéticos y agregación
+        run: |
+          npm run sintetico -w @dataton/backend
+          npm run agregar -w @dataton/backend
+      - name: Levantar API y frontend
+        run: |
+          (cd apps/backend && nohup node dist/server.js > /tmp/backend.log 2>&1 &)
+          (cd apps/frontend/dashboard && nohup npx next start -p 3102 > /tmp/frontend.log 2>&1 &)
+          for url in http://localhost:4000/api/health http://localhost:3102/; do
+            timeout 60 sh -c "until curl -sf -o /dev/null $url; do sleep 1; done"
+          done
+      - name: Pruebas del tablero
+        env:
+          BASE_URL: http://localhost:3102
+        run: npx playwright test --config apps/frontend/dashboard/playwright.tablero.config.ts
+
   auditoria:
     name: npm audit (informativo)
     runs-on: ubuntu-latest
@@ -142,7 +191,7 @@ jobs:
     name: ci-ok
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    needs: [calidad, pruebas, imagenes, playwright]
+    needs: [calidad, pruebas, imagenes, playwright, tablero]
     if: always()
     steps:
       - name: Todos los trabajos requeridos terminaron bien

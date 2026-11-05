@@ -49,6 +49,7 @@ Cada PR hacia `dev`, `main` o `feat/**` pasa por [GitHub Actions](../.github/wor
 | `pruebas`    | Migraciones y pruebas contra PostgreSQL; cobertura mínima del dominio (85 % en líneas, 80 % en ramas)     |
 | `imagenes`   | Construcción de las imágenes Docker                                                                       |
 | `playwright` | Pruebas de anonimato contra el despliegue real y demás suites E2E                                         |
+| `tablero`    | Tablero contra la API real, con datos sintéticos agregados                                                |
 | `auditoria`  | `npm audit --audit-level=high`, informativo: no bloquea                                                   |
 
 Las acciones de GitHub están fijadas por SHA, y las imágenes de Docker, por versión.

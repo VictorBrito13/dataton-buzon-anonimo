@@ -108,6 +108,9 @@ services:
       args:
         DESCARGAR_MODELO_NER: ${DESCARGAR_MODELO_NER:-1}
     image: dataton/frontend:local
+    environment:
+      # El tablero consulta la API desde el servidor al renderizar.
+      API_INTERNA: http://backend:4000
     depends_on:
       backend:
         condition: service_healthy

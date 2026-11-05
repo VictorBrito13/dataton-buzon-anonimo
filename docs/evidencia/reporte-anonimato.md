@@ -3,7 +3,7 @@
 Generado por `npm run test:anonimato`. No se edita a mano.
 
 - **Fecha:** 2026-11-05
-- **Commit:** `ab2d1b8`
+- **Commit:** `afcb56d`
 - **Resultado de la corrida:** passed
 - **Flujo exigido (`ANONIMATO_EXIGIR_FLUJO`):** no
 
@@ -54,7 +54,7 @@ Una prueba **pendiente** no demuestra nada todavía: está escrita y espera a qu
 | Infraestructura › frontend: sistema de archivos de solo lectura y sin privilegios nuevos | Aprobada |  |
 | Infraestructura › caddy: sistema de archivos de solo lectura y sin privilegios nuevos | Aprobada |  |
 | Infraestructura › backend y frontend no tienen salida a internet | Aprobada |  |
-| Bitácoras y base de datos › las bitácoras no guardan IP ni user-agent, incluso con errores 404 y 502 | Aprobada | 83 líneas revisadas; sin 203.0.113.77, sin la IP del anfitrión (172.23.0.1) y sin el user-agent marcador |
+| Bitácoras y base de datos › las bitácoras no guardan IP ni user-agent, incluso con errores 404 y 502 | Aprobada | 73 líneas revisadas; sin 203.0.113.77, sin la IP del anfitrión (172.25.0.1) y sin el user-agent marcador |
 | Bitácoras y base de datos › el volcado de pg_dump incluye los datos, así que buscar en él sí significa algo | Aprobada |  |
 | Bitácoras y base de datos › el rol de la API pública no acepta la contraseña de desarrollo y no lee denuncias | Aprobada |  |
 | Bitácoras y base de datos › el esquema no tiene columnas de IP ni de user-agent | Aprobada |  |
