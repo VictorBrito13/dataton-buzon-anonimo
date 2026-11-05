@@ -13,6 +13,7 @@ import {
   normalizarFrase,
   normalizarPalabra,
   sellar,
+  TIPOS_FALTA,
   TRANSICIONES,
 } from "../src/index.js";
 
@@ -86,6 +87,13 @@ describe("catálogos y folio", () => {
   it("toda transición apunta a una etapa existente", () => {
     for (const destinos of Object.values(TRANSICIONES)) {
       for (const d of destinos) expect(CLAVES_ETAPA).toContain(d);
+    }
+  });
+
+  it("cubre las tres categorías que distingue el S5", () => {
+    const gravedades = Object.values(TIPOS_FALTA).map((t) => t.gravedad as string);
+    for (const categoria of ["grave", "no_grave", "hecho_corrupcion"]) {
+      expect(gravedades).toContain(categoria);
     }
   });
 
