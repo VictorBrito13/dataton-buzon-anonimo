@@ -45,9 +45,9 @@ const filas: FilaAgregado[] = [
         ente: "ficticio-01",
         total: { conteo: 50, motivo: "publicada" },
         porEtapa: {
-          recibida: { conteo: 5, motivo: "publicada" },
+          recibida: { conteo: 10, motivo: "publicada" },
+          en_investigacion: { conteo: 35, motivo: "publicada" },
           archivada: { conteo: 5, motivo: "publicada" },
-          sin_competencia: { conteo: 0, motivo: "publicada" },
         },
         conRespuesta: 40,
         tiempos: {},
@@ -170,6 +170,7 @@ describe("GET /periodos, /metodologia, /indicadores, /pdn", () => {
     expect(cuerpo.aviso).toMatch(/nunca una acusación/);
     expect(cuerpo.entes[0]?.etiqueta).toMatch(/ficticio/);
     expect(cuerpo.entes[0]?.porcentajeConRespuesta).toBe(80);
+    expect(cuerpo.entes[0]?.motivo).toBe("publicado");
   });
 
   it("pdn: conteos con su fuente", async () => {

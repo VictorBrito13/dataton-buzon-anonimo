@@ -114,8 +114,19 @@ const SENALES = {
   datos_insuficientes: "Datos insuficientes",
 } as const;
 
+/** El total del ente, con el mismo criterio que las celdas: "< k" solo si de verdad es menor que k. */
+export const etiquetaDenuncias = (
+  { denuncias, motivo }: Pick<RespuestaIndicadores["entes"][number], "denuncias" | "motivo">,
+  k: number,
+): string =>
+  etiquetaConteo(
+    { conteo: denuncias, motivo: motivo === "menor_a_k" ? motivo : "supresion_complementaria" },
+    k,
+  );
+
 export function IndicadoresEntes({ datos }: { datos: RespuestaIndicadores }) {
   const { entes, aviso, k } = datos;
+  const conEtapaOculta = entes.some((e) => e.motivo === "etapa_oculta");
   return (
     <>
       <p role="note" className="rounded border border-aviso bg-aviso-suave p-3 text-sm text-aviso">
@@ -142,9 +153,7 @@ export function IndicadoresEntes({ datos }: { datos: RespuestaIndicadores }) {
               <th scope="row" className="min-w-40">
                 {e.etiqueta}
               </th>
-              <td className="tabular-nums">
-                {e.denuncias === null ? `< ${k}` : e.denuncias.toLocaleString("en-US")}
-              </td>
+              <td className="tabular-nums">{etiquetaDenuncias(e, k)}</td>
               <td className="tabular-nums">{porciento(e.porcentajeConRespuesta)}</td>
               <td className="tabular-nums">{porciento(e.porcentajeTurnado)}</td>
               <td className="tabular-nums">{porciento(e.porcentajeArchivado)}</td>
@@ -159,6 +168,10 @@ export function IndicadoresEntes({ datos }: { datos: RespuestaIndicadores }) {
       <p className="text-xs text-tinta-suave">
         «Revisar primero» significa que menos de la mitad de las denuncias tuvo respuesta en la
         fecha de corte. Un porcentaje se oculta si con él se pudieran despejar menos de {k} casos.
+        «Oculta» en Denuncias es un total que se retiró para impedir una resta, no un total menor
+        que {k}.
+        {conEtapaOculta &&
+          " Cuando alguna etapa de un ente está oculta en la tabla, sus porcentajes, tiempos y señal se omiten: describirían esa celda."}
       </p>
     </>
   );

@@ -19,6 +19,18 @@ export const respuestaMunicipios = z.object({
 
 const esquemaSenal = z.enum(["priorizar_revision", "sin_senal", "datos_insuficientes"]);
 
+/**
+ * Por qué faltan datos en la fila de un ente. `menor_a_k` y `supresion_complementaria` son el
+ * motivo real del total, el mismo de la tabla por ente; `etapa_oculta`: el total se publica, pero los
+ * porcentajes, tiempos y señal se omiten porque alguna celda ente × etapa está oculta.
+ */
+export const esquemaMotivoIndicador = z.enum([
+  "publicado",
+  "menor_a_k",
+  "supresion_complementaria",
+  "etapa_oculta",
+]);
+
 /** GET /api/v1/publico/indicadores?periodo=2026-T3 */
 export const respuestaIndicadores = z.object({
   k: z.number().int().positive(),
@@ -29,6 +41,7 @@ export const respuestaIndicadores = z.object({
     z.object({
       ente: z.string(),
       etiqueta: z.string(),
+      motivo: esquemaMotivoIndicador,
       denuncias: z.number().int().nonnegative().nullable(),
       porcentajeConRespuesta: z.number().nullable(),
       porcentajeTurnado: z.number().nullable(),
@@ -128,5 +141,6 @@ export const ENTES_SINTETICOS = [
 export type RespuestaPeriodos = z.infer<typeof respuestaPeriodos>;
 export type RespuestaMunicipios = z.infer<typeof respuestaMunicipios>;
 export type RespuestaIndicadores = z.infer<typeof respuestaIndicadores>;
+export type MotivoIndicador = z.infer<typeof esquemaMotivoIndicador>;
 export type RespuestaPdn = z.infer<typeof respuestaPdn>;
 export type RespuestaMetodologia = z.infer<typeof respuestaMetodologia>;

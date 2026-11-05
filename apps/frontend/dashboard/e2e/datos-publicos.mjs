@@ -73,6 +73,7 @@ const indicadores = respuestaIndicadores.parse({
   entes: ENTES_SINTETICOS.map(({ id, etiqueta }, i) => ({
     ente: id,
     etiqueta,
+    motivo: i === 7 ? "menor_a_k" : "publicado",
     denuncias: i === 7 ? null : 400 - i * 40,
     porcentajeConRespuesta: i === 7 ? null : 90 - i * 10,
     porcentajeTurnado: i === 7 ? null : 60,

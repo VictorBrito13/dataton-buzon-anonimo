@@ -59,7 +59,8 @@ export const normalizarDimensiones = (dimensiones: readonly Dimension[]): string
   return [...dimensiones].sort((a, b) => DIMENSIONES.indexOf(a) - DIMENSIONES.indexOf(b)).join(",");
 };
 
-const idDe = (claves: Readonly<Record<string, string>>): string =>
+/** Identificador interno de una celda a partir de sus claves, en el orden en que se dan. */
+export const idDeClaves = (claves: Readonly<Record<string, string>>): string =>
   Object.entries(claves)
     .map(([d, v]) => `${d}=${v}`)
     .join("|") || TABLA_TOTAL;
@@ -70,7 +71,7 @@ class Constructor {
   readonly lineas: Linea[] = [];
 
   registrar(claves: Record<string, string>): string {
-    const id = idDe(claves);
+    const id = idDeClaves(claves);
     if (!this.conteos.has(id)) {
       this.conteos.set(id, 0);
       this.claves.set(id, claves);

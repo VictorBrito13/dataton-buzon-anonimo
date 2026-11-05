@@ -141,11 +141,12 @@ export const crearRutasPublicas = ({
       datosSinteticos: DATOS_SINTETICOS,
       aviso: AVISO_INDICADORES,
       entes: filas.map((f) => {
-        const { ente, denuncias, senal, tiempoPromedioDias, ...porcentajes } =
+        const { ente, motivo, denuncias, senal, tiempoPromedioDias, ...porcentajes } =
           f.detalle as IndicadoresEnte;
         return {
           ente,
           etiqueta: ETIQUETAS_ENTE.get(ente) ?? ente,
+          motivo,
           denuncias,
           porcentajeConRespuesta: porcentajes.porcentajeConRespuesta,
           porcentajeTurnado: porcentajes.porcentajeTurnado,
