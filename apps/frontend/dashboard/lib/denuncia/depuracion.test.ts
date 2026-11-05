@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { Hallazgo } from "@/lib/privacidad";
-import { claveIgnorado, quitarIgnorados, reemplazarHallazgo, segmentarTexto } from "./depuracion";
+import {
+  claveIgnorado,
+  quitarIgnorados,
+  reemplazarHallazgo,
+  segmentarTexto,
+  sugerenciaEnContexto,
+} from "./depuracion";
 
 const hallazgo = (texto: string, inicio: number, sugerencia = "[dato]"): Hallazgo => ({
   tipo: "telefono",
@@ -50,6 +56,16 @@ describe("reemplazarHallazgo", () => {
     expect(r.texto.slice(siguiente.inicio, siguiente.fin)).toBe("a@b.mx");
   });
 
+  it("una fecha al inicio de la oración deja la oración con mayúscula", () => {
+    const texto = "El 14 de marzo de 2026 pidió dinero.";
+    const r = reemplazarHallazgo(
+      texto,
+      [hallazgo("El 14 de marzo de 2026", 0, "en marzo de 2026")],
+      hallazgo("El 14 de marzo de 2026", 0, "en marzo de 2026"),
+    );
+    expect(r.texto).toBe("En marzo de 2026 pidió dinero.");
+  });
+
   it("descarta los hallazgos que se traslapaban con el reemplazado", () => {
     const a = hallazgo("Juan Pérez", 0, "[nombre]");
     const b = hallazgo("Pérez", 5);
@@ -63,6 +79,38 @@ describe("reemplazarHallazgo", () => {
     const r = reemplazarHallazgo("otro texto", [a], a);
     expect(r.texto).toBe("otro texto");
     expect(r.hallazgos).toEqual([]);
+  });
+});
+
+describe("sugerenciaEnContexto", () => {
+  const fecha = (texto: string, original: string, sugerencia = "en marzo de 2026") =>
+    sugerenciaEnContexto(texto, hallazgo(original, texto.indexOf(original), sugerencia));
+
+  it("respeta la mayúscula si el hallazgo la traía", () => {
+    expect(fecha("El 14 de marzo de 2026 vi todo", "El 14 de marzo de 2026")).toBe(
+      "En marzo de 2026",
+    );
+  });
+
+  it.each([
+    ["al inicio del texto", "14/03/2026 fue el pago"],
+    ["tras un punto", "Lo vi. 14/03/2026 fue el pago"],
+    ["tras signos de cierre", "¿Lo viste? 14/03/2026 fue el pago"],
+    ["en una línea nueva", "Hechos\n14/03/2026 fue el pago"],
+    ["tras signos de apertura", "Dijo. ¿14/03/2026 fue el pago?"],
+  ])("empieza con mayúscula %s, aunque la fecha empiece con número", (_caso, texto) => {
+    expect(fecha(texto, "14/03/2026", "marzo de 2026")).toBe("Marzo de 2026");
+  });
+
+  it("deja la minúscula a media oración", () => {
+    expect(fecha("Fue el 14 de marzo de 2026 cuando", "el 14 de marzo de 2026")).toBe(
+      "en marzo de 2026",
+    );
+    expect(fecha("Pagó, el 14/03/2026 y se fue", "el 14/03/2026")).toBe("en marzo de 2026");
+  });
+
+  it("no altera las sugerencias que empiezan con un corchete", () => {
+    expect(fecha("5512345678 es su número", "5512345678", "[teléfono]")).toBe("[teléfono]");
   });
 });
 

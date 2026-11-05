@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { describirTamano, describirTipos, validarArchivo } from "./evidencias";
+import { describirTamano, describirTipos, nombreTipoEvidencia, validarArchivo } from "./evidencias";
 
 const limites = { maxBytesEvidencia: 1000, maxEvidencias: 2, tiposEvidencia: ["image/png"] };
 
@@ -22,8 +22,25 @@ describe("describirTipos", () => {
     expect(describirTipos(["image/png"])).toBe("PNG");
   });
 
+  it("nombra todos los tipos que acepta el servidor, incluido PowerPoint", () => {
+    expect(
+      describirTipos([
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "application/pdf",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      ]),
+    ).toBe("JPG, PNG, WEBP, PDF, Word, Excel y PowerPoint");
+  });
+
   it("nunca muestra un tipo crudo desconocido como cadena técnica", () => {
     expect(describirTipos(["audio/ogg"])).toBe("OGG");
+    expect(nombreTipoEvidencia("application/vnd.ms-outlook")).toBe("Otro tipo de archivo");
+    expect(nombreTipoEvidencia("application/x-msdownload")).toBe("Otro tipo de archivo");
+    expect(nombreTipoEvidencia("sin-barra")).toBe("Otro tipo de archivo");
   });
 });
 

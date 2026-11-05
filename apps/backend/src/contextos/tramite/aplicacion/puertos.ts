@@ -59,7 +59,10 @@ export interface EvidenciaParaAutoridad {
 
 export interface RepositorioTramite extends Bitacora {
   transaccion<T>(fn: (tx: TransaccionTramite) => Promise<T>): Promise<T>;
-  listar(): Promise<(Omit<ResumenDenunciaAutoridad, "estado"> & { estado: string })[]>;
+  listar(): Promise<{
+    denuncias: (Omit<ResumenDenunciaAutoridad, "estado"> & { estado: string })[];
+    total: number;
+  }>;
   detalle(id: string): Promise<DetalleCrudo | null>;
   evidencia(denunciaId: string, evidenciaId: string): Promise<EvidenciaParaAutoridad | null>;
 }

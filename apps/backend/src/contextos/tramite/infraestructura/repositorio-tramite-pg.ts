@@ -67,12 +67,15 @@ export class RepositorioTramitePg implements RepositorioTramite {
   }
 
   /** Por día e identificador aleatorio: el orden no permite inferir el orden de llegada. */
-  async listar(): Promise<FilaResumen[]> {
-    const { rows } = await pool.query<FilaResumen>(
-      `SELECT ${COLUMNAS_RESUMEN} FROM denuncias ORDER BY recibida_dia DESC, id LIMIT $1`,
-      [MAX_LISTADO],
-    );
-    return rows;
+  async listar(): Promise<{ denuncias: FilaResumen[]; total: number }> {
+    const [filas, conteo] = await Promise.all([
+      pool.query<FilaResumen>(
+        `SELECT ${COLUMNAS_RESUMEN} FROM denuncias ORDER BY recibida_dia DESC, id LIMIT $1`,
+        [MAX_LISTADO],
+      ),
+      pool.query<{ total: number }>("SELECT count(*)::int AS total FROM denuncias"),
+    ]);
+    return { denuncias: filas.rows, total: conteo.rows[0]?.total ?? 0 };
   }
 
   async detalle(id: string): Promise<DetalleCrudo | null> {

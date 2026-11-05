@@ -31,7 +31,7 @@ import {
 import { RepositorioTramitePg } from "./contextos/tramite/infraestructura/repositorio-tramite-pg.js";
 
 /** Raíz de composición: el único lugar que conoce a la vez configuración, casos de uso y adaptadores. */
-const reloj = { ahora: () => new Date() };
+const reloj = { ahora: () => new Date(), zona: env.zonaHoraria };
 const azar = { bytes: (cantidad: number) => new Uint8Array(randomBytes(cantidad)) };
 const cifrador = new CifradorAes(env.claveMensajes);
 const huellas = new HuellasHmac(env.pimientaAcceso);

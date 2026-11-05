@@ -51,17 +51,20 @@ class RepositorioFalso implements RepositorioTramite {
     return Promise.resolve();
   }
   listar() {
-    return Promise.resolve([
-      {
-        id: ID,
-        estado: "17",
-        municipio: null,
-        tipoFalta: "cohecho" as const,
-        enteId: null,
-        etapa: "recibida" as const,
-        recibidaDia: "2026-01-01",
-      },
-    ]);
+    return Promise.resolve({
+      denuncias: [
+        {
+          id: ID,
+          estado: "17",
+          municipio: null,
+          tipoFalta: "cohecho" as const,
+          enteId: null,
+          etapa: "recibida" as const,
+          recibidaDia: "2026-01-01",
+        },
+      ],
+      total: 3,
+    });
   }
   detalle(id: string): Promise<DetalleCrudo | null> {
     if (id !== ID) return Promise.resolve(null);
@@ -98,7 +101,9 @@ class RepositorioFalso implements RepositorioTramite {
   }
 }
 
-const reloj = { ahora: () => new Date("2026-05-02T18:44:12Z") };
+const MEXICO = "America/Mexico_City";
+const reloj = { ahora: () => new Date("2026-05-02T18:44:12Z"), zona: MEXICO };
+const relojDeNoche = { ahora: () => new Date("2026-11-05T03:30:00Z"), zona: MEXICO };
 const cifrador = {
   cifrar: (texto: string) => new TextEncoder().encode(texto),
   descifrar: (bytes: Uint8Array) => new TextDecoder().decode(bytes),
@@ -118,8 +123,22 @@ describe("CasosDenunciasAutoridad", () => {
     casos = new CasosDenunciasAutoridad({ repositorio: repo, cifrador, reloj });
   });
 
+  it("el cambio de etapa y el mensaje de la noche quedan en el día de la zona, no en UTC", async () => {
+    const deNoche = new CasosDenunciasAutoridad({
+      repositorio: repo,
+      cifrador,
+      reloj: relojDeNoche,
+    });
+    await deNoche.cambiarEtapa(sesion, ID, "turnada_investigadora");
+    await deNoche.enviarMensaje(sesion, ID, "Hola");
+    expect(repo.cambios[0]?.dia).toBe("2026-11-04");
+    expect(repo.mensajes[0]?.dia).toBe("2026-11-04");
+  });
+
   it("lista y lo registra en la bitácora", async () => {
-    expect(await casos.listar(sesion)).toHaveLength(1);
+    const listado = await casos.listar(sesion);
+    expect(listado.denuncias).toHaveLength(1);
+    expect(listado.total).toBe(3);
     expect(repo.bitacora).toEqual([
       { usuarioId: "u1", accion: "denuncias_listadas", denunciaId: null },
     ]);
@@ -221,7 +240,7 @@ describe("CasosSesion", () => {
         },
         almacen,
         bitacora: repo,
-        reloj: { ahora: () => new Date(ahoraMs) },
+        reloj: { ahora: () => new Date(ahoraMs), zona: MEXICO },
         limite: new LimiteIntentos({ maximo: maxIntentos, ventanaMs: 100_000, maxClaves: 10 }),
         limiteGlobal: new LimiteIntentos({ maximo: maxGlobal, ventanaMs: 60_000, maxClaves: 1 }),
       },

@@ -4,6 +4,7 @@ import {
   indexarEntes,
   municipiosDeEstado,
   nombreEnte,
+  nombreMunicipio,
   type CatalogoEntes,
   type CatalogoMunicipios,
 } from "./catalogos-locales";
@@ -34,6 +35,17 @@ describe("municipiosDeEstado", () => {
   it("un estado sin datos o vacío no rompe el selector", () => {
     expect(municipiosDeEstado(municipios, "99")).toEqual([]);
     expect(municipiosDeEstado(municipios, "")).toEqual([]);
+  });
+});
+
+describe("nombreMunicipio", () => {
+  it("resuelve la clave INEGI de 5 dígitos", () => {
+    expect(nombreMunicipio(municipios, "17007")).toBe("Cuernavaca");
+  });
+
+  it("sin coincidencia devuelve null", () => {
+    expect(nombreMunicipio(municipios, "17999")).toBeNull();
+    expect(nombreMunicipio(municipios, "99007")).toBeNull();
   });
 });
 

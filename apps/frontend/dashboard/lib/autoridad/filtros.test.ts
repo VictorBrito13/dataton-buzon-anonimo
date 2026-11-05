@@ -3,7 +3,9 @@ import { describe, expect, it } from "vitest";
 import type { ResumenDenunciaAutoridad } from "@dataton/shared";
 import {
   FILTROS_VACIOS,
+  OPCIONES_ESTADO,
   cambiarFiltro,
+  describirListado,
   filtrarDenuncias,
   filtrosAConsulta,
   leerFiltros,
@@ -85,5 +87,45 @@ describe("filtrarDenuncias", () => {
     const lista = [a, b, c];
     filtrarDenuncias(lista, FILTROS_VACIOS);
     expect(lista).toEqual([a, b, c]);
+  });
+});
+
+describe("OPCIONES_ESTADO", () => {
+  it("ofrece los 32 estados en orden alfabético, con acentos en su lugar", () => {
+    const nombres = OPCIONES_ESTADO.map((o) => o.texto);
+    expect(nombres).toHaveLength(32);
+    expect(nombres.slice(0, 5)).toEqual([
+      "Aguascalientes",
+      "Baja California",
+      "Baja California Sur",
+      "Campeche",
+      "Chiapas",
+    ]);
+    expect(nombres.indexOf("Michoacán de Ocampo")).toBeLessThan(nombres.indexOf("Morelos"));
+    expect(nombres.indexOf("Querétaro")).toBeLessThan(nombres.indexOf("Quintana Roo"));
+    expect(nombres.at(-1)).toBe("Zacatecas");
+    expect(nombres).toEqual([...nombres].sort((x, y) => x.localeCompare(y, "es")));
+  });
+
+  it("cada opción conserva la clave de su estado", () => {
+    expect(OPCIONES_ESTADO.find((o) => o.texto === "Morelos")?.valor).toBe("17");
+  });
+});
+
+describe("describirListado", () => {
+  it("con la lista completa solo da el conteo", () => {
+    expect(describirListado({ visibles: 2, cargadas: 2, total: 2 })).toBe("2 de 2 denuncias");
+  });
+
+  it("si el servidor recortó la lista, avisa cuántas se muestran y que los filtros no ven el resto", () => {
+    expect(describirListado({ visibles: 500, cargadas: 500, total: 1234 })).toBe(
+      "Se muestran las 500 denuncias más recientes de 1,234. Los filtros solo buscan entre esas 500.",
+    );
+  });
+
+  it("con filtros sobre una lista recortada dice cuántas coinciden", () => {
+    expect(describirListado({ visibles: 12, cargadas: 500, total: 1234 })).toBe(
+      "12 coinciden entre las 500 denuncias más recientes de 1,234. Los filtros solo buscan entre esas 500.",
+    );
   });
 });

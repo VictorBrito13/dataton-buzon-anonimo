@@ -1,21 +1,16 @@
 "use client";
 
 import "@dataton/shared";
-import {
-  CLAVES_ESTADO,
-  CLAVES_ETAPA,
-  CLAVES_TIPO_FALTA,
-  ESTADOS,
-  ETAPAS,
-  TIPOS_FALTA,
-} from "@dataton/shared";
+import { CLAVES_ETAPA, CLAVES_TIPO_FALTA, ESTADOS, ETAPAS, TIPOS_FALTA } from "@dataton/shared";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { listarDenuncias } from "@/lib/autoridad/api";
 import {
   FILTROS_VACIOS,
+  OPCIONES_ESTADO,
   cambiarFiltro,
+  describirListado,
   filtrarDenuncias,
   filtrosAConsulta,
   leerFiltros,
@@ -23,16 +18,13 @@ import {
 } from "@/lib/autoridad/filtros";
 import { ALERTA, BOTON_SECUNDARIO, CAMPO, CELDA, CELDA_TITULO, ETIQUETA, SECCION } from "./estilos";
 import { useCarga } from "./use-carga";
+import { useNombres } from "./use-nombres";
 
 type Opcion = { valor: string; texto: string };
 
 const OPCIONES_ETAPA: Opcion[] = CLAVES_ETAPA.map((valor) => ({
   valor,
   texto: ETAPAS[valor].etiqueta,
-}));
-const OPCIONES_ESTADO: Opcion[] = CLAVES_ESTADO.map((valor) => ({
-  valor,
-  texto: ESTADOS[valor],
 }));
 const OPCIONES_TIPO: Opcion[] = CLAVES_TIPO_FALTA.map((valor) => ({
   valor,
@@ -73,7 +65,11 @@ export function ListaDenuncias() {
   const ruta = usePathname();
   const consulta = useSearchParams();
   const filtros = useMemo(() => leerFiltros(consulta), [consulta]);
-  const visibles = useMemo(() => filtrarDenuncias(datos ?? [], filtros), [datos, filtros]);
+  const visibles = useMemo(
+    () => filtrarDenuncias(datos?.denuncias ?? [], filtros),
+    [datos, filtros],
+  );
+  const nombres = useNombres();
 
   /** En la URL, sin petición al servidor: volver desde un detalle conserva los filtros. */
   const aplicar = (nuevos: Filtros) => {
@@ -134,7 +130,11 @@ export function ListaDenuncias() {
 
       <p role="status" className="text-sm text-tinta-suave">
         {datos
-          ? `${visibles.length} de ${datos.length} denuncias`
+          ? describirListado({
+              visibles: visibles.length,
+              cargadas: datos.denuncias.length,
+              total: datos.total,
+            })
           : cargando
             ? "Cargando denuncias…"
             : ""}
@@ -193,9 +193,9 @@ export function ListaDenuncias() {
                   </td>
                   <td className={CELDA}>{ETAPAS[denuncia.etapa].etiqueta}</td>
                   <td className={CELDA}>{ESTADOS[denuncia.estado]}</td>
-                  <td className={CELDA}>{denuncia.municipio ?? "No indicado"}</td>
+                  <td className={CELDA}>{nombres.municipio(denuncia.municipio)}</td>
                   <td className={CELDA}>{TIPOS_FALTA[denuncia.tipoFalta].etiqueta}</td>
-                  <td className={CELDA}>{denuncia.enteId ?? "No indicado"}</td>
+                  <td className={CELDA}>{nombres.ente(denuncia.enteId)}</td>
                 </tr>
               ))}
               {visibles.length === 0 && (

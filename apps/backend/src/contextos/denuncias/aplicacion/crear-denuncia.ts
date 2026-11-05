@@ -48,7 +48,7 @@ export class CrearDenuncia {
     ) {
       throw new ErrorDominio("demasiados_intentos", "Demasiados intentos. Espera unos minutos.");
     }
-    const denuncia = nuevaDenuncia(solicitud, reloj.ahora());
+    const denuncia = nuevaDenuncia(solicitud, reloj.ahora(), reloj.zona);
     exigirTotalEvidencias(
       await repositorio.tamanosEvidencias(denuncia.evidenciaIds),
       this.maxBytesTotal,

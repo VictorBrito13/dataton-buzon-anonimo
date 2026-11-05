@@ -8,7 +8,7 @@ import {
   modeloActivoEnRevision,
   resumenHallazgos,
 } from "@/lib/denuncia/busqueda-modelo";
-import { segmentarTexto } from "@/lib/denuncia/depuracion";
+import { segmentarTexto, sugerenciaEnContexto } from "@/lib/denuncia/depuracion";
 import {
   cancelarModeloNer,
   cargarModeloNer,
@@ -88,7 +88,7 @@ export function PasoRevision({
     despachar({ tipo: accion, hallazgo });
     setAnuncio(
       accion === "aplicarSugerencia"
-        ? `Reemplazado por ${hallazgo.sugerencia}.`
+        ? `Reemplazado por ${sugerenciaEnContexto(relato, hallazgo)}.`
         : "Lo dejamos como está.",
     );
     // El botón pulsado desaparece: el foco no debe perderse.
@@ -177,7 +177,7 @@ export function PasoRevision({
                     className={BOTON_SECUNDARIO}
                     onClick={() => decidir(hallazgo, "aplicarSugerencia")}
                   >
-                    {`Reemplazar por ${hallazgo.sugerencia}`}
+                    {`Reemplazar por ${sugerenciaEnContexto(relato, hallazgo)}`}
                   </button>
                   <button
                     type="button"

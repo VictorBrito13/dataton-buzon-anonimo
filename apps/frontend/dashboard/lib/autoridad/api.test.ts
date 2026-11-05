@@ -49,7 +49,7 @@ afterEach(() => vi.unstubAllGlobals());
 describe("todas las llamadas del panel", () => {
   it("envían la cookie de mismo origen", async () => {
     const llamadas: Array<[unknown, () => Promise<unknown>]> = [
-      [[RESUMEN], () => listarDenuncias()],
+      [{ denuncias: [RESUMEN], total: 1 }, () => listarDenuncias()],
       [DETALLE, () => obtenerDenuncia(ID)],
       [{}, () => iniciarSesion({ usuario: "a", contrasena: "b" })],
       [{}, () => cerrarSesion()],
@@ -68,16 +68,25 @@ describe("todas las llamadas del panel", () => {
 });
 
 describe("listarDenuncias y obtenerDenuncia", () => {
+  it("el listado conserva el total para poder avisar si está recortado", async () => {
+    peticion.mockResolvedValueOnce(responderCon({ denuncias: [RESUMEN], total: 7 }));
+    expect((await listarDenuncias()).total).toBe(7);
+  });
+
   it("descartan cualquier campo fuera del contrato, como datos de quien denuncia", async () => {
-    peticion.mockResolvedValueOnce(responderCon([{ ...RESUMEN, ip: "203.0.113.9" }]));
-    expect((await listarDenuncias())[0]).not.toHaveProperty("ip");
+    peticion.mockResolvedValueOnce(
+      responderCon({ denuncias: [{ ...RESUMEN, ip: "203.0.113.9" }], total: 1 }),
+    );
+    expect((await listarDenuncias()).denuncias[0]).not.toHaveProperty("ip");
 
     peticion.mockResolvedValueOnce(responderCon({ ...DETALLE, correo: "x@y.mx" }));
     expect(await obtenerDenuncia(ID)).not.toHaveProperty("correo");
   });
 
   it("rechazan una respuesta que no cumple el contrato", async () => {
-    peticion.mockResolvedValueOnce(responderCon([{ id: "no-uuid" }]));
+    peticion.mockResolvedValueOnce(responderCon({ denuncias: [{ id: "no-uuid" }], total: 1 }));
+    await expect(listarDenuncias()).rejects.toThrow();
+    peticion.mockResolvedValueOnce(responderCon({ denuncias: [RESUMEN] }));
     await expect(listarDenuncias()).rejects.toThrow();
   });
 });

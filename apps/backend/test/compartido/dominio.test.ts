@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { diaDe, diaAnterior } from "../../src/compartido/dominio/dia.js";
+import { diaDe, diaAnterior, zonaHorariaValida } from "../../src/compartido/dominio/dia.js";
 import { LimiteIntentos } from "../../src/compartido/dominio/limite-intentos.js";
 import { selloBienFormado } from "../../src/compartido/dominio/sello.js";
 import { Semaforo } from "../../src/compartido/dominio/semaforo.js";
@@ -46,8 +46,36 @@ describe("Semaforo", () => {
 });
 
 describe("dia", () => {
+  const MEXICO = "America/Mexico_City";
+
   it("redondea cualquier instante al día, sin hora", () => {
-    expect(diaDe(new Date("2026-03-09T23:59:59.999Z"))).toBe("2026-03-09");
+    expect(diaDe(new Date("2026-03-09T23:59:59.999Z"), "UTC")).toBe("2026-03-09");
+  });
+
+  it("la noche del 4 de noviembre en México sigue siendo 4, aunque en UTC ya sea 5", () => {
+    expect(diaDe(new Date("2026-11-05T03:30:00Z"), MEXICO)).toBe("2026-11-04");
+  });
+
+  it("cambia de día justo a medianoche de la zona", () => {
+    expect(diaDe(new Date("2026-11-05T05:59:59.999Z"), MEXICO)).toBe("2026-11-04");
+    expect(diaDe(new Date("2026-11-05T06:00:00.000Z"), MEXICO)).toBe("2026-11-05");
+  });
+
+  it("cruza meses y años en la zona", () => {
+    expect(diaDe(new Date("2027-01-01T02:00:00Z"), MEXICO)).toBe("2026-12-31");
+  });
+
+  it("la zona es configurable", () => {
+    const instante = new Date("2026-11-05T03:30:00Z");
+    expect(diaDe(instante, "UTC")).toBe("2026-11-05");
+    expect(diaDe(instante, "America/Tijuana")).toBe("2026-11-04");
+    expect(diaDe(new Date("2026-11-04T20:00:00Z"), "Asia/Tokyo")).toBe("2026-11-05");
+  });
+
+  it("reconoce las zonas válidas", () => {
+    expect(zonaHorariaValida(MEXICO)).toBe(true);
+    expect(zonaHorariaValida("Marte/Olympus")).toBe(false);
+    expect(zonaHorariaValida("")).toBe(false);
   });
 
   it("calcula el día anterior, cruzando meses", () => {

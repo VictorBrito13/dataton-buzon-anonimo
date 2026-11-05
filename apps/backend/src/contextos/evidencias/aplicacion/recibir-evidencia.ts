@@ -53,7 +53,7 @@ export class RecibirEvidencia {
     const evidenciaId = await repositorio.guardar({
       tipo,
       blobSellado: await sellador.sellar(limpio.bytes),
-      subidaDia: diaDe(reloj.ahora()),
+      subidaDia: diaDe(reloj.ahora(), reloj.zona),
     });
     return { evidenciaId, metadatosEliminadosEnServidor: limpio.eliminados };
   }

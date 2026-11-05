@@ -21,13 +21,20 @@ const NOMBRES_TIPO: Record<string, string> = {
   "application/pdf": "PDF",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "Word",
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "Excel",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation": "PowerPoint",
 };
 
-const nombreTipo = (tipo: string): string =>
-  NOMBRES_TIPO[tipo] ?? (tipo.split("/")[1] ?? tipo).toUpperCase();
+/** Un subtipo simple se entiende (OGG); uno de proveedor o experimental sería jerga. */
+const SUBTIPO_LEGIBLE = /^[a-z0-9]+$/i;
+
+export const nombreTipoEvidencia = (tipo: string): string => {
+  if (Object.hasOwn(NOMBRES_TIPO, tipo)) return NOMBRES_TIPO[tipo] as string;
+  const subtipo = tipo.split("/")[1] ?? "";
+  return SUBTIPO_LEGIBLE.test(subtipo) ? subtipo.toUpperCase() : "Otro tipo de archivo";
+};
 
 export const describirTipos = (tipos: readonly string[]): string => {
-  const nombres = tipos.map(nombreTipo);
+  const nombres = tipos.map(nombreTipoEvidencia);
   const ultimo = nombres.pop() ?? "";
   return nombres.length > 0 ? `${nombres.join(", ")} y ${ultimo}` : ultimo;
 };

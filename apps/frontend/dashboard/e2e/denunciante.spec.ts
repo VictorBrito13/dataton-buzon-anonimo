@@ -45,6 +45,10 @@ test("recorrido completo: landing, denuncia, seguimiento y respuesta", async ({ 
   await expect(page.getByText("no constituye una determinación jurídica")).toBeVisible();
   await revisarPantalla(page, info, "03-orientador");
   await page.getByRole("button", { name: "Usar esta opción" }).click();
+  // El panel se cierra, el foco va al campo y la elección se confirma fuera del panel.
+  await expect(page.getByLabel("¿Qué tipo de falta es?")).toBeFocused();
+  await expect(page.getByRole("button", { name: "Usar esta opción" })).toBeHidden();
+  await expect(page.getByRole("status").filter({ hasText: "Elegimos" })).toBeVisible();
   await expect(page.getByLabel("¿Qué tipo de falta es?")).toHaveValue("cohecho");
 
   // Municipio del catálogo local.
