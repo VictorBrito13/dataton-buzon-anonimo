@@ -12,6 +12,8 @@ export default defineConfig({
       "apps/backend/test/**/dominio/**/*.test.ts",
     ],
     passWithNoTests: true,
+    // La medición de cobertura vuelve lentas las pruebas de ataque con muchas publicaciones.
+    testTimeout: 60_000,
     coverage: {
       provider: "v8",
       reporter: ["text-summary"],
