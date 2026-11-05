@@ -125,7 +125,7 @@ export function SelectorTema() {
   }, []);
 
   return (
-    <details ref={menu} className="relative print:hidden">
+    <details ref={menu} className="relative max-sm:static print:hidden">
       <summary
         aria-label={`Tema: ${ETIQUETAS[preferencia]}`}
         className="inline-flex min-h-11 min-w-11 cursor-pointer list-none items-center justify-center gap-2 rounded-sm border border-borde-fuerte bg-superficie px-2 text-sm font-medium text-tinta hover:bg-marca-suave [&::-webkit-details-marker]:hidden"
@@ -135,7 +135,7 @@ export function SelectorTema() {
         ))}
         <span className="hidden md:inline">Tema</span>
       </summary>
-      <fieldset className="menu-tema absolute top-full right-0 z-20 mt-1 w-44 rounded-sm border border-borde-fuerte bg-superficie p-1 shadow-lg">
+      <fieldset className="menu-tema absolute top-full right-0 z-20 mt-1 w-44 max-sm:right-4 max-sm:left-4 max-sm:w-auto rounded-sm border border-borde-fuerte bg-superficie p-1 shadow-lg">
         <legend className="sr-only">Tema de la página</legend>
         {PREFERENCIAS_TEMA.map((tema) => (
           <label
