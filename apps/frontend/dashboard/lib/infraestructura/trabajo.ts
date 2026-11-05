@@ -3,11 +3,8 @@ import { llamarApi } from "@/lib/api";
 import type { PuertoTrabajo } from "@/lib/denuncia/puertos";
 import type { PeticionTrabajo, RespuestaTrabajo } from "./trabajo.worker";
 
-/**
- * Ruta del desafío de la prueba de trabajo. El contrato en @dataton/shared define la solución
- * (`esquemaPow`) pero aún no esta ruta; se debe confirmar con el backend (HU-23).
- */
-const RUTA_DESAFIO = "/pow/desafio";
+/** Reto de la prueba de trabajo que expone el backend (protocolo v2 de Altcha, HU-23). */
+const RUTA_RETO = "/pow/reto";
 
 type Pendiente = { resolver: (valor: string) => void; rechazar: (error: Error) => void };
 
@@ -53,7 +50,7 @@ const encargar = (peticion: PeticionSinId): Promise<string> =>
 export const trabajoEnWorker: PuertoTrabajo = {
   derivarAccesoId: (frase) => encargar({ tipo: "derivar", frase }),
   resolverPow: async () => {
-    const desafio = await llamarApi<Challenge>(RUTA_DESAFIO, {
+    const desafio = await llamarApi<Challenge>(RUTA_RETO, {
       signal: AbortSignal.timeout(45_000),
     });
     return encargar({ tipo: "pow", desafio });

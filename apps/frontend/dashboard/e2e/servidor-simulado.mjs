@@ -1,7 +1,7 @@
 // Backend simulado para las pruebas E2E, basado en los esquemas de @dataton/shared.
 // Valida cada solicitud con el contrato real y verifica la prueba de trabajo con altcha-lib.
 import { createServer } from "node:http";
-import { randomUUID } from "node:crypto";
+import { randomInt, randomUUID } from "node:crypto";
 import {
   ERROR_ACCESO,
   generarParDeClaves,
@@ -14,6 +14,7 @@ import { deriveKey } from "altcha-lib/algorithms/pbkdf2";
 
 const PUERTO = Number(process.env.PUERTO_SIMULADO ?? 4100);
 const SECRETO = "secreto-solo-para-pruebas";
+const SECRETO_CLAVE = "otro-secreto-solo-para-pruebas";
 const { publica } = await generarParDeClaves();
 
 const denuncias = new Map();
@@ -42,6 +43,7 @@ const powValida = async (pow) => {
       solution,
       deriveKey,
       hmacSignatureSecret: SECRETO,
+      hmacKeySignatureSecret: SECRETO_CLAVE,
     });
     if (verified) desafiosUsados.add(challenge.signature);
     return verified;
@@ -73,15 +75,16 @@ const servidor = createServer(async (peticion, respuesta) => {
       tiposEvidencia: ["image/jpeg", "image/png", "application/pdf"],
     });
   }
-  if (peticion.method === "GET" && ruta === "/pow/desafio") {
+  if (peticion.method === "GET" && ruta === "/pow/reto") {
     return responder(
       200,
       await createChallenge({
         algorithm: "PBKDF2/SHA-256",
         cost: 200,
-        keyPrefix: "0a",
+        counter: randomInt(1, 200),
         deriveKey,
         hmacSignatureSecret: SECRETO,
+        hmacKeySignatureSecret: SECRETO_CLAVE,
         expiresAt: Math.floor(Date.now() / 1000) + 300,
       }),
     );

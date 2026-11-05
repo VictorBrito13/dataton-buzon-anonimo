@@ -1,4 +1,5 @@
 import type { ResultadoLimpieza } from "@/lib/privacidad";
+import { ErrorLimpieza } from "@/lib/privacidad/dominio/limpieza/errores";
 import { mensajeDeError } from "./errores";
 import { validarArchivo, type EvidenciaSubida, type LimitesEvidencia } from "./evidencias";
 import type { PuertoBuzon, PuertoTrabajo } from "./puertos";
@@ -21,7 +22,8 @@ export const subirEvidencia = async (
   let limpieza: ResultadoLimpieza;
   try {
     limpieza = await limpiar(archivo);
-  } catch {
+  } catch (error) {
+    if (error instanceof ErrorLimpieza) throw new Error(error.message);
     throw new Error(
       "No pudimos limpiar este archivo, así que no lo enviamos. Puede estar dañado; prueba con otra copia.",
     );

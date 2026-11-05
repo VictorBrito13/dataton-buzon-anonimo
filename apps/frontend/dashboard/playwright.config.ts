@@ -16,7 +16,10 @@ export default defineConfig({
   },
   projects: [
     { name: "celular", use: { browserName: "chromium", viewport: { width: 390, height: 844 } } },
-    { name: "escritorio", use: { browserName: "chromium", viewport: { width: 1280, height: 800 } } },
+    {
+      name: "escritorio",
+      use: { browserName: "chromium", viewport: { width: 1280, height: 800 } },
+    },
   ],
   webServer: [
     {

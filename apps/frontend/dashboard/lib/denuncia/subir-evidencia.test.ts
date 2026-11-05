@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { ErrorApi } from "@/lib/api";
+import { ErrorLimpieza } from "@/lib/privacidad/dominio/limpieza/errores";
 import { subirEvidencia } from "./subir-evidencia";
 
 const limites = { maxBytesEvidencia: 1000, maxEvidencias: 3, tiposEvidencia: ["image/png"] };
@@ -48,6 +49,17 @@ describe("subirEvidencia", () => {
     await expect(
       subirEvidencia({ archivo: original, limites, cantidadActual: 0 }, d),
     ).rejects.toThrow(/No pudimos limpiar/);
+    expect(d.buzon.subirEvidencia).not.toHaveBeenCalled();
+  });
+
+  it("muestra tal cual el motivo que da la limpieza, escrito para la persona", async () => {
+    const d = dependencias();
+    d.limpiar.mockRejectedValueOnce(
+      new ErrorLimpieza("Este archivo está protegido con contraseña."),
+    );
+    await expect(
+      subirEvidencia({ archivo: original, limites, cantidadActual: 0 }, d),
+    ).rejects.toThrow("Este archivo está protegido con contraseña.");
     expect(d.buzon.subirEvidencia).not.toHaveBeenCalled();
   });
 

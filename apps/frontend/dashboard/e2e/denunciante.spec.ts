@@ -71,6 +71,7 @@ test("recorrido completo: landing, denuncia, seguimiento y respuesta", async ({ 
     buffer: PNG,
   });
   await expect(page.getByText("Software de edición")).toBeVisible();
+  await expect(page.getByText(/Nombre original del archivo/)).toBeVisible();
   await expect(page.getByText(/Hasta 3 archivos de 5 MB/)).toBeVisible();
   // Un archivo no permitido se explica y no bloquea.
   await page.getByLabel("Elige tus archivos").setInputFiles({
@@ -84,14 +85,17 @@ test("recorrido completo: landing, denuncia, seguimiento y respuesta", async ({ 
   await page.getByRole("button", { name: "Continuar" }).click();
   await expect(page.getByRole("heading", { name: "Revisión", level: 2 })).toBeFocused();
   await expect(page.getByText("Tu relato (sellado)")).toBeVisible();
-  const reemplazo = page.getByRole("button", { name: /^Reemplazar por/ }).first();
-  const hayDepurador = await reemplazo.isVisible().catch(() => false);
+  // La librería real de privacidad detecta el teléfono; la decisión es de la persona.
+  const hallazgo = page.locator("main ol li").filter({ hasText: "«5512345678»" });
+  await expect(hallazgo).toBeVisible();
+  await expect(page.locator("mark").filter({ hasText: "5512345678" })).toBeVisible();
   await revisarPantalla(page, info, "07-revision");
-  if (hayDepurador) {
-    await reemplazo.click();
-    await expect(page.getByText("5512345678")).toHaveCount(0);
-    await revisarPantalla(page, info, "08-revision-reemplazo");
-  }
+  await hallazgo.getByRole("button", { name: /^Reemplazar por/ }).click();
+  await expect(page.locator("main").getByText("5512345678")).toHaveCount(0);
+  await expect(
+    page.getByRole("heading", { name: "Datos que podrían identificarte" }),
+  ).toBeFocused();
+  await revisarPantalla(page, info, "08-revision-reemplazo");
 
   await page.getByRole("button", { name: "Continuar" }).click();
   await expect(page.getByRole("heading", { name: "Tu frase", level: 2 })).toBeFocused();
@@ -326,10 +330,33 @@ test("funciona a 320 px sin desbordes", async ({ page }) => {
   await sinDesbordeHorizontal(page, "frase");
 });
 
-test("se puede denunciar solo con teclado hasta el primer paso", async ({ page }) => {
+test("el paso de hechos se completa solo con teclado", async ({ page }) => {
   await page.goto("/denunciar");
   await page.getByLabel("¿En qué estado pasó?").focus();
+  await page.keyboard.type("Morelos");
   await page.keyboard.press("Tab");
-  await expect(page.getByLabel("¿En qué municipio?")).toBeDisabled();
+  await expect(page.getByLabel("¿En qué municipio?")).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(page.getByLabel("¿Qué tipo de falta es?")).toBeFocused();
+  await page.keyboard.type("Cohecho");
+  await page.keyboard.press("Tab");
+  await expect(page.getByText("¿No sabes cuál elegir?")).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByLabel(/Institución involucrada/)).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByLabel("Mes")).toBeFocused();
+  await page.keyboard.type("marzo");
+  await page.keyboard.press("Tab");
+  await page.keyboard.type("2026");
+  await page.keyboard.press("Tab");
+  await expect(page.getByLabel("No lo recuerdo")).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByLabel("Cuéntanos qué pasó")).toBeFocused();
+  await page.keyboard.type(RELATO);
+  await page.keyboard.press("Tab");
+  await expect(page.getByLabel("Guardar un borrador en este dispositivo")).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Continuar" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("heading", { name: "Personas o entes involucrados" })).toBeFocused();
 });
