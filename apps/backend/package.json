@@ -5,18 +5,18 @@
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "NODE_ENV=development tsx watch src/server.ts",
+    "dev": "node ../../scripts/con-entorno.mjs tsx watch src/server.ts",
     "build": "tsc -p tsconfig.build.json",
     "start": "node dist/server.js",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "migrate": "NODE_ENV=${NODE_ENV:-development} tsx src/db/migrate.ts",
-    "semilla:autoridad": "NODE_ENV=${NODE_ENV:-development} tsx src/scripts/semilla-autoridad.ts",
-    "claves:autoridad": "NODE_ENV=${NODE_ENV:-development} tsx src/scripts/generar-claves.ts",
+    "migrate": "node ../../scripts/con-entorno.mjs tsx src/db/migrate.ts",
+    "semilla:autoridad": "node ../../scripts/con-entorno.mjs tsx src/scripts/semilla-autoridad.ts",
+    "claves:autoridad": "node ../../scripts/con-entorno.mjs tsx src/scripts/generar-claves.ts",
     "test": "vitest run --passWithNoTests",
     "test:ataques": "vitest run --reporter=verbose ataques-k-anonimato publicacion agregar-periodos",
-    "agregar": "NODE_ENV=${NODE_ENV:-development} tsx src/contextos/transparencia/infraestructura/cli-agregar.ts",
-    "sintetico": "NODE_ENV=${NODE_ENV:-development} tsx ../../scripts/sintetico/generar-denuncias.mts"
+    "agregar": "node ../../scripts/con-entorno.mjs tsx src/contextos/transparencia/infraestructura/cli-agregar.ts",
+    "sintetico": "node ../../scripts/con-entorno.mjs tsx ../../scripts/sintetico/generar-denuncias.mts"
   },
   "dependencies": {
     "argon2": "^0.45.1",

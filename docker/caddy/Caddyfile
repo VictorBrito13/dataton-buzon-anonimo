@@ -1,0 +1,69 @@
+# Único punto de entrada. Regla central: quitar a quien visita de todo lo que queda atrás.
+{
+	admin off
+	auto_https disable_redirects
+	skip_install_trust
+
+	# Sin HTTP/3: no se anuncia un puerto UDP que no se publica.
+	servers {
+		protocols h1 h2
+	}
+
+	# Los registros de error de Caddy incluyen la petición completa: IP y user-agent.
+	# Por eso se excluyen, además del registro de acceso, que tampoco se activa abajo.
+	log default {
+		output stderr
+		level WARN
+		exclude http.log.access http.log.error http.handlers.reverse_proxy
+	}
+}
+
+(sin_rastro) {
+	# Ni el frontend ni el backend reciben la IP ni el navegador de quien visita.
+	header_up -X-Forwarded-For
+	header_up -X-Real-IP
+	header_up -Forwarded
+	header_up -True-Client-IP
+	header_up -CF-Connecting-IP
+	header_up -User-Agent
+	header_up -Referer
+}
+
+{$SITIO_HOST:localhost} {
+	tls internal
+
+	encode zstd gzip
+
+	header {
+		defer
+		Strict-Transport-Security "max-age={$HSTS_MAX_AGE:31536000}"
+		Referrer-Policy "no-referrer"
+		X-Content-Type-Options "nosniff"
+		-Server
+		-Via
+		-X-Powered-By
+	}
+
+	handle /api/* {
+		reverse_proxy backend:4000 {
+			import sin_rastro
+		}
+	}
+
+	handle {
+		reverse_proxy frontend:3000 {
+			import sin_rastro
+		}
+	}
+}
+
+# Sin HTTPS no se sirve nada: toda petición en claro se redirige.
+http:// {
+	header -Server
+	redir https://{host}:{$PUERTO_HTTPS:443}{uri} 308
+}
+
+# Comprobación de salud para Docker. Este puerto no se publica.
+http://:8081 {
+	respond "ok" 200
+}
