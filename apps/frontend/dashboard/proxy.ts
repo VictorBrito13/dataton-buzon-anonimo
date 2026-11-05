@@ -35,5 +35,6 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [{ source: "/((?!api|_next/static|_next/image|favicon.ico).*)" }],
+  // catalogos/: archivos públicos e iguales para todos; con no-store se volverían a bajar con mala señal.
+  matcher: [{ source: "/((?!api|_next/static|_next/image|catalogos/|favicon.ico).*)" }],
 };
