@@ -30,6 +30,9 @@ next-env.d.ts
 # deployment
 .vercel
 
+# modelo NER y WASM: scripts/descargar-modelo.mjs los baja en tiempo de build
+apps/frontend/dashboard/public/modelos/
+
 # misc
 .DS_Store
 *.pem
