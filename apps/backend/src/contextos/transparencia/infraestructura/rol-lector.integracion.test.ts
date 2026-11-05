@@ -4,9 +4,9 @@ import { crearLecturaAgregados } from "./repositorios-postgres.js";
 
 /**
  * D6, regla 7. Requiere Postgres con las migraciones aplicadas:
- * DATABASE_URL_PRUEBAS=postgres://dataton:dataton@localhost:5552/dataton npm test
+ * TEST_DATABASE_URL=postgres://dataton:dataton@localhost:5552/dataton npm test
  */
-const URL_ADMIN = process.env.DATABASE_URL_PRUEBAS;
+const URL_ADMIN = process.env.TEST_DATABASE_URL;
 
 const CODIGO_SIN_PERMISOS = "42501";
 
