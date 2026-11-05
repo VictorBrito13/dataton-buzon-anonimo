@@ -30,6 +30,87 @@ const hallazgo: Hallazgo = {
   sugerencia: "[t]",
 };
 
+describe("búsqueda opcional con el modelo", () => {
+  const evento = (
+    e: Extract<AccionAsistente, { tipo: "busquedaModelo" }>["evento"],
+  ): AccionAsistente => ({ tipo: "busquedaModelo", evento: e });
+  const revisado = aplicar(estadoInicial(), {
+    tipo: "hallazgosDetectados",
+    hallazgos: [hallazgo],
+  });
+
+  it("empieza apagada", () => {
+    expect(estadoInicial().busquedaModelo.fase).toBe("apagada");
+  });
+
+  it("descargar no toca los hallazgos ni el avance de la denuncia", () => {
+    const e = aplicar(revisado, evento({ tipo: "activar" }));
+    expect(e.busquedaModelo.fase).toBe("cargando");
+    expect(e.hallazgos).toEqual([hallazgo]);
+    expect(reducirAsistente({ ...e, paso: "evidencias" }, { tipo: "avanzar" }).paso).toBe(
+      "revision",
+    );
+  });
+
+  it("cancelar la descarga conserva lo ya revisado", () => {
+    const e = aplicar(revisado, evento({ tipo: "activar" }), evento({ tipo: "cancelar" }));
+    expect(e.busquedaModelo.fase).toBe("cancelada");
+    expect(e.hallazgos).toEqual([hallazgo]);
+  });
+
+  it("con el modelo listo vuelve a revisar el relato para sumar sugerencias", () => {
+    const e = aplicar(
+      revisado,
+      evento({ tipo: "activar" }),
+      evento({ tipo: "cargaTerminada", exito: true }),
+    );
+    expect(e.busquedaModelo.fase).toBe("analizando");
+    expect(e.hallazgos).toBeNull();
+  });
+
+  it("recuerda lo que la persona decidió dejar al sumar las sugerencias", () => {
+    const e = aplicar(
+      revisado,
+      { tipo: "ignorarHallazgo", hallazgo },
+      evento({ tipo: "activar" }),
+      evento({ tipo: "cargaTerminada", exito: true }),
+      { tipo: "hallazgosDetectados", hallazgos: [hallazgo] },
+    );
+    expect(e.hallazgos).toEqual([]);
+  });
+
+  it("apagarla con resultados quita las sugerencias del modelo al revisar otra vez", () => {
+    const e = aplicar(
+      revisado,
+      evento({ tipo: "activar" }),
+      evento({ tipo: "cargaTerminada", exito: true }),
+      { tipo: "hallazgosDetectados", hallazgos: [hallazgo] },
+      evento({ tipo: "revisionTerminada", modeloListo: true }),
+      evento({ tipo: "cancelar" }),
+    );
+    expect(e.busquedaModelo.fase).toBe("apagada");
+    expect(e.hallazgos).toBeNull();
+  });
+
+  it("un fallo conserva lo encontrado por las reglas", () => {
+    const e = aplicar(
+      revisado,
+      evento({ tipo: "activar" }),
+      evento({ tipo: "cargaTerminada", exito: false }),
+    );
+    expect(e.busquedaModelo.fase).toBe("fallo");
+    expect(e.hallazgos).toEqual([hallazgo]);
+  });
+
+  it("no se guarda en el borrador ni sobrevive al envío", () => {
+    const e = aplicar(revisado, evento({ tipo: "activar" }), {
+      tipo: "denunciaEnviada",
+      folio: "BZ-1",
+    });
+    expect(e.busquedaModelo.fase).toBe("apagada");
+  });
+});
+
 describe("asistente de denuncia", () => {
   it("empieza en hechos, con el borrador apagado y sin frase", () => {
     const e = estadoInicial();
