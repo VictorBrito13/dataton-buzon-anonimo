@@ -2,6 +2,7 @@
   "name": "@dataton/backend",
   "version": "0.1.0",
   "private": true,
+  "license": "CC-BY-NC-4.0",
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
@@ -16,7 +17,8 @@
     "test": "vitest run --passWithNoTests",
     "test:ataques": "vitest run --reporter=verbose ataques-k-anonimato publicacion agregar-periodos",
     "agregar": "node ../../scripts/con-entorno.mjs tsx src/contextos/transparencia/infraestructura/cli-agregar.ts",
-    "sintetico": "node ../../scripts/con-entorno.mjs tsx src/scripts/sintetico.ts"
+    "sintetico": "node ../../scripts/con-entorno.mjs tsx src/scripts/sintetico.ts",
+    "pdn:instantaneas": "node ../../scripts/con-entorno.mjs tsx ../../scripts/pdn/regenerar-instantaneas.mts"
   },
   "dependencies": {
     "argon2": "^0.45.1",

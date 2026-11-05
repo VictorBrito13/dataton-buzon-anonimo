@@ -42,6 +42,14 @@ SESNA presentó el prototipo como una base y pidió partir de un problema concre
 Los campos del S5 se leyeron en su JS, sin diccionario de datos oficial, por lo que pueden cambiar. Esta tabla
 indica cómo se conectaría este proyecto al S5 y qué falta resolver con SESNA.
 
+**Estado de la conexión en el código.** `AdaptadorS5` (`apps/backend/src/contextos/denuncias/aplicacion/puerto-s5.ts`)
+tiene las lecturas públicas comprobadas (`catalogo`, `estadisticas`) y un envío diseñado pero bloqueado. El flujo de
+denuncia no lo invoca: hoy la tabla siguiente es una correspondencia documental, no un mapeo que se ejecute. Las
+lecturas reales se usan en `scripts/pdn/regenerar-instantaneas.mts` para el catálogo de municipios; los catálogos de
+`apps/frontend/dashboard/public/catalogos/` se generaron a partir de las mismas respuestas el 2026-11-04
+(`fuente.json` ahí mismo). La correspondencia de etapas con el trámite del S5 está en el
+[README del backend](../apps/backend/README.md#correspondencia-de-etapas-con-el-trámite-del-s5).
+
 | Este proyecto | Campo del S5 | Situación |
 |---|---|---|
 | Sin datos de contacto | `denunciante.anonimo` = verdadero | Compatible. No se ofrece la denuncia identificada del S5 |

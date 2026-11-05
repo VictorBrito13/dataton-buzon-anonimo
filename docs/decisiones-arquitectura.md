@@ -103,8 +103,15 @@ por institución, sin nombres de personas, y con la metodología publicada.
 
 Fuentes confirmadas en [`investigacion-s5-pdn.md`](./investigacion-s5-pdn.md): S3 (sanciones), S6
 (contrataciones hasta 2021) y Cobertura (entes). Se versionan instantáneas agregadas: el sitio no llama a
-la PDN en tiempo de ejecución. El acceso al S5 pasa por `AdaptadorS5`; sus lecturas públicas están
-comprobadas y **no se envían denuncias al entorno de pruebas** sin autorización de SESNA.
+la PDN en tiempo de ejecución, y en el despliegue la red interna no tiene salida a internet.
+
+**Estado real del `AdaptadorS5`:** existe (`MockS5` y `RealS5`, elegidos con `S5_ADAPTADOR`) y sus
+lecturas públicas están comprobadas, pero **el flujo de denuncia no lo invoca**: `composicion.ts` lo
+expone y ningún caso de uso lo usa. Sus lecturas reales se ejercitan fuera del tiempo de ejecución, en
+`scripts/pdn/regenerar-instantaneas.mts` (`npm run pdn:instantaneas`), que regenera el catálogo de
+municipios con `RealS5.catalogo`. **No se envían denuncias al entorno de pruebas** sin autorización de
+SESNA: `registrarDenuncia` se niega sin `S5_ENVIO_AUTORIZADO=true`. La correspondencia de campos y
+etapas está en `investigacion-s5-pdn.md` y en el README del backend.
 
 ## D9. Prototipo responsable
 
