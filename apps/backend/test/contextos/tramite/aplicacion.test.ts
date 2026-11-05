@@ -202,7 +202,7 @@ describe("CasosSesion", () => {
     }
   }
 
-  const armar = (maxIntentos = 10) => {
+  const armar = (maxIntentos = 10, maxGlobal = 100) => {
     const repo = new RepositorioFalso();
     const almacen = new AlmacenFalso();
     const verificados: (string | null)[] = [];
@@ -223,11 +223,20 @@ describe("CasosSesion", () => {
         bitacora: repo,
         reloj: { ahora: () => new Date(ahoraMs) },
         limite: new LimiteIntentos({ maximo: maxIntentos, ventanaMs: 100_000, maxClaves: 10 }),
+        limiteGlobal: new LimiteIntentos({ maximo: maxGlobal, ventanaMs: 60_000, maxClaves: 1 }),
       },
       500,
     );
     return { casos, repo, almacen, verificados, avanzar: (ms: number) => (ahoraMs += ms) };
   };
+
+  it("limita los inicios de sesión de todo el panel, sin importar el usuario", async () => {
+    const { casos, verificados } = armar(10, 2);
+    await codigo(casos.iniciar("nadie", "x"));
+    await codigo(casos.iniciar("otro", "x"));
+    expect(await codigo(casos.iniciar("ana", "secreta"))).toBe("demasiados_intentos");
+    expect(verificados).toHaveLength(2);
+  });
 
   it("inicia sesión, la registra y la sesión queda vigente", async () => {
     const { casos, repo } = armar();

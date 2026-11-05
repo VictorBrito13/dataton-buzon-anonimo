@@ -26,6 +26,33 @@ export const exigirTamano = (bytes: number, maximo: number): void => {
   }
 };
 
+/** Un PDF por encima de esto no es una evidencia razonable y sí una forma de agotar CPU y memoria. */
+export const LIMITES_PDF = { paginas: 500, objetos: 50_000 } as const;
+
+export const exigirComplejidadPdf = (medida: { paginas: number; objetos: number }): void => {
+  if (medida.paginas > LIMITES_PDF.paginas || medida.objetos > LIMITES_PDF.objetos) {
+    throw new ErrorDominio(
+      "evidencia_demasiado_compleja",
+      `Este PDF es demasiado grande para procesarlo: máximo ${LIMITES_PDF.paginas} páginas.`,
+    );
+  }
+};
+
+export interface UsoHuerfanas {
+  filas: number;
+  bytes: number;
+}
+
+/** Cuota global de subidas aún sin denuncia: evita que el almacenamiento se llene sin denunciar. */
+export const exigirCuotaHuerfanas = (uso: UsoHuerfanas, cuota: UsoHuerfanas): void => {
+  if (uso.filas >= cuota.filas || uso.bytes >= cuota.bytes) {
+    throw new ErrorDominio(
+      "cuota_subidas_agotada",
+      "El buzón no puede recibir más archivos por ahora. Inténtalo más tarde.",
+    );
+  }
+};
+
 /** HU-20: si tras la limpieza aún quedan metadatos, el archivo se rechaza. */
 export const exigirSinResiduales = (residuales: readonly string[]): void => {
   if (residuales.length > 0) {

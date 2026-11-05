@@ -15,6 +15,8 @@ const ESTADO_POR_CODIGO: Record<string, number> = {
   acceso_duplicado: 409,
   evidencia_vacia: 400,
   evidencia_demasiado_grande: 413,
+  evidencia_demasiado_compleja: 413,
+  cuota_subidas_agotada: 503,
   tipo_no_permitido: 415,
   metadatos_residuales: 422,
   evidencia_danada: 422,

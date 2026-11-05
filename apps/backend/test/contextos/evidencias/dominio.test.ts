@@ -13,8 +13,11 @@ import {
 } from "../../../src/contextos/evidencias/dominio/office.js";
 import {
   categoriaDe,
+  exigirComplejidadPdf,
+  exigirCuotaHuerfanas,
   exigirSinResiduales,
   exigirTamano,
+  LIMITES_PDF,
   TIPOS_EVIDENCIA,
 } from "../../../src/contextos/evidencias/dominio/politica.js";
 
@@ -60,6 +63,28 @@ describe("política de evidencias", () => {
   it("rechaza un archivo al que le quedan metadatos tras limpiarlo", () => {
     expect(codigoDe(() => exigirSinResiduales(["EXIF"]))).toBe("metadatos_residuales");
     expect(codigoDe(() => exigirSinResiduales([]))).toBeUndefined();
+  });
+
+  it("acota páginas y objetos de un PDF antes de reescribirlo", () => {
+    expect(LIMITES_PDF).toEqual({ paginas: 500, objetos: 50_000 });
+    expect(codigoDe(() => exigirComplejidadPdf({ paginas: 500, objetos: 50_000 }))).toBeUndefined();
+    expect(codigoDe(() => exigirComplejidadPdf({ paginas: 501, objetos: 10 }))).toBe(
+      "evidencia_demasiado_compleja",
+    );
+    expect(codigoDe(() => exigirComplejidadPdf({ paginas: 1, objetos: 50_001 }))).toBe(
+      "evidencia_demasiado_compleja",
+    );
+  });
+
+  it("cierra la recepción cuando las subidas sin denuncia agotan la cuota global", () => {
+    const cuota = { filas: 2000, bytes: 2 * 1024 ** 3 };
+    expect(codigoDe(() => exigirCuotaHuerfanas({ filas: 1999, bytes: 1 }, cuota))).toBeUndefined();
+    expect(codigoDe(() => exigirCuotaHuerfanas({ filas: 2000, bytes: 1 }, cuota))).toBe(
+      "cuota_subidas_agotada",
+    );
+    expect(codigoDe(() => exigirCuotaHuerfanas({ filas: 1, bytes: 2 * 1024 ** 3 }, cuota))).toBe(
+      "cuota_subidas_agotada",
+    );
   });
 });
 

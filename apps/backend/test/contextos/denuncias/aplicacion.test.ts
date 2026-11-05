@@ -74,9 +74,20 @@ const powValida = { consumir: (pow: string) => Promise.resolve(pow === "ok") };
 const azar = { bytes: (n: number) => new Uint8Array(n).fill(7) };
 const MAX_TOTAL = 1000;
 
-const armarCrear = (repo = new RepositorioFalso()) => ({
+const limitesDeCreacion = (maximo = 100) => ({
+  limiteCredencial: new LimiteIntentos({ maximo, ventanaMs: 60_000, maxClaves: 10 }),
+  limiteGlobal: new LimiteIntentos({ maximo, ventanaMs: 60_000, maxClaves: 1 }),
+});
+
+const armarCrear = (
+  repo = new RepositorioFalso(),
+  sobre: Partial<ReturnType<typeof limitesDeCreacion>> = {},
+) => ({
   repo,
-  caso: new CrearDenuncia({ repositorio: repo, huellas, reloj, pow: powValida, azar }, MAX_TOTAL),
+  caso: new CrearDenuncia(
+    { repositorio: repo, huellas, reloj, pow: powValida, azar, ...limitesDeCreacion(), ...sobre },
+    MAX_TOTAL,
+  ),
 });
 
 const solicitud = {
@@ -119,6 +130,27 @@ describe("CrearDenuncia", () => {
     expect(await codigo(caso.ejecutar(solicitud))).toBe("acceso_duplicado");
   });
 
+  it("pasa por el límite por credencial: tras agotarlo ni siquiera consulta la frase", async () => {
+    const { repo, caso } = armarCrear(undefined, {
+      limiteCredencial: new LimiteIntentos({ maximo: 1, ventanaMs: 60_000, maxClaves: 10 }),
+    });
+    await caso.ejecutar(solicitud);
+    expect(await codigo(caso.ejecutar(solicitud))).toBe("demasiados_intentos");
+    expect(await codigo(caso.ejecutar({ ...solicitud, accesoId: "b".repeat(64) }))).toBeUndefined();
+    expect(repo.denuncias).toHaveLength(2);
+  });
+
+  it("pasa por el límite global, cualquiera que sea la frase", async () => {
+    const { repo, caso } = armarCrear(undefined, {
+      limiteGlobal: new LimiteIntentos({ maximo: 1, ventanaMs: 60_000, maxClaves: 1 }),
+    });
+    await caso.ejecutar(solicitud);
+    expect(await codigo(caso.ejecutar({ ...solicitud, accesoId: "b".repeat(64) }))).toBe(
+      "demasiados_intentos",
+    );
+    expect(repo.denuncias).toHaveLength(1);
+  });
+
   it("rechaza evidencias inexistentes o ya ligadas", async () => {
     const { caso } = armarCrear();
     expect(await codigo(caso.ejecutar({ ...solicitud, evidenciaIds: ["x"] }))).toBe(
@@ -152,7 +184,7 @@ describe("PuertaAcceso", () => {
   const preparar = async (limites?: { credencial?: number; global?: number }) => {
     const repo = new RepositorioFalso();
     const { folio } = await new CrearDenuncia(
-      { repositorio: repo, huellas, reloj, pow: powValida, azar },
+      { repositorio: repo, huellas, reloj, pow: powValida, azar, ...limitesDeCreacion() },
       MAX_TOTAL,
     ).ejecutar(solicitud);
     const puerta = new PuertaAcceso({

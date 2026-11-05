@@ -10,6 +10,7 @@ import { RecibirEvidencia } from "../../../src/contextos/evidencias/aplicacion/r
 class RepositorioFalso implements RepositorioEvidencias {
   guardadas: EvidenciaSellada[] = [];
   eliminadasAntesDe: string | null = null;
+  huerfanas = { filas: 0, bytes: 0 };
   guardar(evidencia: EvidenciaSellada): Promise<string> {
     this.guardadas.push(evidencia);
     return Promise.resolve("evidencia-1");
@@ -17,6 +18,9 @@ class RepositorioFalso implements RepositorioEvidencias {
   eliminarSinDenunciaAntesDe(dia: string): Promise<number> {
     this.eliminadasAntesDe = dia;
     return Promise.resolve(3);
+  }
+  usoHuerfanas(): Promise<{ filas: number; bytes: number }> {
+    return Promise.resolve(this.huerfanas);
   }
 }
 
@@ -26,7 +30,12 @@ const limpiadorOk: Limpiador = {
   limpiar: () => Promise.resolve({ bytes: limpio, eliminados: ["EXIF"], residuales: [] }),
 };
 const armar = (
-  sobre: { tipo?: string | null; limpiador?: Limpiador; max?: number } = {},
+  sobre: {
+    tipo?: string | null;
+    limpiador?: Limpiador;
+    max?: number;
+    cuota?: { filas: number; bytes: number };
+  } = {},
 ): { repo: RepositorioFalso; caso: RecibirEvidencia; sellados: Uint8Array[] } => {
   const repo = new RepositorioFalso();
   const sellados: Uint8Array[] = [];
@@ -45,7 +54,7 @@ const armar = (
       repositorio: repo,
       reloj: { ahora: () => new Date("2026-05-02T18:44:12Z") },
     },
-    sobre.max ?? 1000,
+    { maxBytes: sobre.max ?? 1000, cuotaHuerfanas: sobre.cuota ?? { filas: 10, bytes: 10_000 } },
   );
   return { repo, caso, sellados };
 };
@@ -85,6 +94,25 @@ describe("RecibirEvidencia", () => {
   it("rechaza por tamaño antes de procesar", async () => {
     const { caso } = armar({ max: 2 });
     expect(await codigo(caso.ejecutar(original))).toBe("evidencia_demasiado_grande");
+  });
+
+  it("cierra la recepción si las subidas sin denuncia agotan la cuota, sin limpiar ni guardar", async () => {
+    const limpiezas: number[] = [];
+    const limpiador: Limpiador = {
+      limpiar: (_t, _c, bytes) => {
+        limpiezas.push(bytes.length);
+        return limpiadorOk.limpiar(_t, _c, bytes);
+      },
+    };
+    const porFilas = armar({ limpiador, cuota: { filas: 2, bytes: 10_000 } });
+    porFilas.repo.huerfanas = { filas: 2, bytes: 10 };
+    expect(await codigo(porFilas.caso.ejecutar(original))).toBe("cuota_subidas_agotada");
+    const porBytes = armar({ limpiador, cuota: { filas: 10, bytes: 100 } });
+    porBytes.repo.huerfanas = { filas: 1, bytes: 100 };
+    expect(await codigo(porBytes.caso.ejecutar(original))).toBe("cuota_subidas_agotada");
+    expect(limpiezas).toEqual([]);
+    expect(porFilas.repo.guardadas).toHaveLength(0);
+    expect(porBytes.sellados).toHaveLength(0);
   });
 
   it("rechaza si quedan metadatos tras la limpieza", async () => {

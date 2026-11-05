@@ -1,6 +1,12 @@
 import express, { Router } from "express";
 import { crearRutasPlataforma } from "../compartido/infraestructura/rutas-plataforma.js";
-import { casos, configuracionPublica, cookieSegura, pow } from "../composicion.js";
+import {
+  casos,
+  configuracionPublica,
+  cookieSegura,
+  pow,
+  semaforoLimpiezas,
+} from "../composicion.js";
 import { env } from "../config/env.js";
 import {
   crearRutasAcceso,
@@ -26,6 +32,7 @@ v1Router.use(
     recibir: casos.recibirEvidencia,
     pow,
     maxBytes: env.maxBytesEvidencia,
+    semaforo: semaforoLimpiezas,
   }),
 );
 v1Router.use(

@@ -121,6 +121,13 @@ export const cargarEnv = (fuente: Fuente) => {
     powExpiraSeg: entero(fuente, "POW_EXPIRA_SEG", 120),
     maxBytesEvidencia: entero(fuente, "MAX_BYTES_EVIDENCIA", 20 * 1024 * 1024),
     maxBytesEvidenciasTotal: entero(fuente, "MAX_BYTES_EVIDENCIAS_TOTAL", 100 * 1024 * 1024),
+    cuotaHuerfanas: {
+      bytes: entero(fuente, "CUOTA_HUERFANAS_BYTES", 2 * 1024 * 1024 * 1024),
+      filas: entero(fuente, "CUOTA_HUERFANAS_FILAS", 2000),
+    },
+    limpiezasSimultaneas: entero(fuente, "LIMPIEZAS_SIMULTANEAS", 2),
+    limpiezasEsperaMs: entero(fuente, "LIMPIEZAS_ESPERA_MS", 10_000),
+    sesionLimiteGlobal: entero(fuente, "SESION_LIMITE_GLOBAL", 60),
     accesoTiempoMinimoMs: entero(fuente, "ACCESO_TIEMPO_MINIMO_MS", 400),
     accesoIntentosCredencial: entero(fuente, "ACCESO_INTENTOS_CREDENCIAL", 30),
     accesoVentanaMs: entero(fuente, "ACCESO_VENTANA_MS", 15 * 60_000),

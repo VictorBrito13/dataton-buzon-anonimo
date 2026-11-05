@@ -10,6 +10,8 @@ import type {
   VerificadorContrasena,
 } from "./puertos.js";
 
+const CLAVE_GLOBAL = "global";
+
 export class CasosSesion {
   constructor(
     private readonly puertos: {
@@ -19,14 +21,16 @@ export class CasosSesion {
       bitacora: Bitacora;
       reloj: Reloj;
       limite: LimiteIntentos;
+      /** Para todo el panel: frena la fuerza bruta repartida entre muchos usuarios. */
+      limiteGlobal: LimiteIntentos;
     },
     private readonly duracionMs: number,
   ) {}
 
   async iniciar(usuario: string, contrasena: string): Promise<{ token: string; usuario: string }> {
-    const { usuarios, hasher, almacen, bitacora, reloj, limite } = this.puertos;
+    const { usuarios, hasher, almacen, bitacora, reloj, limite, limiteGlobal } = this.puertos;
     const ahoraMs = reloj.ahora().getTime();
-    if (!limite.permitir(usuario, ahoraMs)) {
+    if (!limiteGlobal.permitir(CLAVE_GLOBAL, ahoraMs) || !limite.permitir(usuario, ahoraMs)) {
       throw new ErrorDominio("demasiados_intentos", "Demasiados intentos. Espera unos minutos.");
     }
     const encontrado = await usuarios.buscar(usuario);

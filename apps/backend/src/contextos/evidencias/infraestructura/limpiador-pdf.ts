@@ -10,6 +10,7 @@ import {
 import { ErrorDominio } from "../../../compartido/dominio/errores.js";
 import type { ResultadoLimpieza } from "../aplicacion/puertos.js";
 import { quitarMetadatosJpeg } from "../dominio/jpeg.js";
+import { exigirComplejidadPdf } from "../dominio/politica.js";
 
 const nombre = (texto: string): PDFName => PDFName.of(texto);
 
@@ -94,6 +95,11 @@ export const limpiarPdf = async (bytes: Uint8Array): Promise<ResultadoLimpieza> 
       "Este PDF está protegido con contraseña; quítala para poder enviarlo.",
     );
   }
+  // Antes de aplanar y copiar páginas, que es donde se gasta la CPU y la memoria.
+  exigirComplejidadPdf({
+    paginas: origen.getPageCount(),
+    objetos: origen.context.enumerateIndirectObjects().length,
+  });
 
   try {
     const eliminados = describirOrigen(origen, bytes);

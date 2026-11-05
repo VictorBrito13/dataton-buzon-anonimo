@@ -2,6 +2,48 @@ import { describe, expect, it } from "vitest";
 import { diaDe, diaAnterior } from "../../src/compartido/dominio/dia.js";
 import { LimiteIntentos } from "../../src/compartido/dominio/limite-intentos.js";
 import { selloBienFormado } from "../../src/compartido/dominio/sello.js";
+import { Semaforo } from "../../src/compartido/dominio/semaforo.js";
+
+describe("Semaforo", () => {
+  it("deja pasar hasta el máximo y hace esperar al siguiente hasta que alguien libere", async () => {
+    const semaforo = new Semaforo({ maximo: 2, esperaMaxMs: 1000 });
+    const a = await semaforo.adquirir();
+    const b = await semaforo.adquirir();
+    expect(a).not.toBeNull();
+    expect(b).not.toBeNull();
+    expect(semaforo.ocupados).toBe(2);
+    let tercero: (() => void) | null | "esperando" = "esperando";
+    const espera = semaforo.adquirir().then((l) => (tercero = l));
+    await new Promise((r) => setTimeout(r, 20));
+    expect(tercero).toBe("esperando");
+    a?.();
+    await espera;
+    expect(tercero).not.toBe("esperando");
+    expect(tercero).not.toBeNull();
+    expect(semaforo.ocupados).toBe(2);
+  });
+
+  it("devuelve null si la espera acotada se agota, sin ocupar lugar", async () => {
+    const semaforo = new Semaforo({ maximo: 1, esperaMaxMs: 30 });
+    const unico = await semaforo.adquirir();
+    expect(await semaforo.adquirir()).toBeNull();
+    expect(semaforo.ocupados).toBe(1);
+    unico?.();
+    expect(semaforo.ocupados).toBe(0);
+    expect(await semaforo.adquirir()).not.toBeNull();
+  });
+
+  it("liberar dos veces no abre un lugar de más", async () => {
+    const semaforo = new Semaforo({ maximo: 1, esperaMaxMs: 10 });
+    const liberar = (await semaforo.adquirir()) as () => void;
+    liberar();
+    liberar();
+    expect(semaforo.ocupados).toBe(0);
+    const otro = await semaforo.adquirir();
+    expect(otro).not.toBeNull();
+    expect(await semaforo.adquirir()).toBeNull();
+  });
+});
 
 describe("dia", () => {
   it("redondea cualquier instante al día, sin hora", () => {

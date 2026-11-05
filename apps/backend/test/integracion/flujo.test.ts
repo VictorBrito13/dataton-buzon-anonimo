@@ -13,8 +13,10 @@ import type { Express } from "express";
 import sharp from "sharp";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { enTransaccion } from "../../src/compartido/infraestructura/transaccion.js";
 import { closeDatabase, pool } from "../../src/db/postgres.js";
 import { limpiarHuerfanas } from "../../src/composicion.js";
+import { RepositorioEvidenciasPg } from "../../src/contextos/evidencias/infraestructura/repositorio-evidencias-pg.js";
 import {
   AUTOR,
   jpegConMetadatos,
@@ -54,6 +56,57 @@ const consultar = async (credencial: unknown) =>
   request(app)
     .post("/api/v1/acceso/consulta")
     .send({ pow: await resolverPow(app), credencial });
+
+describe("enTransaccion", () => {
+  it("revierte y devuelve la conexión al fallar, y la base sigue usable", async () => {
+    const antes = await pool.query("SELECT count(*)::int AS n FROM autoridad_usuarios");
+    await expect(
+      enTransaccion(async (cliente) => {
+        await cliente.query(
+          "INSERT INTO autoridad_usuarios (usuario, contrasena_hash) VALUES ('fugaz', 'x')",
+        );
+        throw new Error("falla a mitad");
+      }),
+    ).rejects.toThrow("falla a mitad");
+    const despues = await pool.query("SELECT count(*)::int AS n FROM autoridad_usuarios");
+    expect(despues.rows[0]).toEqual(antes.rows[0]);
+    expect(pool.waitingCount).toBe(0);
+  });
+
+  it("si hasta el ROLLBACK falla, propaga el error original y descarta esa conexión", async () => {
+    const totalAntes = pool.totalCount;
+    await expect(
+      enTransaccion(async (cliente) => {
+        const original = cliente.query.bind(cliente);
+        await original("SELECT 1");
+        (cliente as { query: unknown }).query = (texto: unknown, ...resto: unknown[]) => {
+          if (texto === "ROLLBACK") return Promise.reject(new Error("conexión rota"));
+          return (original as (...a: unknown[]) => Promise<unknown>)(texto, ...resto);
+        };
+        throw new Error("falla original");
+      }),
+    ).rejects.toThrow("falla original");
+    // La conexión con el `query` parchado se destruyó en vez de volver al pool.
+    expect(pool.totalCount).toBeLessThanOrEqual(totalAntes);
+    expect((await pool.query("SELECT 1 AS uno")).rows[0]).toEqual({ uno: 1 });
+  });
+});
+
+describe("cuota de subidas huérfanas", () => {
+  it("el repositorio cuenta filas y bytes sellados de las evidencias sin denuncia", async () => {
+    const repo = new RepositorioEvidenciasPg();
+    const antes = await repo.usoHuerfanas();
+    const id = await repo.guardar({
+      tipo: "image/jpeg",
+      blobSellado: new Uint8Array(1234),
+      subidaDia: "2026-01-01",
+    });
+    const despues = await repo.usoHuerfanas();
+    expect(despues.filas).toBe(antes.filas + 1);
+    expect(despues.bytes).toBe(antes.bytes + 1234);
+    await pool.query("DELETE FROM evidencias WHERE id = $1", [id]);
+  });
+});
 
 describe("plataforma", () => {
   it("expone la configuración del contrato con los límites del prototipo", async () => {

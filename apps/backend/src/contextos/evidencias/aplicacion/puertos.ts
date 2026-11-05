@@ -1,4 +1,4 @@
-import type { CategoriaEvidencia } from "../dominio/politica.js";
+import type { CategoriaEvidencia, UsoHuerfanas } from "../dominio/politica.js";
 
 export interface DetectorTipo {
   /** Tipo real según los bytes; nunca el Content-Type que declara el cliente. */
@@ -34,4 +34,6 @@ export interface EvidenciaSellada {
 export interface RepositorioEvidencias {
   guardar(evidencia: EvidenciaSellada): Promise<string>;
   eliminarSinDenunciaAntesDe(dia: string): Promise<number>;
+  /** Filas y bytes sellados de las subidas que aún no pertenecen a ninguna denuncia. */
+  usoHuerfanas(): Promise<UsoHuerfanas>;
 }

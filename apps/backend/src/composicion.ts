@@ -3,6 +3,7 @@ import { MAX_EVIDENCIAS } from "./contextos/denuncias/dominio/denuncia.js";
 import { TIPOS_EVIDENCIA } from "./contextos/evidencias/dominio/politica.js";
 import { env, isProduction } from "./config/env.js";
 import { LimiteIntentos } from "./compartido/dominio/limite-intentos.js";
+import { Semaforo } from "./compartido/dominio/semaforo.js";
 import { CifradorAes } from "./compartido/infraestructura/cifrador-aes.js";
 import { HuellasHmac } from "./compartido/infraestructura/huellas-hmac.js";
 import { PowAltcha } from "./compartido/infraestructura/pow-altcha.js";
@@ -47,11 +48,8 @@ const repositorioDenuncias = new RepositorioDenunciasPg();
 const repositorioEvidencias = new RepositorioEvidenciasPg();
 const repositorioTramite = new RepositorioTramitePg();
 
-const puerta = new PuertaAcceso({
-  repositorio: repositorioDenuncias,
-  huellas,
-  reloj,
-  pow,
+/** Mismos límites para consultar y para crear; instancias aparte para que uno no agote al otro. */
+const limitesSinCuenta = () => ({
   limiteCredencial: new LimiteIntentos({
     maximo: env.accesoIntentosCredencial,
     ventanaMs: env.accesoVentanaMs,
@@ -64,9 +62,23 @@ const puerta = new PuertaAcceso({
   }),
 });
 
+const puerta = new PuertaAcceso({
+  repositorio: repositorioDenuncias,
+  huellas,
+  reloj,
+  pow,
+  ...limitesSinCuenta(),
+});
+
+/** Limpiezas de archivos a la vez; el resto espera un tiempo acotado y luego recibe 503. */
+export const semaforoLimpiezas = new Semaforo({
+  maximo: env.limpiezasSimultaneas,
+  esperaMaxMs: env.limpiezasEsperaMs,
+});
+
 export const casos = {
   crearDenuncia: new CrearDenuncia(
-    { repositorio: repositorioDenuncias, huellas, reloj, pow, azar },
+    { repositorio: repositorioDenuncias, huellas, reloj, pow, azar, ...limitesSinCuenta() },
     env.maxBytesEvidenciasTotal,
   ),
   consultar: new ConsultarDenuncia({ puerta, repositorio: repositorioDenuncias, cifrador }),
@@ -83,7 +95,7 @@ export const casos = {
       repositorio: repositorioEvidencias,
       reloj,
     },
-    env.maxBytesEvidencia,
+    { maxBytes: env.maxBytesEvidencia, cuotaHuerfanas: env.cuotaHuerfanas },
   ),
   sesion: new CasosSesion(
     {
@@ -93,6 +105,11 @@ export const casos = {
       bitacora: repositorioTramite,
       reloj,
       limite: new LimiteIntentos({ maximo: 10, ventanaMs: 15 * 60_000, maxClaves: 100_000 }),
+      limiteGlobal: new LimiteIntentos({
+        maximo: env.sesionLimiteGlobal,
+        ventanaMs: 60_000,
+        maxClaves: 1,
+      }),
     },
     env.sesionDuracionMs,
   ),

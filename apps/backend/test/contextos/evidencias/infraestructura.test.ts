@@ -1,7 +1,7 @@
 import JSZip from "jszip";
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, PDFNumber } from "pdf-lib";
 import sharp from "sharp";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { ErrorDominio } from "../../../src/compartido/dominio/errores.js";
 import { DetectorFileType } from "../../../src/contextos/evidencias/infraestructura/detector-file-type.js";
 import { limpiarImagen } from "../../../src/contextos/evidencias/infraestructura/limpiador-imagen.js";
@@ -134,6 +134,29 @@ describe("limpiarPdf", () => {
   it("rechaza un PDF ilegible", async () => {
     expect(await codigo(limpiarPdf(new TextEncoder().encode("%PDF-1.7\nbasura")))).toBe(
       "evidencia_danada",
+    );
+  });
+
+  it("rechaza más de 500 páginas antes de copiarlas", async () => {
+    const doc = await PDFDocument.create();
+    for (let i = 0; i < 501; i += 1) doc.addPage([10, 10]);
+    const copiar = vi.spyOn(PDFDocument.prototype, "copyPages");
+    try {
+      expect(await codigo(limpiarPdf(await doc.save({ useObjectStreams: true })))).toBe(
+        "evidencia_demasiado_compleja",
+      );
+      expect(copiar).not.toHaveBeenCalled();
+    } finally {
+      copiar.mockRestore();
+    }
+  });
+
+  it("rechaza un PDF con demasiados objetos indirectos", async () => {
+    const doc = await PDFDocument.create();
+    doc.addPage([10, 10]);
+    for (let i = 0; i < 50_001; i += 1) doc.context.register(PDFNumber.of(i));
+    expect(await codigo(limpiarPdf(await doc.save({ useObjectStreams: false })))).toBe(
+      "evidencia_demasiado_compleja",
     );
   });
 });
@@ -281,5 +304,40 @@ describe("limpiarOffice", () => {
     expect(await codigo(limpiarOffice(new TextEncoder().encode("PK no es zip")))).toBe(
       "evidencia_danada",
     );
+  });
+
+  describe("bombas ZIP", () => {
+    const MB = 1024 * 1024;
+    const conRelleno = async (megas: number) =>
+      officeConMetadatos({ partes: { "word/relleno.xml": new Uint8Array(megas * MB) } });
+
+    it("acepta un documento de hasta 50 MB inflados", async () => {
+      expect((await limpiarOffice(await conRelleno(20))).residuales).toEqual([]);
+    });
+
+    it("rechaza más de 50 MB declarados", async () => {
+      expect(await codigo(limpiarOffice(await conRelleno(51)))).toBe("evidencia_danada");
+    });
+
+    it("rechaza por el tamaño real inflado aunque las cabeceras mientan", async () => {
+      const bomba = await conRelleno(60);
+      // Reescribe el tamaño sin comprimir de word/relleno.xml a 1 KB en la cabecera local y en
+      // el directorio central: lo que lee JSZip para los tamaños declarados.
+      const texto = Buffer.from(bomba).toString("latin1");
+      const nombre = "word/relleno.xml";
+      const mentira = Buffer.alloc(4);
+      mentira.writeUInt32LE(1024);
+      const local = texto.indexOf(nombre) - 30;
+      expect(texto.slice(local, local + 4)).toBe("PK\x03\x04");
+      bomba.set(mentira, local + 22);
+      const central = texto.indexOf(nombre, local + 30 + nombre.length) - 46;
+      expect(texto.slice(central, central + 4)).toBe("PK\x01\x02");
+      bomba.set(mentira, central + 24);
+      const zip = await JSZip.loadAsync(bomba);
+      const entrada = zip.file(nombre) as unknown as { _data: { uncompressedSize: number } };
+      expect(entrada._data.uncompressedSize).toBe(1024);
+
+      expect(await codigo(limpiarOffice(bomba))).toBe("evidencia_danada");
+    });
   });
 });
