@@ -3,7 +3,7 @@
 Generado por `npm run test:anonimato`. No se edita a mano.
 
 - **Fecha:** 2026-11-05
-- **Commit:** `c653f79`
+- **Commit:** `062fdf6`
 - **Resultado de la corrida:** passed
 - **Flujo exigido (`ANONIMATO_EXIGIR_FLUJO`):** no
 
