@@ -42,6 +42,10 @@ export const NO_CUBRE = [
   "Protege las cifras, no el contenido: alguien puede identificarse por lo que escribió en su denuncia.",
 ];
 
+/** Separa dos conjuntos que el tablero muestra juntos, para que nadie suponga que comparten garantía. */
+export const ALCANCE_COBERTURA =
+  "El k-anonimato protege las cifras de denuncias. No aplica a la cobertura de la PDN: son conteos de entes públicos, no de denuncias ni de personas, por eso se publican también los valores pequeños. Se sirven de una instantánea aparte y no entran al motor de publicación ni cambian su garantía.";
+
 /** El ejemplo de la sección 7.2 de la propuesta, ejecutado por el motor real. */
 export const ejemploAtaque = (k: number) => {
   const filas = ["A", "B", "C"];
@@ -83,6 +87,7 @@ export const metodologia = (k: number, rezagoDias: number) => ({
   reglas: REGLAS,
   garantia: textoGarantia(k),
   noCubre: NO_CUBRE,
+  alcanceCobertura: ALCANCE_COBERTURA,
   ejemploAtaque: ejemploAtaque(k),
   tablas: [...TABLAS_PUBLICADAS],
 });

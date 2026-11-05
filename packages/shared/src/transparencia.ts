@@ -100,6 +100,94 @@ export const respuestaPdn = z.object({
   }),
 });
 
+/** Sistemas de la PDN que el catálogo de Cobertura marca por ente. S4 y S5 no traen bandera. */
+export const SISTEMAS_COBERTURA = ["s1", "s2", "s3", "s6"] as const;
+export type SistemaCobertura = (typeof SISTEMAS_COBERTURA)[number];
+
+/** Nombres según la leyenda del tablero de Cobertura de la PDN, y a quién se le pide cada uno. */
+export const DETALLE_SISTEMAS: Record<
+  SistemaCobertura,
+  { etiqueta: string; tema: string; descripcion: string; seLePideA: string }
+> = {
+  s1: {
+    etiqueta: "S1",
+    tema: "declaraciones",
+    descripcion:
+      "Evolución patrimonial, declaración de intereses y constancia de declaración fiscal.",
+    seLePideA: "sujetos obligados y tribunales",
+  },
+  s2: {
+    etiqueta: "S2",
+    tema: "contrataciones: quién interviene",
+    descripcion: "Servidores públicos que intervienen en procedimientos de contratación pública.",
+    seLePideA: "sujetos obligados y tribunales",
+  },
+  s3: {
+    etiqueta: "S3",
+    tema: "sancionados",
+    descripcion: "Servidores públicos y particulares sancionados.",
+    seLePideA: "órganos internos de control y tribunales",
+  },
+  s6: {
+    etiqueta: "S6",
+    tema: "contrataciones públicas",
+    descripcion: "Información pública de contrataciones.",
+    seLePideA: "sujetos obligados y tribunales",
+  },
+};
+
+const esquemaConexion = z.object({
+  /** Registros a los que el tablero de la PDN les pide este sistema. */
+  aplicables: z.number().int().nonnegative(),
+  conectados: z.number().int().nonnegative(),
+  /** Nulo si a ningún registro se le pide este sistema: no es lo mismo que 0 %. */
+  porcentaje: z.number().min(0).max(100).nullable(),
+});
+
+export const esquemaFilaCobertura = z.object({
+  entidad: z.string().nullable(),
+  ambito: z.string().nullable(),
+  nombre: z.string(),
+  registros: z.number().int().nonnegative(),
+  sujetosObligados: z.number().int().nonnegative(),
+  organosControl: z.number().int().nonnegative(),
+  tribunales: z.number().int().nonnegative(),
+  s1: esquemaConexion,
+  s2: esquemaConexion,
+  s3: esquemaConexion,
+  s6: esquemaConexion,
+  /** Registros sin ninguna bandera en los sistemas que se les piden. */
+  sinConexion: z.number().int().nonnegative(),
+  porcentajeSinConexion: z.number().min(0).max(100).nullable(),
+});
+
+/**
+ * GET /api/v1/publico/cobertura-pdn. Información de entes públicos, no de denuncias ni de personas:
+ * el k-anonimato no aplica y estas cifras nunca entran al motor de publicación.
+ */
+export const respuestaCoberturaPdn = z.object({
+  fuente: esquemaFuentePdn,
+  datosSinteticos: z.literal(false),
+  kAnonimato: z.literal("no_aplica"),
+  avisos: z.array(z.string()),
+  /** Última edición o alta registrada en el catálogo, no la fecha de los datos de cada ente. */
+  ultimaModificacion: z.string(),
+  banderasFueraDeAlcance: z.number().int().nonnegative(),
+  nacional: esquemaFilaCobertura,
+  porAmbito: z.array(esquemaFilaCobertura),
+  porEntidad: z.array(esquemaFilaCobertura),
+  porEntidadAmbito: z.array(esquemaFilaCobertura),
+  /** Contraste con la instantánea de S3: las banderas y los datos no siempre coinciden. */
+  contrasteS3: z.object({
+    conRegistrosSinConexion: z.array(
+      z.object({ estado: z.string(), registros: z.number().int().positive() }),
+    ),
+    conConexionSinRegistros: z.array(
+      z.object({ estado: z.string(), conectados: z.number().int().positive() }),
+    ),
+  }),
+});
+
 const filaEjemplo = z.object({
   municipio: z.string(),
   cohecho: z.number().int().nullable(),
@@ -116,6 +204,8 @@ export const respuestaMetodologia = z.object({
   reglas: z.array(z.string()),
   garantia: z.string(),
   noCubre: z.array(z.string()),
+  /** Aclara que la cobertura de la PDN queda fuera del motor y de su garantía. */
+  alcanceCobertura: z.string(),
   /** Calculado por el motor real en cada petición, no escrito a mano. */
   ejemploAtaque: z.object({
     original: z.array(filaEjemplo),
@@ -143,4 +233,6 @@ export type RespuestaMunicipios = z.infer<typeof respuestaMunicipios>;
 export type RespuestaIndicadores = z.infer<typeof respuestaIndicadores>;
 export type MotivoIndicador = z.infer<typeof esquemaMotivoIndicador>;
 export type RespuestaPdn = z.infer<typeof respuestaPdn>;
+export type FilaCobertura = z.infer<typeof esquemaFilaCobertura>;
+export type RespuestaCoberturaPdn = z.infer<typeof respuestaCoberturaPdn>;
 export type RespuestaMetodologia = z.infer<typeof respuestaMetodologia>;
