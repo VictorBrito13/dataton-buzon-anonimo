@@ -1,0 +1,1604 @@
+{
+  "fuente": {
+    "nombre": "S6, contrataciones públicas: procedimientos por institución compradora",
+    "url": "https://api.plataformadigitalnacional.org/s6/api/v1/search",
+    "consultadoEl": "2026-11-05",
+    "licencia": "No encontrada. Pendiente de confirmar con SESNA.",
+    "cobertura": "Ciclos hasta 2021. Consulta por nombre exacto (regex anclada); un procedimiento no implica ninguna irregularidad."
+  },
+  "compradores": [
+    {
+      "nombre": "Diconsa, S.A. de C.V.",
+      "procedimientos": 184099,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Mexicano del Seguro Social",
+      "procedimientos": 144730,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto de Seguridad y Servicios Sociales de los Trabajadores del Estado",
+      "procedimientos": 65656,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto de Administración y Avalúos de Bienes Nacionales",
+      "procedimientos": 39630,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Comunicaciones y Transportes",
+      "procedimientos": 31407,
+      "jurisdicciones": ["24"]
+    },
+    {
+      "nombre": "XE-IPN Canal 11",
+      "procedimientos": 22907,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Centro de Investigación y de Estudios Avanzados del Instituto Politécnico Nacional",
+      "procedimientos": 21146,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Cultura",
+      "procedimientos": 19767,
+      "jurisdicciones": [
+        "00",
+        "05",
+        "08",
+        "09",
+        "13",
+        "14",
+        "16",
+        "17",
+        "19",
+        "21",
+        "22",
+        "24",
+        "27",
+        "29",
+        "30"
+      ]
+    },
+    {
+      "nombre": "Secretaría de Marina",
+      "procedimientos": 19445,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Desarrollo Agrario, Territorial y Urbano",
+      "procedimientos": 17714,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Ciencias Médicas y Nutrición Salvador Zubirán",
+      "procedimientos": 15549,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Politécnico Nacional",
+      "procedimientos": 14306,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional del Agua",
+      "procedimientos": 13763,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de la Infraestructura Física Educativa",
+      "procedimientos": 13518,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de la Defensa Nacional",
+      "procedimientos": 12398,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Bellas Artes y Literatura",
+      "procedimientos": 12282,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Antropología e Historia",
+      "procedimientos": 12085,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Agricultura y Desarrollo Rural",
+      "procedimientos": 10085,
+      "jurisdicciones": ["00", "14", "16"]
+    },
+    {
+      "nombre": "Secretaria de Bienestar",
+      "procedimientos": 9614,
+      "jurisdicciones": ["00", "02", "04", "17", "21", "27", "29", "31"]
+    },
+    {
+      "nombre": "Caminos y Puentes Federales de Ingresos y Servicios Conexos",
+      "procedimientos": 9233,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Liconsa, S.A. de C.V.",
+      "procedimientos": 8391,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Cardiología Ignacio Chávez",
+      "procedimientos": 8073,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de la Función Pública",
+      "procedimientos": 7629,
+      "jurisdicciones": ["00", "08", "21", "32"]
+    },
+    {
+      "nombre": "Aeropuertos y Servicios Auxiliares",
+      "procedimientos": 7434,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Pediatría",
+      "procedimientos": 6984,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Infraestructura, Comunicaciones y Transportes",
+      "procedimientos": 6751,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "FONATUR Infraestructura, S.A. de C.V.",
+      "procedimientos": 6744,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional para el Desarrollo de Capacidades del Sector Rural, A.C.",
+      "procedimientos": 6326,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Investigaciones Forestales, Agrícolas y Pecuarias",
+      "procedimientos": 5897,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de los Pueblos Indígenas",
+      "procedimientos": 5719,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Salud Pública",
+      "procedimientos": 5524,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Colegio de Postgraduados",
+      "procedimientos": 5486,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Salud",
+      "procedimientos": 4915,
+      "jurisdicciones": [
+        "00",
+        "01",
+        "04",
+        "05",
+        "06",
+        "08",
+        "09",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "19",
+        "21",
+        "22",
+        "23",
+        "25",
+        "27",
+        "28",
+        "30",
+        "31"
+      ]
+    },
+    {
+      "nombre": "Hospital General de México \"Dr. Eduardo Liceaga\"",
+      "procedimientos": 4871,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Servicio de Administración Tributaria",
+      "procedimientos": 4781,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Enfermedades Respiratorias Ismael Cosío Villegas",
+      "procedimientos": 4673,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Hospital Juárez de México",
+      "procedimientos": 4493,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Fondo Nacional para el Fomento de las Artesanías",
+      "procedimientos": 4355,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Rehabilitación Luis Guillermo Ibarra Ibarra",
+      "procedimientos": 4275,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Investigación en Alimentación y Desarrollo, A.C.",
+      "procedimientos": 4055,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Hospital Regional de Alta Especialidad de Ciudad Victoria \"Bicentenario 2010\"",
+      "procedimientos": 4020,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Hospital Infantil de México Federico Gómez",
+      "procedimientos": 4016,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Casa de Moneda de México",
+      "procedimientos": 3433,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Mexicano de la Radio",
+      "procedimientos": 3343,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Mexicano del Petróleo",
+      "procedimientos": 3261,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Compañía Operadora del Centro Cultural y Turístico de Tijuana, S.A. de C.V.",
+      "procedimientos": 3148,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Veracruz, S.A. de C.V.",
+      "procedimientos": 3135,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Fiscalía General de la República",
+      "procedimientos": 3104,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Exportadora de Sal, S.A. de C.V.",
+      "procedimientos": 3079,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Hacienda y Crédito Público",
+      "procedimientos": 3072,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "El Colegio de Michoacán, A.C.",
+      "procedimientos": 3025,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Capacitación Cinematográfica, A.C.",
+      "procedimientos": 2969,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Cancerología",
+      "procedimientos": 2966,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Mexicano de Cinematografía",
+      "procedimientos": 2949,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Sistema Público de Radiodifusión del Estado Mexicano",
+      "procedimientos": 2926,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional Forestal",
+      "procedimientos": 2913,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Ciencias Penales",
+      "procedimientos": 2817,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Medicina Genómica",
+      "procedimientos": 2737,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Consejo Nacional para Prevenir la Discriminación",
+      "procedimientos": 2721,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Investigaciones Biológicas del Noroeste, S.C.",
+      "procedimientos": 2628,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Estudios Churubusco Azteca, S.A.",
+      "procedimientos": 2443,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Neurología y Neurocirugía Manuel Velasco Suárez",
+      "procedimientos": 2374,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Talleres Gráficos de México",
+      "procedimientos": 2345,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Fideicomiso para la Cineteca Nacional",
+      "procedimientos": 2329,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional de Libros de Texto Gratuitos",
+      "procedimientos": 2296,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Coordinación Nacional de Becas para el Bienestar Benito Juárez",
+      "procedimientos": 2296,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Agencia de Servicios a la Comercialización y Desarrollo de Mercados Agropecuarios",
+      "procedimientos": 2282,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Tribunal Federal de Justicia Administrativa",
+      "procedimientos": 2228,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Investigación en Química Aplicada",
+      "procedimientos": 2209,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto de Ecología, A.C.",
+      "procedimientos": 2198,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Nacional Financiera, S.N.C.",
+      "procedimientos": 2162,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Electricidad y Energías Limpias",
+      "procedimientos": 2149,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Banco Nacional de Obras y Servicios Públicos, S.N.C.",
+      "procedimientos": 2136,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría del Trabajo y Previsión Social",
+      "procedimientos": 2123,
+      "jurisdicciones": ["00", "02", "08", "12", "13", "14", "23", "24"]
+    },
+    {
+      "nombre": "Servicio Geológico Mexicano",
+      "procedimientos": 2098,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Investigación Científica de Yucatán, A.C.",
+      "procedimientos": 2040,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro Regional de Alta Especialidad de Chiapas",
+      "procedimientos": 2034,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Potosino de Investigación Científica y Tecnológica, A.C.",
+      "procedimientos": 2034,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Psiquiatría Ramón de la Fuente Muñiz",
+      "procedimientos": 1977,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Banco Nacional de Comercio Exterior, S.N.C.",
+      "procedimientos": 1975,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Manzanillo, S.A. de C.V.",
+      "procedimientos": 1970,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Impresora y Encuadernadora Progreso, S.A. de C.V.",
+      "procedimientos": 1965,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Banco Nacional del Ejército, Fuerza Aérea y Armada, S.N.C.",
+      "procedimientos": 1946,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Aeropuerto Internacional de la Ciudad de México, S.A. de C.V.",
+      "procedimientos": 1929,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Televisión Metropolitana S.A. de C.V.",
+      "procedimientos": 1873,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Hospital General \"Dr. Manuel Gea González\"",
+      "procedimientos": 1826,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Lázaro Cárdenas, S.A. de C.V.",
+      "procedimientos": 1733,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Instituto Nacional de Astrofísica, Óptica y Electrónica",
+      "procedimientos": 1732,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Servicios a la Navegación en el Espacio Aéreo Mexicano",
+      "procedimientos": 1727,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Procuraduría Agraria",
+      "procedimientos": 1719,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Investigación Científica y de Educación Superior de Ensenada, Baja California",
+      "procedimientos": 1718,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "El Colegio de la Frontera Norte, A.C.",
+      "procedimientos": 1715,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Pesca y Acuacultura",
+      "procedimientos": 1702,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Fideicomiso de Formación y Capacitación para el Personal de la Marina Mercante Nacional",
+      "procedimientos": 1698,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro Nacional de Control de Energía",
+      "procedimientos": 1690,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto para Devolver al Pueblo lo Robado",
+      "procedimientos": 1668,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Fondo Nacional de Fomento al Turismo",
+      "procedimientos": 1663,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Laboratorios de Biológicos y Reactivos de México, S.A. de C.V.",
+      "procedimientos": 1621,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Economía",
+      "procedimientos": 1619,
+      "jurisdicciones": ["00", "05", "11", "18", "19", "21", "25", "26", "32"]
+    },
+    {
+      "nombre": "Consejo Nacional de Fomento Educativo",
+      "procedimientos": 1612,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro Nacional de Metrología",
+      "procedimientos": 1598,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Medio Ambiente y Recursos Naturales",
+      "procedimientos": 1578,
+      "jurisdicciones": ["00", "13"]
+    },
+    {
+      "nombre": "Centro de Investigación en Materiales Avanzados, S.C.",
+      "procedimientos": 1537,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Corporación Mexicana de Investigación en Materiales, S.A. de C.V.",
+      "procedimientos": 1502,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Telecomunicaciones de México",
+      "procedimientos": 1471,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Instituto Nacional de Perinatología Isidro Espinosa de los Reyes",
+      "procedimientos": 1465,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Federal de Competencia Económica",
+      "procedimientos": 1452,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional para la Educación de los Adultos",
+      "procedimientos": 1434,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto del Fondo Nacional para el Consumo de los Trabajadores",
+      "procedimientos": 1429,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Mexicano de Tecnología del Agua",
+      "procedimientos": 1366,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Investigaciones Nucleares",
+      "procedimientos": 1364,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto de Investigaciones \"Dr. José María Luis Mora\"",
+      "procedimientos": 1359,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "El Colegio de la Frontera Sur",
+      "procedimientos": 1335,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Guaymas, S.A. de C.V.",
+      "procedimientos": 1333,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Comisión Nacional para la Protección y Defensa de los Usuarios de Servicios Financieros",
+      "procedimientos": 1333,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "FONATUR Tren Maya, S.A. de C.V.",
+      "procedimientos": 1305,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional Bancaria y de Valores",
+      "procedimientos": 1290,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Fondo de Cultura Económica",
+      "procedimientos": 1256,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Investigación y Desarrollo Tecnológico en Electroquímica, S.C.",
+      "procedimientos": 1240,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional de Acuacultura y Pesca",
+      "procedimientos": 1233,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Registro Agrario Nacional",
+      "procedimientos": 1226,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Hospital Regional de Alta Especialidad del Bajío",
+      "procedimientos": 1205,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Investigaciones y Estudios Superiores en Antropología Social",
+      "procedimientos": 1202,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Procuraduría Federal del Consumidor",
+      "procedimientos": 1191,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Servicio Nacional de Sanidad, Inocuidad y Calidad Agroalimentaria",
+      "procedimientos": 1186,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Hospital Regional de Alta Especialidad de Oaxaca",
+      "procedimientos": 1176,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Enseñanza Técnica Industrial",
+      "procedimientos": 1158,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Banco del Bienestar, S.N.C., I.B.D",
+      "procedimientos": 1136,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Centro Nacional de Control del Gas Natural",
+      "procedimientos": 1115,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto de Seguridad Social para las Fuerzas Armadas Mexicanas",
+      "procedimientos": 1108,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Federal de Telecomunicaciones",
+      "procedimientos": 1107,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Servicio Postal Mexicano",
+      "procedimientos": 1100,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Hospital Regional de Alta Especialidad de la Península de Yucatán",
+      "procedimientos": 1095,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Altamira, S.A. de C.V.",
+      "procedimientos": 1063,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Guardia Nacional",
+      "procedimientos": 1063,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Relaciones Exteriores",
+      "procedimientos": 1050,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro Nacional de Equidad de Género y Salud Reproductiva",
+      "procedimientos": 1035,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional de Áreas Naturales Protegidas",
+      "procedimientos": 1031,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centros de Integración Juvenil, A.C.",
+      "procedimientos": 1023,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Coatzacoalcos, S.A. de C.V.",
+      "procedimientos": 1000,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Servicios de Atención Psiquiátrica",
+      "procedimientos": 982,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Mexicano del Transporte",
+      "procedimientos": 960,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Colegio de Bachilleres",
+      "procedimientos": 954,
+      "jurisdicciones": ["00", "24"]
+    },
+    {
+      "nombre": "Lotería Nacional",
+      "procedimientos": 952,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Productora Nacional de Biológicos Veterinarios",
+      "procedimientos": 945,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Mexicano de la Propiedad Industrial",
+      "procedimientos": 944,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Investigación y Asistencia en Tecnología y Diseño del Estado de Jalisco, A.C.",
+      "procedimientos": 921,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Transparencia, Acceso a la Información y Protección de Datos Personales",
+      "procedimientos": 895,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Gobernación",
+      "procedimientos": 887,
+      "jurisdicciones": ["00", "21"]
+    },
+    {
+      "nombre": "Lotería Nacional para la Asistencia Pública",
+      "procedimientos": 882,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Colegio Nacional de Educación Profesional Técnica",
+      "procedimientos": 877,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Progreso, S.A. de C.V.",
+      "procedimientos": 872,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Sistema Nacional para el Desarrollo Integral de la Familia",
+      "procedimientos": 868,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Migración",
+      "procedimientos": 865,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Manzanillo, S.A. de C.V.",
+      "procedimientos": 859,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional del Sistema de Ahorro para el Retiro",
+      "procedimientos": 856,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Estadística Y Geografía",
+      "procedimientos": 841,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Investigación y Docencia Económicas, A.C.",
+      "procedimientos": 830,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Procuraduría Federal de Protección al Ambiente",
+      "procedimientos": 815,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Sociedad Hipotecaria Federal, S.N.C.",
+      "procedimientos": 798,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Autoridad Educativa Federal en la Ciudad de México",
+      "procedimientos": 788,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional de Seguros y Fianzas",
+      "procedimientos": 760,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Fideicomiso de Fomento Minero",
+      "procedimientos": 750,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Financiera Nacional de Desarrollo Agropecuario, Rural, Forestal y Pesquero",
+      "procedimientos": 744,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Investigación en Ciencias de Información Geoespacial, A.C.",
+      "procedimientos": 722,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Servicio de Protección Federal",
+      "procedimientos": 720,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Compañía Mexicana de Exploraciones, S.A. de C.V.",
+      "procedimientos": 710,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional del Suelo Sustentable",
+      "procedimientos": 703,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Fondo de Garantía y Fomento para la Agricultura, Ganadería y Avicultura",
+      "procedimientos": 700,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Turismo",
+      "procedimientos": 692,
+      "jurisdicciones": [
+        "00",
+        "01",
+        "04",
+        "05",
+        "07",
+        "08",
+        "09",
+        "13",
+        "14",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "28",
+        "29",
+        "32"
+      ]
+    },
+    {
+      "nombre": "Centro de Investigación en Matemáticas, A.C.",
+      "procedimientos": 681,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional de Cultura Física y Deporte",
+      "procedimientos": 675,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Lázaro Cárdenas, S.A. de C.V.",
+      "procedimientos": 674,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Consejo Nacional de Evaluación de la Política de Desarrollo Social",
+      "procedimientos": 660,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Educación Pública",
+      "procedimientos": 651,
+      "jurisdicciones": ["00", "03", "13"]
+    },
+    {
+      "nombre": "Fideicomiso de Riesgo Compartido",
+      "procedimientos": 643,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Dos Bocas, S.A. de C.V.",
+      "procedimientos": 634,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública",
+      "procedimientos": 633,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Agroasemex, S.A.",
+      "procedimientos": 625,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro de Investigaciones en Óptica, A.C.",
+      "procedimientos": 624,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Hospital Regional de Alta Especialidad de Ixtapaluca",
+      "procedimientos": 604,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro Nacional para la Prevención y el Control del VIH/SIDA",
+      "procedimientos": 588,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto para la Protección al Ahorro Bancario",
+      "procedimientos": 588,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "SALUD",
+      "procedimientos": 569,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Servicio Nacional de Inspección y Certificación de Semillas",
+      "procedimientos": 568,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Archivo General de la Nación",
+      "procedimientos": 566,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Salina Cruz, S.A. de C.V.",
+      "procedimientos": 536,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Comisión Federal para la Protección contra Riesgos Sanitarios",
+      "procedimientos": 534,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Mexicano de la Juventud",
+      "procedimientos": 528,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "CIATEQ, A.C. Centro de Tecnología Avanzada",
+      "procedimientos": 527,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Universidad Pedagógica Nacional",
+      "procedimientos": 509,
+      "jurisdicciones": ["00", "22"]
+    },
+    {
+      "nombre": "Instituto Nacional de las Mujeres",
+      "procedimientos": 503,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Ecología y Cambio Climático",
+      "procedimientos": 492,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Ferrocarril del Istmo de Tehuantepec, S.A. de C.V.",
+      "procedimientos": 490,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Prevención y Readaptación Social",
+      "procedimientos": 482,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro Nacional de Inteligencia",
+      "procedimientos": 481,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Presidencia de la República",
+      "procedimientos": 477,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Tuxpan, S.A. de C.V.",
+      "procedimientos": 472,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Comisión Nacional de las Zonas Áridas",
+      "procedimientos": 464,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Seguridad Alimentaria Mexicana",
+      "procedimientos": 439,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de Desarrollo Social",
+      "procedimientos": 438,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Instituto Nacional de Lenguas Indígenas",
+      "procedimientos": 438,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Procuraduría de la Defensa del Contribuyente",
+      "procedimientos": 436,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Tribunales Agrarios",
+      "procedimientos": 434,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Pronósticos para la Asistencia Pública",
+      "procedimientos": 433,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional de las Personas Adultas Mayores",
+      "procedimientos": 427,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Federal de Electricidad",
+      "procedimientos": 424,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Agencia Nacional de Seguridad Industrial y de Protección al Medio Ambiente del Sector Hidrocarburos",
+      "procedimientos": 420,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional de Seguridad Nuclear y Salvaguardias",
+      "procedimientos": 417,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Seguridad y Protección Ciudadana",
+      "procedimientos": 411,
+      "jurisdicciones": ["00", "18", "20", "27"]
+    },
+    {
+      "nombre": "Educal, S.A. de C.V.",
+      "procedimientos": 408,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto de Salud para el Bienestar",
+      "procedimientos": 406,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Consejo Nacional de Ciencia y Tecnología",
+      "procedimientos": 404,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "INFOTEC Centro de Investigación e Innovación en Tecnologías de la Información y Comunicación",
+      "procedimientos": 397,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Ensenada, S.A. de C.V.",
+      "procedimientos": 394,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Mazatlán, S.A. de C.V.",
+      "procedimientos": 385,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "CIATEC, A.C. \"Centro de Innovación Aplicada en Tecnologías Competitivas\"",
+      "procedimientos": 383,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Fideicomiso Fondo Nacional de Fomento Ejidal",
+      "procedimientos": 370,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión de Operación y Fomento de Actividades Académicas del Instituto Politécnico Nacional",
+      "procedimientos": 364,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Veracruz, S.A. de C.V.",
+      "procedimientos": 363,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro Nacional de la Transfusión Sanguínea",
+      "procedimientos": 361,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro Nacional de Programas Preventivos y Control de Enfermedades",
+      "procedimientos": 359,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría de Energía",
+      "procedimientos": 350,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Ejecutiva de Atención a Víctimas",
+      "procedimientos": 349,
+      "jurisdicciones": ["00", "26"]
+    },
+    {
+      "nombre": "Fideicomiso Fondo Nacional de Habitaciones Populares",
+      "procedimientos": 343,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Colegio Superior Agropecuario del Estado de Guerrero",
+      "procedimientos": 340,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Fideicomiso de los Sistemas Normalizado de Competencia Laboral y de Certificación de Competencia Laboral",
+      "procedimientos": 340,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "CULTURA",
+      "procedimientos": 322,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Fondo de Capitalización e Inversión del Sector Rural",
+      "procedimientos": 313,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional de Vivienda",
+      "procedimientos": 302,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Reguladora de Energía",
+      "procedimientos": 302,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "El Colegio de San Luis, A.C.",
+      "procedimientos": 298,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "BIENESTAR",
+      "procedimientos": 295,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Topolobampo, S.A. de C.V.",
+      "procedimientos": 292,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Instituto Nacional de Geriatría",
+      "procedimientos": 290,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional para la Mejora Continua de la Educación",
+      "procedimientos": 289,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "TRABAJO Y PREVISIÓN SOCIAL",
+      "procedimientos": 264,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Instituto Nacional de la Economía Social",
+      "procedimientos": 261,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Organismo Promotor de Inversiones en Telecomunicaciones",
+      "procedimientos": 251,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Autoridad Federal para el Desarrollo de las Zonas Económicas Especiales",
+      "procedimientos": 250,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Procuraduría Federal de la Defensa del Trabajo",
+      "procedimientos": 244,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Consejería Jurídica del Ejecutivo Federal",
+      "procedimientos": 240,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Puerto Vallarta, S.A. de C.V.",
+      "procedimientos": 238,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Comisión Nacional contra las Adicciones",
+      "procedimientos": 238,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Tampico, S.A. de C.V.",
+      "procedimientos": 234,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Centro de Ingeniería y Desarrollo Industrial",
+      "procedimientos": 232,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Notimex, Agencia de Noticias del Estado Mexicano",
+      "procedimientos": 217,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Progreso, S.A. de C.V.",
+      "procedimientos": 214,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comité Nacional para el Desarrollo Sustentable de la Caña de Azúcar",
+      "procedimientos": 211,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Patronato de Obras e Instalaciones del Instituto Politécnico Nacional",
+      "procedimientos": 198,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Dos Bocas, S.A. de C.V.",
+      "procedimientos": 197,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Consejo de Promoción Turística de México, S.A. de C.V.",
+      "procedimientos": 197,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Altamira, S.A. de C.V.",
+      "procedimientos": 195,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comité Nacional Mixto de Protección al Salario",
+      "procedimientos": 192,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Servicio de Información Agroalimentaria y Pesquera",
+      "procedimientos": 189,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Tuxpan, S.A. de C.V.",
+      "procedimientos": 186,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro Federal de Conciliación y Registro Laboral",
+      "procedimientos": 183,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional de Hidrocarburos",
+      "procedimientos": 181,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional para el Uso Eficiente de la Energía",
+      "procedimientos": 181,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración Portuaria Integral de Puerto Madero, S.A. de C.V.",
+      "procedimientos": 180,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Guaymas, S.A. de C.V.",
+      "procedimientos": 154,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Agencia Reguladora del Transporte Ferroviario",
+      "procedimientos": 136,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "SEGURIDAD Y PROTECCIÓN CIUDADANA",
+      "procedimientos": 135,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Puerto Chiapas, S.A. de C.V.",
+      "procedimientos": 128,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Agencia Espacial Mexicana",
+      "procedimientos": 125,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Aeropuerto Internacional Felipe Ángeles, S.A. de C.V.",
+      "procedimientos": 118,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Secretaría Ejecutiva del Sistema Nacional Anticorrupción",
+      "procedimientos": 118,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Ensenada, S.A. de C.V.",
+      "procedimientos": 114,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional de los Salarios Mínimos",
+      "procedimientos": 112,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Corredor Interoceánico del Istmo de Tehuantepec",
+      "procedimientos": 102,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Topolobampo, S.A. de C.V.",
+      "procedimientos": 96,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional de Arbitraje Médico",
+      "procedimientos": 78,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "ProMéxico",
+      "procedimientos": 78,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "GOBERNACIÓN",
+      "procedimientos": 73,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Servicios Aeroportuarios de la Ciudad de México, S.A. de C.V.",
+      "procedimientos": 70,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Mazatlán, S.A. de C.V.",
+      "procedimientos": 69,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Tampico, S.A. de C.V.",
+      "procedimientos": 60,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Centro Nacional para la Salud de la Infancia y la Adolescencia",
+      "procedimientos": 58,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Comisión Nacional de Bioética",
+      "procedimientos": 57,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Consejo Nacional para el Desarrollo y la Inclusión de las Personas con Discapacidad",
+      "procedimientos": 56,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Instituto Nacional del Emprendedor",
+      "procedimientos": 56,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Comisión Nacional de Mejora Regulatoria",
+      "procedimientos": 50,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Seguros de Crédito a la Vivienda SHF, S.A. de C.V.",
+      "procedimientos": 50,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "FUNCIÓN PÚBLICA",
+      "procedimientos": 48,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Administración del Sistema Portuario Nacional Puerto Vallarta, S.A. de C.V.",
+      "procedimientos": 40,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "COMUNICACIONES Y TRANSPORTES",
+      "procedimientos": 40,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Coordinación General @prende.mx",
+      "procedimientos": 34,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "COORDINACIÓN NACIONAL DEL SERVICIO PROFESIONAL DOCENTE",
+      "procedimientos": 33,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "SERVICIO DE ADMINISTRACIÓN Y ENAJENACIÓN DE BIENES",
+      "procedimientos": 33,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Centro Nacional de Excelencia Tecnológica en Salud",
+      "procedimientos": 32,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Administración del Patrimonio de la Beneficencia Pública",
+      "procedimientos": 29,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Universidad Abierta y a Distancia de México",
+      "procedimientos": 27,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "TURISMO",
+      "procedimientos": 24,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Tecnológico Nacional de México",
+      "procedimientos": 17,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "DEFENSA NACIONAL",
+      "procedimientos": 11,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "COORDINACIÓN NACIONAL DE PROSPERA PROGRAMA DE INCLUSIÓN SOCIAL",
+      "procedimientos": 10,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "RADIO EDUCACIÓN ",
+      "procedimientos": 10,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "OFICINA DE LA PRESIDENCIA DE LA REPÚBLICA",
+      "procedimientos": 9,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "FONATUR MANTENIMIENTO TURÍSTICO, S.A. DE C.V.",
+      "procedimientos": 7,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "Unidad del Sistema para la Carrera de las Maestras y los Maestros",
+      "procedimientos": 7,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "COMISIÓN DE APELACIÓN Y ARBITRAJE DEL DEPORTE",
+      "procedimientos": 6,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "Agencia Federal de Aviación Civil",
+      "procedimientos": 5,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "INSTITUTO NACIONAL DEL DERECHO DE AUTOR ",
+      "procedimientos": 4,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "POLICÍA FEDERAL",
+      "procedimientos": 4,
+      "jurisdicciones": ["00"]
+    },
+    {
+      "nombre": "EDUCACIÓN PÚBLICA",
+      "procedimientos": 3,
+      "jurisdicciones": []
+    },
+    {
+      "nombre": "COMISIÓN FEDERAL DE MEJORA REGULATORIA",
+      "procedimientos": 2,
+      "jurisdicciones": []
+    }
+  ]
+}

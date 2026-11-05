@@ -11,7 +11,10 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "migrate": "tsx src/db/migrate.ts",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "test:ataques": "vitest run --reporter=verbose ataques-k-anonimato publicacion agregar-periodos",
+    "agregar": "tsx src/contextos/transparencia/infraestructura/cli-agregar.ts",
+    "sintetico": "tsx ../../scripts/sintetico/generar-denuncias.mts"
   },
   "dependencies": {
     "argon2": "^0.45.1",

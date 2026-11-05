@@ -40,3 +40,6 @@ test-results/
 
 # worktrees y estado local de herramientas
 .claude/
+
+# playwright
+test-results/

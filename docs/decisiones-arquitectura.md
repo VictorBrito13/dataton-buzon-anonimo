@@ -67,6 +67,19 @@ Reglas del motor (k inicial = 5, configurable):
 
 Pruebas obligatorias: ataque por resta en fila, columna, entre niveles y entre periodos.
 
+**Ampliación tras implementarlo.** Las reglas anteriores no bastan, y las pruebas lo demostraron:
+
+- `4 + 4 = 8` cumple "dos suprimidas con suma ≥ k" y revela ambas. Como el motivo se publica, `1 + 5 = 6`
+  también: una es menor que k y la otra no.
+- Hay restas que cruzan varias líneas: el total nacional menos dos filas, contra una columna.
+- Bajo un total menor que k, cuatro celdas positivas solo pueden ser `1 + 1 + 1 + 1`.
+
+Por eso el motor audita cada publicación con un atacante (eliminación de variables y propagación de
+intervalos) y exige un ancho mínimo de `⌈(k − 1) / 2⌉`. Si falla, oculta más o retira el motivo; si no
+puede, no publica. Además: la supresión complementaria no se gasta en ceros, porque no aportan a la suma; y
+municipio × tipo de falta no se publica, porque saldría casi todo oculto. La garantía exacta y lo que no
+cubre están en `contextos/transparencia/dominio/metodologia.ts`.
+
 ## D7. Sin terceros, comprobable
 
 - CSP por nonce en `apps/frontend/dashboard/proxy.ts`. Exige render dinámico, por eso `layout.tsx`
