@@ -21,7 +21,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         <a
           href="#contenido"
-          className="sr-only focus:not-sr-only focus:absolute focus:m-2 focus:bg-superficie focus:p-2"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-20 focus:m-2 focus:inline-flex focus:min-h-11 focus:items-center focus:bg-superficie focus:p-2"
         >
           Saltar al contenido
         </a>

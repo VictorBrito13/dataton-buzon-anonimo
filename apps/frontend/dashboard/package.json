@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "next": "16.4.3",
@@ -16,6 +17,7 @@
     "react-dom": "19.3.0",
     "@dataton/shared": "*",
     "altcha": "^3.5.0",
+    "altcha-lib": "^2.8.0",
     "qrcode": "^1.5.4",
     "pdf-lib": "^1.17.1",
     "jszip": "^3.10.2",
