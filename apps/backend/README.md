@@ -54,15 +54,15 @@ contexto de transparencia.
 
 **Errores:** `{ error: { message, details? } }`; `details` solo nombra campos, nunca valores.
 
-| Estado        | Cuándo                                                                                                    |
-| ------------- | --------------------------------------------------------------------------------------------------------- |
-| 400           | Solicitud inválida, relato sin sellar, municipio de otro estado, evidencia inexistente o ya ligada        |
-| 401           | `ERROR_ACCESO` en `/acceso/*` ante **cualquier** fallo; sin sesión o credenciales incorrectas en el panel |
-| 403           | Prueba de trabajo inválida, expirada o ya usada, salvo en `/acceso/*`                                     |
-| 404, 409      | No existe; transición inválida o frase ya usada                                                           |
-| 413, 415, 422 | Excede el tamaño o las 500 páginas; tipo no permitido; dañado, cifrado, con macros o con residuales       |
-| 429           | Demasiados intentos: inicio de sesión (por usuario y global) o `POST /denuncias` (por frase y global)     |
-| 503           | Cuota global de subidas sin denuncia agotada, o demasiadas limpiezas de archivos en curso                 |
+| Estado        | Cuándo                                                                                                                                |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 400           | Solicitud inválida, relato sin sellar, municipio de otro estado, evidencia inexistente o ya ligada                                    |
+| 401           | `ERROR_ACCESO` en `/acceso/*` ante **cualquier** fallo; sin sesión o credenciales incorrectas en el panel                             |
+| 403           | Prueba de trabajo inválida, expirada o ya usada, salvo en `/acceso/*`                                                                 |
+| 404, 409      | No existe; transición inválida o frase ya usada                                                                                       |
+| 413, 415, 422 | Excede el tamaño, las 500 páginas, el plazo o la memoria de limpieza; tipo no permitido; dañado, cifrado, con macros o con residuales |
+| 429           | Demasiados intentos: inicio de sesión (por usuario y global) o `POST /denuncias` (por frase y global)                                 |
+| 503           | Cuota global de subidas sin denuncia agotada, o demasiadas limpiezas de archivos en curso                                             |
 
 ## Variables de entorno
 
@@ -86,6 +86,7 @@ fija `NODE_ENV=development`; `npm run migrate` y los scripts lo leen de `.env`.
 | `MAX_BYTES_EVIDENCIAS_TOTAL`                                | No              | 100 MiB                          | Por denuncia. El máximo de 5 archivos es regla de dominio                  |
 | `CUOTA_HUERFANAS_BYTES`, `CUOTA_HUERFANAS_FILAS`            | No              | 2 GiB, `2000`                    | Cuota global de subidas sin denuncia; al llegar, 503                       |
 | `LIMPIEZAS_SIMULTANEAS`, `LIMPIEZAS_ESPERA_MS`              | No              | `2`, `10000`                     | Limpiezas de archivos a la vez y espera máxima antes de 503                |
+| `LIMPIEZA_TIEMPO_MAX_MS`, `LIMPIEZA_MEMORIA_MAX_MB`         | No              | `20000`, `768`                   | Plazo y memoria del worker que limpia PDF y Office; al excederlos, 413     |
 | `ACCESO_TIEMPO_MINIMO_MS`                                   | No              | `400`                            | Tiempo mínimo de `/acceso/*`                                               |
 | `ACCESO_INTENTOS_CREDENCIAL`, `ACCESO_VENTANA_MS`           | No              | `30`, 15 min                     | Límite por HMAC de credencial, en `/acceso/*` y en `POST /denuncias`       |
 | `ACCESO_LIMITE_GLOBAL`                                      | No              | `600`                            | Intentos por minuto entre todas las credenciales                           |
@@ -160,7 +161,8 @@ memoria durante la petición; a disco y a la base de datos llega únicamente el 
 - Comprueba el resultado buscando marcas (`/Metadata`, `/Author`, `/JavaScript`…) y rechaza el
   archivo si queda alguna, por lo que un PDF legítimo con esas cadenas sin comprimir se rechazaría.
 - Rechaza más de 500 páginas o 50,000 objetos indirectos antes de aplanar y copiar páginas. El
-  análisis inicial (`PDFDocument.load`) sí se ejecuta y para 100,000 páginas tarda unos 2 s.
+  análisis inicial (`PDFDocument.load`) sí se ejecuta y para 100,000 páginas tarda unos 2 s, pero
+  ocurre en un worker aparte (ver abajo): el hilo que atiende peticiones no lo nota.
 
 **Límites conocidos en Office.** Regla: lo que no se sabe limpiar no se da por limpio, se rechaza.
 
@@ -197,9 +199,15 @@ lista de permitidos, el rechazo de contenido activo y la recodificación.
   hora para que la ventana sea de una hora y no de segundos; **no elimina el riesgo**. Quitarlo
   exige separar la bitácora en otra base o reescribir las tablas periódicamente (`VACUUM FULL` o
   `CLUSTER` por una columna aleatoria), y ninguna de las dos está hecha.
-- La limpieza de archivos corre en el mismo proceso que atiende peticiones: `LIMPIEZAS_SIMULTANEAS`
-  acota cuántas a la vez y el resto espera o recibe 503. No corre en `worker_threads`, así que una
-  limpieza lenta sigue ocupando el hilo principal mientras dura.
+- La limpieza de PDF y Office corre en un `worker_threads` por archivo
+  (`infraestructura/limpiador-en-worker.ts`), con plazo (`LIMPIEZA_TIEMPO_MAX_MS`) y memoria
+  (`LIMPIEZA_MEMORIA_MAX_MB`) acotados: al vencer el plazo el worker se termina y se responde 413;
+  si rebasa la memoria muere solo el worker. `LIMPIEZAS_SIMULTANEAS` sigue acotando cuántas a la
+  vez y el resto espera o recibe 503. Las imágenes no van al worker: `sharp` ya trabaja fuera del
+  hilo principal. Medido con el PDF de 100,000 páginas de la PoC: en el hilo principal la limpieza
+  lo ocupaba cerca del 30 % durante 1.7 s, con retrasos de hasta 33 ms en los temporizadores; en el
+  worker, 0 % y 2 ms (`test/contextos/evidencias/limpiador-en-worker.test.ts`). Un worker por
+  archivo cuesta unos 100 ms de arranque; no hay un pool.
 
 ## Pruebas
 

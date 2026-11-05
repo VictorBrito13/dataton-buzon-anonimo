@@ -134,6 +134,8 @@ export const cargarEnv = (fuente: Fuente) => {
     },
     limpiezasSimultaneas: entero(fuente, "LIMPIEZAS_SIMULTANEAS", 2),
     limpiezasEsperaMs: entero(fuente, "LIMPIEZAS_ESPERA_MS", 10_000),
+    limpiezaTiempoMaxMs: entero(fuente, "LIMPIEZA_TIEMPO_MAX_MS", 20_000),
+    limpiezaMemoriaMaxMb: entero(fuente, "LIMPIEZA_MEMORIA_MAX_MB", 768),
     sesionLimiteGlobal: entero(fuente, "SESION_LIMITE_GLOBAL", 60),
     accesoTiempoMinimoMs: entero(fuente, "ACCESO_TIEMPO_MINIMO_MS", 400),
     accesoIntentosCredencial: entero(fuente, "ACCESO_INTENTOS_CREDENCIAL", 30),

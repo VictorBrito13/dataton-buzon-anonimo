@@ -71,6 +71,25 @@ export const pdfConMetadatos = async (): Promise<Uint8Array> => {
   return salida;
 };
 
+/**
+ * PDF con `paginas` páginas vacías, escrito a mano: pdf-lib tarda más de un minuto en generarlo
+ * dentro de Vitest y aquí basta con que su analizador tenga que recorrer cada objeto. Es el mismo
+ * ataque de la PoC: con 100,000 páginas el análisis previo al rechazo ronda los 2 s.
+ */
+export const pdfDePaginasVacias = (paginas: number): Uint8Array => {
+  const objetos = [`<< /Type /Catalog /Pages 2 0 R >>`];
+  const hijos: string[] = [];
+  for (let i = 0; i < paginas; i += 1) {
+    hijos.push(`${i + 3} 0 R`);
+    objetos.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 10 10] >>`);
+  }
+  objetos.splice(1, 0, `<< /Type /Pages /Count ${paginas} /Kids [${hijos.join(" ")}] >>`);
+  const cuerpo = objetos.map((o, i) => `${i + 1} 0 obj\n${o}\nendobj\n`).join("");
+  return new TextEncoder().encode(
+    `%PDF-1.4\n${cuerpo}trailer\n<< /Size ${objetos.length + 1} /Root 1 0 R >>\n%%EOF\n`,
+  );
+};
+
 export const pdfCifradoDeclarado = async (): Promise<Uint8Array> => {
   const doc = await PDFDocument.create();
   doc.addPage();

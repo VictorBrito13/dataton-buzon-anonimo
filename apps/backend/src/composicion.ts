@@ -15,11 +15,9 @@ import { RepositorioDenunciasPg } from "./contextos/denuncias/infraestructura/re
 import { crearAdaptadorS5 } from "./contextos/denuncias/infraestructura/s5/crear-adaptador.js";
 import { LimpiarEvidenciasHuerfanas } from "./contextos/evidencias/aplicacion/limpiar-huerfanas.js";
 import { RecibirEvidencia } from "./contextos/evidencias/aplicacion/recibir-evidencia.js";
-import {
-  LimpiadorEvidencias,
-  SelladorClavePublica,
-} from "./contextos/evidencias/infraestructura/adaptadores.js";
+import { SelladorClavePublica } from "./contextos/evidencias/infraestructura/adaptadores.js";
 import { DetectorFileType } from "./contextos/evidencias/infraestructura/detector-file-type.js";
+import { LimpiadorEnWorker } from "./contextos/evidencias/infraestructura/limpiador-en-worker.js";
 import { RepositorioEvidenciasPg } from "./contextos/evidencias/infraestructura/repositorio-evidencias-pg.js";
 import { CasosDenunciasAutoridad } from "./contextos/tramite/aplicacion/casos-denuncias.js";
 import { CasosSesion } from "./contextos/tramite/aplicacion/casos-sesion.js";
@@ -90,7 +88,11 @@ export const casos = {
   recibirEvidencia: new RecibirEvidencia(
     {
       detector: new DetectorFileType(),
-      limpiador: new LimpiadorEvidencias(),
+      // PDF y Office se limpian en un worker por archivo, con plazo y memoria acotados.
+      limpiador: new LimpiadorEnWorker({
+        tiempoMaxMs: env.limpiezaTiempoMaxMs,
+        memoriaMaxMb: env.limpiezaMemoriaMaxMb,
+      }),
       sellador: new SelladorClavePublica(env.clavePublicaAutoridad),
       repositorio: repositorioEvidencias,
       reloj,
