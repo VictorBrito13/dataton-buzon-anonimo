@@ -101,7 +101,10 @@ fija `NODE_ENV=development`; `npm run migrate` y los scripts lo leen de `.env`.
 
 Puerto: `AdaptadorS5` en `contextos/denuncias/aplicacion/puerto-s5.ts`, con `MockS5` y `RealS5`.
 Se elige con `S5_ADAPTADOR`. **Ningún caso de uso lo usa todavía**: la composición lo expone como
-`adaptadorS5`, y una denuncia del buzón nunca sale hacia el S5.
+`adaptadorS5`, y una denuncia del buzón nunca sale hacia el S5. En el despliegue, además, la red
+interna no tiene salida a internet. Donde sí se usan sus lecturas reales es fuera del servidor:
+`npm run pdn:instantaneas` regenera el catálogo de municipios con `RealS5.catalogo("municipios")`
+(`scripts/pdn/regenerar-instantaneas.mts`).
 
 | Operación                                           | Ruta en `S5_BASE_URL`                      | Estado                                  |
 | --------------------------------------------------- | ------------------------------------------ | --------------------------------------- |

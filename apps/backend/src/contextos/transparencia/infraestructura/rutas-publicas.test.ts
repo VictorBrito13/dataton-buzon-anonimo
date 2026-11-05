@@ -45,9 +45,9 @@ const filas: FilaAgregado[] = [
         ente: "ficticio-01",
         total: { conteo: 50, motivo: "publicada" },
         porEtapa: {
-          recibida: { conteo: 5, motivo: "publicada" },
+          recibida: { conteo: 10, motivo: "publicada" },
+          en_investigacion: { conteo: 35, motivo: "publicada" },
           archivada: { conteo: 5, motivo: "publicada" },
-          sin_competencia: { conteo: 0, motivo: "publicada" },
         },
         conRespuesta: 40,
         tiempos: {},
@@ -170,6 +170,7 @@ describe("GET /periodos, /metodologia, /indicadores, /pdn", () => {
     expect(cuerpo.aviso).toMatch(/nunca una acusación/);
     expect(cuerpo.entes[0]?.etiqueta).toMatch(/ficticio/);
     expect(cuerpo.entes[0]?.porcentajeConRespuesta).toBe(80);
+    expect(cuerpo.entes[0]?.motivo).toBe("publicado");
   });
 
   it("pdn: conteos con su fuente", async () => {
@@ -202,6 +203,18 @@ describe("descargas", () => {
     expect(cuerpoDe(r).diccionario.campos.map((c) => c.campo)).toContain("motivo");
     expect(cuerpoDe(r).datosSinteticos).toBe(true);
     expect(cuerpoDe(r).filas.length).toBe(4);
+  });
+
+  it("las descargas se pueden cachear como el resto de lo público: un trimestre publicado no cambia", async () => {
+    for (const ruta of [
+      "/descargas/agregados.csv?periodo=2026-T3",
+      "/descargas/agregados.json?periodo=2026-T3",
+      "/descargas/diccionario.json",
+    ]) {
+      const r = await request(app).get(ruta);
+      expect(r.status, ruta).toBe(200);
+      expect(r.headers["cache-control"], ruta).toBe("public, max-age=300");
+    }
   });
 
   it("publica el diccionario de datos por separado", async () => {

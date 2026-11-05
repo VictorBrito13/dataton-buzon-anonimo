@@ -1,5 +1,6 @@
 # Despliegue completo:      docker compose up --build
-# Postgres de desarrollo:   docker compose up -d postgres   (perfil "dev", puerto en localhost)
+# Datos de demostración:    docker compose run --rm sintetico   (perfil "demo", denuncias sintéticas)
+# Postgres de desarrollo:   docker compose up -d postgres       (perfil "dev", puerto en localhost)
 #
 # Solo Caddy publica puertos. La red "interna" no tiene salida a internet: backend, frontend
 # y base de datos no pueden hablar con terceros aunque el código lo intentara.
@@ -29,9 +30,11 @@ services:
       CLAVE_PUBLICA_AUTORIDAD: ${CLAVE_PUBLICA_AUTORIDAD:-}
       SECRETOS_DIR: /secretos
       CLAVE_AUTORIDAD_DIR: /clave-autoridad
+      SEMILLA_AUTORIDAD_DIR: /semilla-autoridad
     volumes:
       - secretos:/secretos
       - clave-autoridad-demo:/clave-autoridad
+      - semilla-autoridad-demo:/semilla-autoridad
       - ./docker/generar-secretos.mjs:/generar-secretos.mjs:ro
     command: ["node", "/generar-secretos.mjs"]
     restart: "no"
@@ -84,10 +87,11 @@ services:
       dockerfile: apps/backend/Dockerfile
     image: dataton/backend:local
     # Migra, rota la contraseña del rol público y crea el usuario demo del panel (con hash Argon2id).
+    # La contraseña demo viene de su propio volumen, que solo este servicio lee: el backend no la recibe.
     command:
       - sh
       - -c
-      - node dist/db/migrate.js && node rotar-rol-lector.mjs && node dist/scripts/semilla-autoridad.js
+      - node dist/db/migrate.js && node rotar-rol-lector.mjs && (set -a; . /semilla-autoridad/semilla_autoridad.env; set +a; node dist/scripts/semilla-autoridad.js)
     restart: "no"
     depends_on:
       db:
@@ -97,6 +101,32 @@ services:
     networks: [interna]
     volumes:
       - secretos:/secretos:ro
+      - semilla-autoridad-demo:/semilla-autoridad:ro
+
+  # Datos de demostración, solo a mano: `docker compose run --rm sintetico` (igual en PowerShell).
+  # Llena la base con denuncias SINTÉTICAS y publica los trimestres cerrados para el tablero. El
+  # generador se niega con NODE_ENV=production; la bandera lo permite solo en este servicio.
+  sintetico:
+    profiles: [demo]
+    <<: *endurecido
+    build: *backend-build
+    image: dataton/backend:local
+    command:
+      - sh
+      - -c
+      - node dist/scripts/sintetico.js && node dist/contextos/transparencia/infraestructura/cli-agregar.js
+    restart: "no"
+    depends_on:
+      migraciones:
+        condition: service_completed_successfully
+    environment:
+      <<: *backend-env
+      DATOS_SINTETICOS_DEMO: "1"
+    networks: [interna]
+    volumes:
+      - secretos:/secretos:ro
+    tmpfs:
+      - /tmp
 
   backend:
     <<: *endurecido
@@ -210,6 +240,9 @@ volumes:
   # Clave privada y acceso demo de la autoridad. Solo "secretos" (al generar) y "clave-autoridad"
   # (a mano) lo montan: ni backend, ni frontend, ni db, ni caddy, ni migraciones.
   clave-autoridad-demo:
+  # Usuario y contraseña demo del panel. Solo "secretos" (al generar) y "migraciones" (al sembrar el
+  # hash) lo montan; el backend no recibe la contraseña.
+  semilla-autoridad-demo:
   db-data:
   caddy-data:
   postgres-data:

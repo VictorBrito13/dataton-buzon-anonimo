@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { after, describe, it } from "node:test";
@@ -16,18 +16,26 @@ const PUBLICA_EXTERNA = JSON.stringify({
   y: "lLgpqedTMB40bkFVOShb5LCUNRBnt3lk7f0akK1MdzA",
 });
 
-/** Corre el generador contra dos carpetas temporales: la de secretos y la de la clave. */
-const generar = (entorno = {}) => {
-  const secretos = mkdtempSync(path.join(tmpdir(), "secretos-"));
-  const clave = mkdtempSync(path.join(tmpdir(), "clave-"));
-  temporales.push(secretos, clave);
+/** Corre el generador contra tres carpetas temporales: secretos, clave y semilla del panel. */
+const generar = (entorno = {}, carpetas = {}) => {
+  const secretos = carpetas.secretos ?? mkdtempSync(path.join(tmpdir(), "secretos-"));
+  const clave = carpetas.clave ?? mkdtempSync(path.join(tmpdir(), "clave-"));
+  const semilla = carpetas.semilla ?? mkdtempSync(path.join(tmpdir(), "semilla-"));
+  temporales.push(secretos, clave, semilla);
   const r = spawnSync(process.execPath, [SCRIPT], {
     encoding: "utf8",
-    env: { ...process.env, SECRETOS_DIR: secretos, CLAVE_AUTORIDAD_DIR: clave, ...entorno },
+    env: {
+      ...process.env,
+      SECRETOS_DIR: secretos,
+      CLAVE_AUTORIDAD_DIR: clave,
+      SEMILLA_AUTORIDAD_DIR: semilla,
+      ...entorno,
+    },
   });
   assert.equal(r.status, 0, r.stderr);
   const env = readFileSync(path.join(secretos, "backend.env"), "utf8");
-  return { secretos, clave, env, salida: r.stdout };
+  const semillaEnv = readFileSync(path.join(semilla, "semilla_autoridad.env"), "utf8");
+  return { secretos, clave, semilla, env, semillaEnv, salida: r.stdout };
 };
 
 const variable = (env, nombre) => new RegExp(`^${nombre}=(.*)$`, "m").exec(env)?.[1];
@@ -81,28 +89,51 @@ describe("generar-secretos.mjs", () => {
       variable(env, "DATABASE_URL_PUBLICO") ?? "",
       /^postgres:\/\/buzon_lector_publico:/,
     );
-    assert.equal(variable(env, "SEMILLA_AUTORIDAD_USUARIO"), "autoridad.demo");
-    assert.match(variable(env, "SEMILLA_AUTORIDAD_CONTRASENA") ?? "", /^[0-9a-f]{32}$/);
+  });
+
+  it("la contraseña demo del panel no entra en el entorno del backend", () => {
+    const { env, semillaEnv } = generar({ CLAVE_PUBLICA_AUTORIDAD: "" });
+    assert.equal(variable(env, "SEMILLA_AUTORIDAD_USUARIO"), undefined);
+    assert.equal(variable(env, "SEMILLA_AUTORIDAD_CONTRASENA"), undefined);
+    assert.equal(variable(semillaEnv, "SEMILLA_AUTORIDAD_USUARIO"), "autoridad.demo");
+    assert.match(variable(semillaEnv, "SEMILLA_AUTORIDAD_CONTRASENA") ?? "", /^[0-9a-f]{32}$/);
+    assert.ok(!env.includes(variable(semillaEnv, "SEMILLA_AUTORIDAD_CONTRASENA")));
+  });
+
+  it("retira la contraseña demo de un backend.env de una versión anterior y conserva lo demás", () => {
+    const secretos = mkdtempSync(path.join(tmpdir(), "secretos-"));
+    const previo = [
+      "PIMIENTA_ACCESO=aa",
+      "SEMILLA_AUTORIDAD_USUARIO=autoridad.demo",
+      "SEMILLA_AUTORIDAD_CONTRASENA=0123456789abcdef0123456789abcdef",
+      "CLAVE_MENSAJES=bb",
+      "",
+    ].join("\n");
+    writeFileSync(path.join(secretos, "backend.env"), previo);
+    const { env, semillaEnv } = generar({ CLAVE_PUBLICA_AUTORIDAD: "" }, { secretos });
+    assert.equal(variable(env, "PIMIENTA_ACCESO"), "aa");
+    assert.equal(variable(env, "CLAVE_MENSAJES"), "bb");
+    assert.ok(!env.includes("SEMILLA_AUTORIDAD"));
+    assert.equal(
+      variable(semillaEnv, "SEMILLA_AUTORIDAD_CONTRASENA"),
+      "0123456789abcdef0123456789abcdef",
+      "la contraseña ya sembrada se conserva para que el acceso siga funcionando",
+    );
   });
 
   it("deja el acceso demo del panel junto a la clave, para quien hace la demostración", () => {
-    const { env, clave } = generar({ CLAVE_PUBLICA_AUTORIDAD: "" });
+    const { semillaEnv, clave } = generar({ CLAVE_PUBLICA_AUTORIDAD: "" });
     const acceso = readFileSync(path.join(clave, "acceso_panel.txt"), "utf8");
-    assert.ok(acceso.includes(variable(env, "SEMILLA_AUTORIDAD_CONTRASENA")));
+    assert.ok(acceso.includes(variable(semillaEnv, "SEMILLA_AUTORIDAD_CONTRASENA")));
   });
 
   it("es idempotente: una segunda corrida conserva todo", () => {
     const primera = generar({ CLAVE_PUBLICA_AUTORIDAD: "" });
-    const r = spawnSync(process.execPath, [SCRIPT], {
-      encoding: "utf8",
-      env: {
-        ...process.env,
-        SECRETOS_DIR: primera.secretos,
-        CLAVE_AUTORIDAD_DIR: primera.clave,
-        CLAVE_PUBLICA_AUTORIDAD: "",
-      },
-    });
-    assert.equal(r.status, 0, r.stderr);
-    assert.equal(readFileSync(path.join(primera.secretos, "backend.env"), "utf8"), primera.env);
+    const segunda = generar(
+      { CLAVE_PUBLICA_AUTORIDAD: "" },
+      { secretos: primera.secretos, clave: primera.clave, semilla: primera.semilla },
+    );
+    assert.equal(segunda.env, primera.env);
+    assert.equal(segunda.semillaEnv, primera.semillaEnv);
   });
 });

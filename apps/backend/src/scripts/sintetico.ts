@@ -1,19 +1,25 @@
 /**
- * Llena la base con denuncias SINTÉTICAS (HU-27). Nunca usa datos reales y se niega a correr en
- * producción. Reemplaza las sintéticas anteriores; las demás no se tocan.
+ * Llena la base con denuncias SINTÉTICAS (HU-27). Nunca usa datos reales. Reemplaza las sintéticas
+ * anteriores; las demás no se tocan.
  *
  * Uso: npm run sintetico -w @dataton/backend -- [--semilla 2026] [--por-trimestre 6000]
  *      [--desde 2025-T3] [--hasta 2026-T3] [--hoy 2026-11-04]
+ *
+ * Con NODE_ENV=production se niega a correr, salvo con la bandera explícita DATOS_SINTETICOS_DEMO=1,
+ * que solo declara el servicio `sintetico` de docker-compose.yml (`docker compose run --rm sintetico`).
+ * Así una base real no se llena por accidente, y la demostración en Docker sigue siendo posible.
  */
 import { createHash } from "node:crypto";
 import { ENTES_SINTETICOS } from "@dataton/shared";
 import pg from "pg";
-import { ZONA_HORARIA_POR_DEFECTO, diaDe } from "../../apps/backend/src/compartido/dominio/dia.js";
-import { generarDenunciasSinteticas } from "../../apps/backend/src/contextos/transparencia/aplicacion/generador-sintetico.js";
-import { leerMunicipios } from "../../apps/backend/src/contextos/transparencia/infraestructura/fuente-pdn-instantaneas.js";
+import { ZONA_HORARIA_POR_DEFECTO, diaDe } from "../compartido/dominio/dia.js";
+import { generarDenunciasSinteticas } from "../contextos/transparencia/aplicacion/generador-sintetico.js";
+import { leerMunicipios } from "../contextos/transparencia/infraestructura/fuente-pdn-instantaneas.js";
 
-if (process.env.NODE_ENV === "production") {
-  throw new Error("El generador sintético no corre en producción");
+if (process.env.NODE_ENV === "production" && process.env.DATOS_SINTETICOS_DEMO !== "1") {
+  throw new Error(
+    "El generador sintético no corre en producción. Para una demostración, usa el servicio `sintetico` de docker-compose.yml, que declara DATOS_SINTETICOS_DEMO=1",
+  );
 }
 
 const opcion = (nombre: string, predeterminado: string): string => {

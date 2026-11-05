@@ -14,10 +14,11 @@ const ESTADO = "main div[role=status][aria-live=polite]";
 const RELATO =
   "María Hernández, la directora de Obras en Pachuca, me pidió dinero en la ventanilla 3. Mi teléfono es 5512345678.";
 const ARCHIVO_MODELO = /\/modelos\/.*model_quantized\.onnx$/;
+// Relativo a este archivo, no al directorio de trabajo: la CI corre la suite desde la raíz del repositorio.
 const CON_MODELO = existsSync(
   join(
-    process.cwd(),
-    "public/modelos/Xenova/distilbert-base-multilingual-cased-ner-hrl/onnx/model_quantized.onnx",
+    __dirname,
+    "../public/modelos/Xenova/distilbert-base-multilingual-cased-ner-hrl/onnx/model_quantized.onnx",
   ),
 );
 

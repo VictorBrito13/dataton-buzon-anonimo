@@ -1,12 +1,16 @@
+import { CLAVES_ETAPA, TRANSICIONES, type Dimension, type Etapa } from "@dataton/shared";
 import { describe, expect, it } from "vitest";
+import { acotarConIndicadores, desigualdadesDeIndicador } from "./ataque-indicadores.js";
 import { acotarPorIntervalos } from "./ataque-intervalos.js";
-import { crearAzar } from "./azar.js";
+import { crearAzar, type Azar } from "./azar.js";
+import { indicadoresDePublicacion, type HechosObservados } from "./indicadores.js";
 import { anchoMinimo } from "./k-anonimato.js";
 import {
   CLAVE_SIN_ENTE,
   claveMunicipioSinEspecificar,
   construirPublicacion,
   construirRed,
+  idDeClaves,
   normalizarDimensiones,
   TABLAS_PUBLICADAS,
   type DenunciaAgregable,
@@ -59,6 +63,25 @@ describe("dimensiones", () => {
     for (const tabla of TABLAS_PUBLICADAS) {
       expect(tabla.split(",").length).toBeLessThanOrEqual(2);
     }
+  });
+
+  it("cada tabla publicada lleva su nombre normalizado: así /agregados puede servirla", () => {
+    for (const tabla of TABLAS_PUBLICADAS) {
+      expect(normalizarDimensiones(tabla.split(",") as Dimension[])).toBe(tabla);
+    }
+  });
+
+  it("las filas publicadas y sus identificadores no dependen del orden de las claves", () => {
+    const filas = construirPublicacion([denuncia({ n: 50 })], universo, { k });
+    for (const fila of filas) {
+      if (fila.dimensiones === "total") continue;
+      expect(normalizarDimensiones(fila.dimensiones.split(",") as Dimension[])).toBe(
+        fila.dimensiones,
+      );
+    }
+    expect(idDeClaves({ ente: "ente-a", etapa: "recibida" })).toBe(
+      idDeClaves({ etapa: "recibida", ente: "ente-a" }),
+    );
   });
 });
 
@@ -199,5 +222,99 @@ describe("HU-31 · Ataques entre tablas de una misma publicación", () => {
     const publicacion = construirPublicacion(filas, { municipios, entes }, { k });
     const ids = publicacion.map((f) => f.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  /**
+   * Un atacante que además lee /indicadores. Los hechos (salidas por etapa y respuestas) se simulan
+   * coherentes con las celdas: cada denuncia recorrió un camino válido de TRANSICIONES hasta su etapa.
+   */
+  const caminoHasta = (azar: Azar, destino: Etapa): Etapa[] => {
+    const buscar = (actual: Etapa, recorrido: Etapa[]): Etapa[] | null => {
+      if (actual === destino) return recorrido;
+      const siguientes = [...TRANSICIONES[actual]].sort(() => azar.real() - 0.5);
+      for (const s of siguientes) {
+        const camino = buscar(s, [...recorrido, s]);
+        if (camino) return camino;
+      }
+      return null;
+    };
+    return buscar("recibida", ["recibida"]) ?? ["recibida"];
+  };
+
+  const hechosDe = (azar: Azar, filas: readonly DenunciaAgregable[]) => {
+    const hechos = new Map<string, HechosObservados>();
+    for (const fila of filas) {
+      if (fila.ente === null) continue;
+      const propios = hechos.get(fila.ente) ?? { conRespuesta: 0, tiempos: {} };
+      const tiempos: Record<string, { denuncias: number; diasAcumulados: number }> = {
+        ...propios.tiempos,
+      };
+      let conRespuesta = propios.conRespuesta;
+      for (let i = 0; i < fila.n; i += 1) {
+        const camino = caminoHasta(azar, fila.etapa as Etapa);
+        for (const etapa of camino.slice(0, -1)) {
+          const t = tiempos[etapa] ?? { denuncias: 0, diasAcumulados: 0 };
+          tiempos[etapa] = {
+            denuncias: t.denuncias + 1,
+            diasAcumulados: t.diasAcumulados + azar.entero(1, 30),
+          };
+        }
+        if (camino.length > 1 || azar.real() < 0.3) conRespuesta += 1;
+      }
+      hechos.set(fila.ente, { conRespuesta, tiempos });
+    }
+    return hechos;
+  };
+
+  it("100 publicaciones al azar: tablas, descargas e indicadores juntos tampoco acotan una celda oculta", () => {
+    let indicadoresConDerivados = 0;
+    let indicadoresPorEtapaOculta = 0;
+    for (let semilla = 1; semilla <= 100; semilla += 1) {
+      const filas = generar(semilla);
+      const azar = crearAzar(semilla * 7919);
+      const red = construirRed(filas, { municipios, entes });
+      const publicacion = construirPublicacion(filas, { municipios, entes }, { k });
+      const indicadores = indicadoresDePublicacion(publicacion, hechosDe(azar, filas), entes, {
+        k,
+      });
+      indicadoresConDerivados += indicadores.filter((i) => i.motivo === "publicado").length;
+      indicadoresPorEtapaOculta += indicadores.filter((i) => i.motivo === "etapa_oculta").length;
+
+      const vista = new Map(publicacion.map((f) => [f.id, { conteo: f.conteo, motivo: f.motivo }]));
+      const cotas = acotarConIndicadores(vista, red.lineas, indicadores, k);
+      for (const fila of publicacion) {
+        const real = red.conteos.get(fila.id) ?? 0;
+        const cota = cotas.get(fila.id);
+        if (!cota) throw new Error(`Sin cota: ${fila.id}`);
+        expect(cota.min, `${fila.id}: la cota debe contener el valor real`).toBeLessThanOrEqual(
+          real,
+        );
+        expect(cota.max, `${fila.id}: la cota debe contener el valor real`).toBeGreaterThanOrEqual(
+          real,
+        );
+        if (fila.conteo === null) {
+          expect(cota.max - cota.min, `${fila.id}: ancho`).toBeGreaterThanOrEqual(anchoMinimo(k));
+        }
+      }
+    }
+    // El atacante tuvo material: hubo entes con indicadores completos y entes con etapa oculta.
+    expect(indicadoresConDerivados).toBeGreaterThan(0);
+    expect(indicadoresPorEtapaOculta).toBeGreaterThan(0);
+  });
+
+  it("de un ente con todas sus celdas publicadas, el atacante solo deduce lo que ya era público", () => {
+    const filas: DenunciaAgregable[] = CLAVES_ETAPA.map((etapa) =>
+      denuncia({ ente: "ente-a", etapa, n: 20 }),
+    );
+    const publicacion = construirPublicacion(filas, { municipios, entes: ["ente-a"] }, { k });
+    const hechos = hechosDe(crearAzar(3), filas);
+    const [indicador] = indicadoresDePublicacion(publicacion, hechos, ["ente-a"], { k });
+    expect(indicador?.motivo).toBe("publicado");
+    const desigualdades = desigualdadesDeIndicador(indicador!, k);
+    expect(desigualdades.length).toBeGreaterThan(0);
+    const publicadas = new Set(publicacion.filter((f) => f.conteo !== null).map((f) => f.id));
+    for (const d of desigualdades) {
+      for (const celda of d.celdas) expect(publicadas, celda).toContain(celda);
+    }
   });
 });

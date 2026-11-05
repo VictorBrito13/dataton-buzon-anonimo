@@ -1,0 +1,16 @@
+{
+  "municipios.json": {
+    "fuente": "Catálogo de municipios de la versión de pruebas del S5 de la PDN",
+    "url": "https://dev-denuncias.plataformadigitalnacional.org/next-api/public/catalogos?catalog=municipios",
+    "consultadoEl": "2026-11-04",
+    "licencia": "No publicada. Pendiente de confirmar con SESNA."
+  },
+  "entes.json": {
+    "fuente": "Catálogo de entes públicos de Cobertura de la PDN, servido por la versión de pruebas del S5",
+    "url": "https://dev-denuncias.plataformadigitalnacional.org/",
+    "consultadoEl": "2026-11-04",
+    "licencia": "No publicada. Pendiente de confirmar con SESNA."
+  },
+  "generadoCon": "apps/frontend/dashboard/scripts/generar-catalogos.mjs",
+  "zonaHoraria": "America/Mexico_City"
+}

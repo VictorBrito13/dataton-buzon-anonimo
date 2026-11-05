@@ -3,12 +3,12 @@
 Generado por `npm run test:anonimato`. No se edita a mano.
 
 - **Fecha:** 2026-11-05
-- **Commit:** `82ef5b4`
+- **Commit:** `8959207`
 - **Resultado de la corrida:** passed
 
 | Aprobadas | Fallidas | Pendientes (fixme) | Omitidas | Total |
 |---|---|---|---|---|
-| 38 | 0 | 0 | 0 | 38 |
+| 44 | 0 | 0 | 0 | 44 |
 
 Ninguna prueba queda pendiente ni omitida: todas corren contra el despliegue real.
 
@@ -17,8 +17,9 @@ Ninguna prueba queda pendiente ni omitida: todas corren contra el despliegue rea
 | Prueba | Estado | Evidencia |
 |---|---|---|
 | Página /como-te-protegemos › responde las preguntas del público y distingue lo pendiente | Aprobada |  |
-| Página /como-te-protegemos › sin fallas de accesibilidad WCAG A y AA en modo light | Aprobada | axe-core: 19 reglas aprobadas, 0 violaciones |
-| Página /como-te-protegemos › sin fallas de accesibilidad WCAG A y AA en modo dark | Aprobada | axe-core: 19 reglas aprobadas, 0 violaciones |
+| Página /como-te-protegemos › declara que la salida rápida abre un sitio ajeno y qué borra | Aprobada |  |
+| Página /como-te-protegemos › sin fallas de accesibilidad WCAG A y AA en modo light | Aprobada | axe-core: 22 reglas aprobadas, 0 violaciones |
+| Página /como-te-protegemos › sin fallas de accesibilidad WCAG A y AA en modo dark | Aprobada | axe-core: 22 reglas aprobadas, 0 violaciones |
 | Página /como-te-protegemos › funciona a 320 px de ancho, sin desplazamiento horizontal | Aprobada |  |
 
 ## controles.spec.ts
@@ -53,7 +54,7 @@ Ninguna prueba queda pendiente ni omitida: todas corren contra el despliegue rea
 | Infraestructura › frontend: sistema de archivos de solo lectura y sin privilegios nuevos | Aprobada |  |
 | Infraestructura › caddy: sistema de archivos de solo lectura y sin privilegios nuevos | Aprobada |  |
 | Infraestructura › backend y frontend no tienen salida a internet | Aprobada |  |
-| Bitácoras y base de datos › las bitácoras no guardan IP ni user-agent, incluso con errores 404 y 502 | Aprobada | 82 líneas revisadas; sin 203.0.113.77, sin la IP del anfitrión (172.25.0.1) y sin el user-agent marcador |
+| Bitácoras y base de datos › las bitácoras no guardan IP ni user-agent, incluso con errores 404 y 502 | Aprobada | 74 líneas revisadas; sin 203.0.113.77, sin la IP del anfitrión (172.29.0.1) y sin el user-agent marcador |
 | Bitácoras y base de datos › el volcado de pg_dump incluye los datos, así que buscar en él sí significa algo | Aprobada |  |
 | Bitácoras y base de datos › el rol de la API pública no acepta la contraseña de desarrollo y no lee denuncias | Aprobada |  |
 | Bitácoras y base de datos › el esquema no tiene columnas de IP ni de user-agent | Aprobada |  |
@@ -69,3 +70,13 @@ Ninguna prueba queda pendiente ni omitida: todas corren contra el despliegue rea
 | Flujo de denuncia › sin cookies ni almacenamiento local si no se activó el borrador | Aprobada |  |
 | Flujo de denuncia › pg_dump no contiene relato, frase, folio ni IP de prueba | Aprobada |  |
 | Flujo de denuncia › las bitácoras de backend y Caddy no contienen IP ni user-agent | Aprobada |  |
+
+## tablero.spec.ts
+
+| Prueba | Estado | Evidencia |
+|---|---|---|
+| Tablero con datos de demostración › el servicio de demostración publica trimestres y los marca como sintéticos | Aprobada | 5 trimestres publicados; el más reciente, 2026-T3, con k = 5 |
+| Tablero con datos de demostración › el tablero muestra el trimestre y avisa que las denuncias son sintéticas | Aprobada |  |
+| Tablero con datos de demostración › ninguna celda publicada vale entre 1 y k − 1, en ninguna tabla ni descarga | Aprobada | 3476 celdas en 10 tablas; 765 ocultas y ninguna publicada entre 1 y 4 |
+| Tablero con datos de demostración › los indicadores de un ente con alguna etapa oculta no traen porcentajes, tiempos ni señal | Aprobada | 8 entes; 8 con alguna etapa oculta y sin derivados |
+| Tablero con datos de demostración › el generador se niega sin la bandera de demostración, aunque corra en la misma imagen | Aprobada |  |

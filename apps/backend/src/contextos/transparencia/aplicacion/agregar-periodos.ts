@@ -1,5 +1,5 @@
-import { calcularIndicadoresEnte, type HechosEnte } from "../dominio/indicadores.js";
-import type { CeldaVista } from "../dominio/k-anonimato.js";
+import { indicadoresDePublicacion, type HechosObservados } from "../dominio/indicadores.js";
+import type { Motivo } from "../dominio/k-anonimato.js";
 import {
   fechaDeCorte,
   finDePeriodo,
@@ -21,7 +21,7 @@ import type {
 
 export const TABLA_INDICADORES = "indicador_ente";
 
-type HechosInternos = Pick<HechosEnte, "conRespuesta" | "tiempos">;
+type HechosInternos = HechosObservados;
 
 const diasEntre = (desde: string, hasta: string): number =>
   Math.round((Date.parse(`${hasta}T00:00:00Z`) - Date.parse(`${desde}T00:00:00Z`)) / 86_400_000);
@@ -87,39 +87,25 @@ const publicarPeriodo = (
   const resumen = resumirPeriodo(denuncias, periodo, rezagoDias);
   const entes = [...new Set([...universo.entes, ...resumen.hechos.keys()])].sort();
   const filas = construirPublicacion(resumen.denuncias, { ...universo, entes }, { k });
-  const porId = new Map(filas.map((f) => [f.id, f]));
-  const celda = (id: string): CeldaVista => {
-    const fila = porId.get(id);
-    return fila ? { conteo: fila.conteo, motivo: fila.motivo } : { conteo: 0, motivo: "publicada" };
-  };
+  const conEnte = entes.filter((ente) => ente !== CLAVE_SIN_ENTE);
 
-  const indicadores: FilaAgregado[] = entes
-    .filter((ente) => ente !== CLAVE_SIN_ENTE)
-    .map((ente) => {
-      const propios = resumen.hechos.get(ente);
-      const detalle = calcularIndicadoresEnte(
-        {
-          ente,
-          total: celda(`ente=${ente}`),
-          porEtapa: {
-            recibida: celda(`ente=${ente}|etapa=recibida`),
-            archivada: celda(`ente=${ente}|etapa=archivada`),
-            sin_competencia: celda(`ente=${ente}|etapa=sin_competencia`),
-          },
-          conRespuesta: propios?.conRespuesta ?? 0,
-          tiempos: propios?.tiempos ?? {},
-        },
-        { k },
-      );
-      return {
-        dimensiones: TABLA_INDICADORES,
-        claves: { ente },
-        conteo: null,
-        motivo: detalle.motivo === "publicado" ? ("publicada" as const) : ("menor_a_k" as const),
-        k,
-        detalle,
-      };
-    });
+  // La fila lleva el motivo real del total del ente; el detalle dice además si faltan derivados.
+  const indicadores: FilaAgregado[] = indicadoresDePublicacion(filas, resumen.hechos, conEnte, {
+    k,
+  }).map((detalle) => {
+    const motivo: Motivo =
+      detalle.motivo === "publicado" || detalle.motivo === "etapa_oculta"
+        ? "publicada"
+        : detalle.motivo;
+    return {
+      dimensiones: TABLA_INDICADORES,
+      claves: { ente: detalle.ente },
+      conteo: null,
+      motivo,
+      k,
+      detalle,
+    };
+  });
 
   return [
     ...filas.map(({ dimensiones, claves, conteo, motivo }) => ({

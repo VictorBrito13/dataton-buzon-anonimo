@@ -62,7 +62,8 @@ Navegador ──HTTPS──▶ Caddy ──▶ frontend (Next.js standalone)
 | `secretos`    | Genera secretos si faltan y termina. La clave privada de demostración va a su propio volumen | No |
 | `clave-autoridad` | Solo a mano (`docker compose run`): lee ese volumen e imprime la clave. Perfil `demo`, sin red | No |
 | `db`          | PostgreSQL                                                      | No              |
-| `migraciones` | Aplica `apps/backend/migrations`, cambia la contraseña del rol público, crea el usuario demo del panel y termina | No |
+| `migraciones` | Aplica `apps/backend/migrations`, cambia la contraseña del rol público, crea el usuario demo del panel (lee su contraseña del volumen `semilla-autoridad-demo`, que el backend no monta) y termina | No |
+| `sintetico`   | Solo a mano (`docker compose run --rm sintetico`): denuncias sintéticas y agregados para el tablero. Perfil `demo` | No |
 | `backend`     | API en `/api`                                                   | No              |
 | `frontend`    | Aplicación Next.js                                              | No              |
 | `caddy`       | HTTPS, HSTS y único punto de entrada; sin bitácora de peticiones | 80 y 443        |
@@ -99,9 +100,19 @@ docker compose up --build
 
 Debe ser antes del primer arranque: la pública se escribe una vez en el volumen `secretos` y se conserva.
 
-### Tablero y datos sintéticos
+### Datos de demostración para el tablero
 
-El despliegue arranca sin denuncias, por lo que el tablero público no tendrá datos que mostrar. **Pendiente de verificar:** cargar datos sintéticos en este modo; `npm run sintetico` y `npm run agregar` del backend están pensados para el modo de desarrollo (sección 6), porque la base no publica puertos aquí.
+El despliegue arranca sin denuncias, así que el tablero dice «Todavía no hay un trimestre publicado». Para una demostración, con el despliegue ya levantado:
+
+```bash
+docker compose run --rm sintetico
+```
+
+El comando es el mismo en PowerShell. Llena la base con **denuncias sintéticas** (30 000, con semilla fija; entes ficticios y relatos marcados como `SINTETICO`: ninguna es real ni se parece a una real) y publica los trimestres cerrados con el motor de k-anonimato. Tarda alrededor de un minuto. Después, <https://localhost/tablero> muestra el trimestre más reciente y avisa en pantalla que las cifras son sintéticas; `/api/v1/publico/periodos` lo marca con `datosSinteticos: true`.
+
+El generador se niega a correr con `NODE_ENV=production`, que es como corre toda la imagen del backend. El servicio `sintetico` (perfil `demo`: no arranca con `up`) es el único que declara la bandera `DATOS_SINTETICOS_DEMO=1`, y `docker/compose.test.mjs` lo comprueba en cada PR. Volver a correrlo reemplaza las sintéticas anteriores; `docker compose down -v` deja todo vacío otra vez.
+
+**Comprobado** en el despliegue real: `e2e/anonimato/tablero.spec.ts` ejecuta este mismo comando en cada corrida de `npm run test:anonimato` y revisa que el tablero muestre el trimestre, que ninguna celda publicada quede entre 1 y k − 1 en ninguna tabla ni descarga, y que los indicadores de un ente con alguna etapa oculta no traigan porcentajes ni tiempos.
 
 ## 3. Comprobar que funciona
 
@@ -139,7 +150,7 @@ docker compose down      # Conserva datos y secretos
 docker compose down -v   # Borra datos y secretos
 ```
 
-**Los secretos y los datos van juntos.** Sin la pimienta, ningún folio ni frase existente vuelve a funcionar. Para respaldar el despliegue, respalda los volúmenes `secretos` y `db-data`. El volumen `clave-autoridad-demo` solo existe en la demostración; en uso real está vacío y la clave la resguarda la autoridad.
+**Los secretos y los datos van juntos.** Sin la pimienta, ningún folio ni frase existente vuelve a funcionar. Para respaldar el despliegue, respalda los volúmenes `secretos` y `db-data`. El volumen `clave-autoridad-demo` solo existe en la demostración; en uso real está vacío y la clave la resguarda la autoridad. `semilla-autoridad-demo` guarda el usuario y la contraseña demo del panel: solo lo leen `secretos` y `migraciones`; el backend recibe únicamente el hash que quedó en la base.
 
 ## 6. Desarrollo local
 
@@ -184,7 +195,7 @@ Esta guía cubre el prototipo. Para exponerlo con un dominio real:
 
 ## Qué se comprobó de esta guía
 
-- **Comprobado** en macOS (arm64) con las versiones de la tabla, desde volúmenes vacíos: [`evidencia/despliegue-local.md`](./evidencia/despliegue-local.md).
+- **Comprobado** en macOS (arm64) con las versiones de la tabla, desde volúmenes vacíos: [`evidencia/despliegue-local.md`](./evidencia/despliegue-local.md). Incluye los datos de demostración y el tablero con datos (`tablero.spec.ts`).
 - **Linux x86-64:** el trabajo de CI construye y prueba en `ubuntu-latest`. Su resultado se consulta en cada PR.
 - **Windows, sin Docker:** el trabajo `windows` de CI corre en `windows-latest` `npm ci`, `npm run build` (Next.js con `output: standalone`), `npm run typecheck`, `npm run lint`, los verificadores y las pruebas unitarias que no necesitan Postgres, además de un script npm del backend para comprobar que arrancan en `cmd.exe`.
 - **Pendiente de verificar:** `docker compose up --build` en Windows con Docker Desktop y WSL2. El ejecutor de GitHub para Windows no corre contenedores Linux, así que la CI no lo cubre; falta probarlo en un equipo Windows real, igual que una persona ajena al equipo siguiendo la guía.

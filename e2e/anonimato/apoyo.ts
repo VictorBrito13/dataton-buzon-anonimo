@@ -53,6 +53,17 @@ export const compose = (argumentos: string[], opciones: { salidaVisible?: boolea
     env: { ...process.env, PUERTO_HTTP, PUERTO_HTTPS },
   }) ?? "";
 
+/** Como `compose`, pero devuelve el código de salida en lugar de lanzar: para probar que algo se niega. */
+export const composeIntento = (argumentos: string[]): { estado: number | null; salida: string } => {
+  const r = spawnSync("docker", ["compose", "-p", PROYECTO, ...argumentos], {
+    cwd: RAIZ,
+    encoding: "utf8",
+    maxBuffer: 256 * 1024 * 1024,
+    env: { ...process.env, PUERTO_HTTP, PUERTO_HTTPS },
+  });
+  return { estado: r.status, salida: `${r.stdout}${r.stderr}` };
+};
+
 /** Bitácoras de todos los servicios, incluidas las de contenedores ya terminados. */
 export const leerBitacoras = (): string =>
   compose([

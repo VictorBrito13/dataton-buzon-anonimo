@@ -1,4 +1,8 @@
-/** Destino común que no delata lo que se estaba haciendo. */
+/**
+ * Destino común que no delata lo que se estaba haciendo. Es un sitio ajeno: como cualquier página
+ * que se abra, recibe la IP y la hora de esa visita. Se declara en /como-te-protegemos y en el
+ * modelo de amenazas; `limpiarRastro` borra borrador y tema, no el historial ni la caché del modelo.
+ */
 export const SITIO_NEUTRO = "https://www.google.com/";
 const PREFIJO = "buzon:";
 const VENTANA_ESCAPE_MS = 1500;

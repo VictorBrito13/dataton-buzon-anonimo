@@ -3,7 +3,11 @@
  * archivos: en tiempo de ejecución no hay ninguna llamada a terceros.
  *
  * Uso (desde apps/backend):
- *   npx tsx ../../scripts/pdn/regenerar-instantaneas.mts --s3-csv <conteos.csv> [--cache <dir>] [--sin-s6]
+ *   npm run pdn:instantaneas -- --s3-csv <conteos.csv> [--cache <dir>] [--sin-s6]
+ *
+ * El catálogo de municipios del S5 se lee con `RealS5`, el mismo adaptador que el backend tiene
+ * disponible y que el flujo de denuncia no invoca: así sus lecturas reales se ejercitan aquí, fuera
+ * del tiempo de ejecución del sitio. La fecha de consulta se registra en zona de México.
  *
  * --s3-csv  CSV `carpeta_proveedor,ente,n`, ya reducido a conteos por institución. Los paquetes
  *           S3 traen campos personales: se reducen fuera del repositorio y nunca se versionan.
@@ -16,6 +20,8 @@
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { ZONA_HORARIA_POR_DEFECTO, diaDe } from "../../apps/backend/src/compartido/dominio/dia.js";
+import { RealS5 } from "../../apps/backend/src/contextos/denuncias/infraestructura/s5/real-s5.js";
 import {
   consolidarCompradores,
   consolidarConteosS3,
@@ -26,7 +32,8 @@ import {
 } from "../../apps/backend/src/contextos/transparencia/dominio/instituciones.js";
 
 const API_S6 = "https://api.plataformadigitalnacional.org/s6/api/v1";
-const S5 = "https://dev-denuncias.plataformadigitalnacional.org/next-api/public/catalogos";
+const S5_BASE = "https://dev-denuncias.plataformadigitalnacional.org";
+const S5 = `${S5_BASE}/next-api/public/catalogos`;
 const COBERTURA = "https://cobertura.plataformadigitalnacional.org/directus/items/entes?limit=-1";
 const PAUSA_MS = 1000;
 const UMBRAL_S3 = 5;
@@ -38,7 +45,7 @@ const DESTINO = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "../../apps/backend/datos/pdn",
 );
-const hoy = new Date().toISOString().slice(0, 10);
+const hoy = diaDe(new Date(), process.env.ZONA_HORARIA || ZONA_HORARIA_POR_DEFECTO);
 
 const opcion = (nombre: string): string | undefined => {
   const i = process.argv.indexOf(nombre);
@@ -100,10 +107,13 @@ interface EnteCobertura {
 }
 
 const municipios = async (): Promise<void> => {
-  const { data } = await leerFuente<{ data: MunicipioS5[] }>(
-    "c_municipios.json",
-    `${S5}?catalog=municipios`,
-  );
+  const local = cache ? path.join(cache, "c_municipios.json") : undefined;
+  const data: MunicipioS5[] =
+    local && existsSync(local)
+      ? (JSON.parse(readFileSync(local, "utf8")) as { data: MunicipioS5[] }).data
+      : ((await new RealS5({ baseUrl: S5_BASE, envioAutorizado: false }).catalogo(
+          "municipios",
+        )) as unknown as MunicipioS5[]);
   guardar("municipios.json", {
     fuente: {
       nombre: "Catálogo de municipios del prototipo S5 (versión de pruebas)",

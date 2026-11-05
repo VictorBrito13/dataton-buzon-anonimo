@@ -338,6 +338,8 @@ test("el paso de hechos se completa solo con teclado", async ({ page }) => {
   await page.goto("/denunciar");
   await page.getByLabel("¿En qué estado pasó?").focus();
   await page.keyboard.type("Morelos");
+  // El selector de municipio está deshabilitado hasta que llega el catálogo: con Tab antes, se salta.
+  await expect(page.getByLabel("¿En qué municipio?")).toBeEnabled();
   await page.keyboard.press("Tab");
   await expect(page.getByLabel("¿En qué municipio?")).toBeFocused();
   await page.keyboard.press("Tab");

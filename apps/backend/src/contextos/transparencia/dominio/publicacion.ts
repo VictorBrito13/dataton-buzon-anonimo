@@ -18,7 +18,7 @@ export const TABLAS_PUBLICADAS = [
   "estado,tipoFalta",
   "estado,etapa",
   "tipoFalta,etapa",
-  "ente,etapa",
+  "etapa,ente",
 ] as const;
 
 export const TABLA_TOTAL = "total";
@@ -59,8 +59,16 @@ export const normalizarDimensiones = (dimensiones: readonly Dimension[]): string
   return [...dimensiones].sort((a, b) => DIMENSIONES.indexOf(a) - DIMENSIONES.indexOf(b)).join(",");
 };
 
-const idDe = (claves: Readonly<Record<string, string>>): string =>
-  Object.entries(claves)
+/** Claves en el orden canónico de DIMENSIONES: `{ ente, etapa }` y `{ etapa, ente }` son la misma celda. */
+const ordenarClaves = (claves: Readonly<Record<string, string>>): [string, string][] =>
+  Object.entries(claves).sort(
+    ([a], [b]) =>
+      (DIMENSIONES as readonly string[]).indexOf(a) - (DIMENSIONES as readonly string[]).indexOf(b),
+  );
+
+/** Identificador interno de una celda a partir de sus claves, sin importar el orden en que se den. */
+export const idDeClaves = (claves: Readonly<Record<string, string>>): string =>
+  ordenarClaves(claves)
     .map(([d, v]) => `${d}=${v}`)
     .join("|") || TABLA_TOTAL;
 
@@ -70,10 +78,10 @@ class Constructor {
   readonly lineas: Linea[] = [];
 
   registrar(claves: Record<string, string>): string {
-    const id = idDe(claves);
+    const id = idDeClaves(claves);
     if (!this.conteos.has(id)) {
       this.conteos.set(id, 0);
-      this.claves.set(id, claves);
+      this.claves.set(id, Object.fromEntries(ordenarClaves(claves)));
     }
     return id;
   }
@@ -195,8 +203,11 @@ export const construirRed = (
   return { conteos, lineas };
 };
 
+/** El mismo nombre que produce `normalizarDimensiones`: así cada tabla se puede pedir por /agregados. */
 const nombreDeTabla = (claves: Readonly<Record<string, string>>): string =>
-  Object.keys(claves).join(",") || TABLA_TOTAL;
+  ordenarClaves(claves)
+    .map(([d]) => d)
+    .join(",") || TABLA_TOTAL;
 
 /** Protege todas las tablas de un trimestre. Es la única forma de producir filas publicables. */
 export const construirPublicacion = (

@@ -41,14 +41,14 @@ El enfoque responde a lo que SESNA señaló en el [taller para la explotación d
 
 ### Barrera de calidad
 
-Cada PR hacia `dev`, `main` o `feat/**` pasa por [GitHub Actions](../.github/workflows/ci.yml). El check `ci-ok` agrega los trabajos requeridos:
+Cada PR hacia `dev`, `main` o `feat/**`, y cada `push` a `dev` o `main`, pasa por [GitHub Actions](../.github/workflows/ci.yml). El check `ci-ok` agrega los trabajos requeridos:
 
 | Trabajo      | Comprueba                                                                                                 |
 | ------------ | --------------------------------------------------------------------------------------------------------- |
 | `calidad`    | Sin terceros ni lectura de IP; dependencias entre capas; build; tipos; lint; formato                      |
 | `pruebas`    | Migraciones y pruebas contra PostgreSQL; cobertura mínima del dominio (85 % en líneas, 80 % en ramas)     |
 | `imagenes`   | Construcción de las imágenes Docker                                                                       |
-| `playwright` | Pruebas de anonimato contra el despliegue real y demás suites E2E                                         |
+| `playwright` | Pruebas de anonimato contra el despliegue real (con datos de demostración) y demás suites E2E, incluida la búsqueda con el modelo NER real descargado en el ejecutor |
 | `tablero`    | Tablero contra la API real, con datos sintéticos agregados                                                |
 | `auditoria`  | `npm audit --audit-level=high`, informativo: no bloquea                                                   |
 
@@ -66,7 +66,7 @@ Todas son libres o de código abierto y no requieren pago ni cuentas.
 | Base de datos        | PostgreSQL 17                                    | Sin columnas de IP, user-agent ni hora en denuncias     |
 | Credenciales         | Argon2id en el navegador; HMAC-SHA-256 con pimienta | Búsqueda determinista sin guardar la frase (D1)      |
 | Sellado              | ECDH P-256, HKDF-SHA-256, AES-256-GCM (WebCrypto) | El servidor no puede abrir los relatos (D3)            |
-| Prueba de trabajo    | Altcha, autoalojado (integración pendiente de verificar) | Frenar abuso sin un captcha de terceros |
+| Prueba de trabajo    | Altcha, autoalojado; integrado en el envío y exigido por la API (`test/integracion/flujo.test.ts`, `flujo.spec.ts`) | Frenar abuso sin un captcha de terceros |
 | Despliegue           | Docker Compose, Caddy 2                          | Un comando, HTTPS local, sin bitácora de peticiones     |
 | Pruebas              | Vitest, Playwright, axe-core, `node:test`        | Unidad, navegador real y accesibilidad                  |
 | Asistencia de IA     | Ver [`uso-de-ia.md`](./uso-de-ia.md)             | Declaración exigida por las bases                       |
@@ -75,7 +75,9 @@ Todas son libres o de código abierto y no requieren pago ni cuentas.
 
 - **Denuncias:** solo sintéticas. No se envían denuncias al entorno de pruebas del S5 sin autorización de SESNA.
 - **PDN:** para la explotación de datos se usan S3, S6, Cobertura y los catálogos del prototipo. Las fuentes, consultas y limitaciones están en la [investigación](./investigacion-s5-pdn.md) y no se repiten aquí. Solo se versionan conteos por institución, nunca registros individuales. Son señales para priorizar revisión, no conclusiones (D8).
-- **Datos abiertos:** agregados protegidos con k-anonimato (D6). **Pendiente de verificar** al integrar el módulo de datos.
+- **Datos abiertos:** agregados protegidos con k-anonimato (D6), en `/tablero`, `/api/v1/publico/agregados`, `/indicadores` y las descargas CSV y JSON con diccionario de datos. Comprobado en el despliegue con datos sintéticos (`e2e/anonimato/tablero.spec.ts`): ninguna celda publicada entre 1 y k − 1, y los indicadores de un ente con alguna etapa oculta no traen derivados. La garantía exacta y lo que no cubre están en `dominio/metodologia.ts` y en `/api/v1/publico/metodologia`.
+- **Instantáneas de la PDN:** se regeneran con `npm run pdn:instantaneas -w @dataton/backend` (ver [`scripts/pdn/regenerar-instantaneas.mts`](../scripts/pdn/regenerar-instantaneas.mts)); la fecha de consulta se registra en zona de México. Las lecturas del S5 pasan por `RealS5`, el mismo adaptador que el backend tiene disponible y que el flujo de denuncia no invoca.
+- **Salida rápida:** lleva a Google, un sitio ajeno que recibe la IP y la hora de esa visita; borra borrador y tema, no el historial ni el modelo NER en caché. Es la única salida hacia un tercero y está declarada en `/como-te-protegemos`, en la página de inicio y en el [modelo de amenazas](./modelo-de-amenazas.md#5-límites-honestos).
 
 ## 6. Cómo se demuestra el anonimato
 
@@ -85,7 +87,8 @@ Las pruebas corren contra el despliegue real, no contra un servidor de desarroll
 2. Un navegador real recorre el sitio con marcadores: una IP de un rango reservado para documentación y un user-agent único.
 3. Se registra todo lo que sale del navegador y se revisan el volcado de la base y las bitácoras de cada servicio.
 4. **Controles:** otras pruebas confirman que los detectores detectan. Por ejemplo, un Caddy con bitácora activada sí registra el marcador, que es el "antes" frente al despliegue real.
-5. El resultado se escribe en [`evidencia/reporte-anonimato.md`](./evidencia/reporte-anonimato.md). Las pruebas que dependen de funciones aún no integradas aparecen como pendientes, no como aprobadas.
+5. El resultado se escribe en [`evidencia/reporte-anonimato.md`](./evidencia/reporte-anonimato.md). Todas las pruebas corren contra el despliegue; si una función faltara, la prueba fallaría en vez de quedar pendiente.
+6. Con `docker compose run --rm sintetico` se cargan denuncias sintéticas y se publica el tablero; `tablero.spec.ts` lo hace en cada corrida y revisa lo publicado.
 
 Para quien no programa, [`/como-te-protegemos`](../apps/frontend/dashboard/app/como-te-protegemos/page.tsx) lo explica en lenguaje claro y enseña a comprobarlo con el navegador.
 

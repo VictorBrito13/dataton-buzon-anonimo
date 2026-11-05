@@ -15,12 +15,18 @@ export const REGLAS = [
   "Se publican como máximo dos dimensiones a la vez.",
   "Solo trimestres cerrados, con rezago y sin recalcular: nunca acumulados que se puedan restar.",
   "Antes de publicar, un atacante automático intenta acotar cada celda oculta. Si lo logra, se oculta más o no se publica.",
+  "Los indicadores de un ente (porcentajes, tiempos promedio y señal) se publican solo si todas sus celdas ente × etapa están publicadas. Un promedio que se oculta por tener pocas denuncias diría cuántas salieron de una etapa, y con ello el valor de una celda oculta.",
   "Nunca se publica nada sobre la persona denunciada.",
 ];
 
-/** Lo que se puede afirmar con exactitud. Probado en ataques-k-anonimato.test.ts. */
+/**
+ * Lo que se puede afirmar con exactitud. Probado en ataques-k-anonimato.test.ts (tablas),
+ * publicacion.test.ts (tablas e indicadores de una misma publicación) y agregar-periodos.test.ts
+ * (lo que de verdad se guarda y sirven /agregados, /indicadores y las descargas).
+ */
 export const textoGarantia = (k: number): string =>
-  `Dentro de la publicación de un trimestre, a partir de los conteos, motivos, k y las sumas entre tablas y niveles, ` +
+  `Dentro de la publicación de un trimestre, a partir de todo lo que sirven las tablas, las descargas y los indicadores por ente ` +
+  `(conteos, motivos, k, las sumas entre tablas y niveles, y los porcentajes y tiempos publicados u omitidos), ` +
   `combinar restas (eliminación de variables), propagar intervalos y sondear valores extremos no permite acotar una celda oculta a un rango con ` +
   `diferencia menor que ${anchoMinimo(k)} entre máximo y mínimo: con k = ${k}, siempre quedan al menos ${anchoMinimo(k) + 1} valores ` +
   `posibles. El motor lo comprueba en cada publicación y se niega a publicar si falla. En pruebas con semilla fija, ` +
@@ -32,6 +38,7 @@ export const NO_CUBRE = [
   "Los ceros se publican: «< 5 de cohecho y 0 en lo demás» revela de qué tipo son todos los casos de ese lugar.",
   "En tablas grandes no se resuelve el problema como programación lineal completa, ni se modela la tabla de tres dimensiones que hay detrás de los cruces publicados.",
   "No se considera a un atacante que simule el motor para aprovechar qué celda eligió ocultar.",
+  "Del atacante que lee los indicadores solo se modelan las desigualdades que se derivan de cómo se calculan (salidas por etapa, porcentajes redondeados y su complemento); un porcentaje omitido se trata como sin información, aunque quien conozca el código puede deducir una disyunción débil.",
   "Protege las cifras, no el contenido: alguien puede identificarse por lo que escribió en su denuncia.",
 ];
 
