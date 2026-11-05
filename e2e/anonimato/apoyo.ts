@@ -209,6 +209,12 @@ export interface ResultadoFlujo {
   relato: string;
 }
 
+export interface ArchivoDePrueba {
+  name: string;
+  mimeType: string;
+  buffer: Buffer;
+}
+
 /**
  * Carga una página y da tiempo a las peticiones tardías, como las precargas de enlaces. No se usa
  * `networkidle`: Next deja abiertas las precargas que responden 404 y nunca se alcanzaría.
@@ -219,8 +225,15 @@ export const visitar = async (pagina: Page, ruta: string) => {
   return respuesta;
 };
 
-/** Recorre el formulario real sin activar el borrador ni la detección de nombres. */
-export const completarDenuncia = async (pagina: Page): Promise<ResultadoFlujo> => {
+/**
+ * Recorre el formulario real sin activar el borrador ni la detección de nombres. Con `evidencias`,
+ * adjunta esos archivos en el paso correspondiente y espera a que cada uno quede listo; si alguno
+ * se rechaza, la prueba falla aquí mismo.
+ */
+export const completarDenuncia = async (
+  pagina: Page,
+  opciones: { evidencias?: ArchivoDePrueba[] } = {},
+): Promise<ResultadoFlujo> => {
   const relato = `Relato sintético de prueba, no es un hecho real. ${RELATO_MARCADOR}.`;
   const continuar = pagina.getByRole("button", { name: "Continuar" });
 
@@ -233,6 +246,21 @@ export const completarDenuncia = async (pagina: Page): Promise<ResultadoFlujo> =
 
   for (const titulo of ["Personas o entes involucrados", "Evidencias", "Revisión"]) {
     await pagina.getByRole("heading", { name: titulo, level: 2 }).waitFor();
+    if (titulo === "Evidencias" && opciones.evidencias?.length) {
+      await pagina.getByLabel("Elige tus archivos").setInputFiles(opciones.evidencias);
+      for (const archivo of opciones.evidencias) {
+        // Limpieza en el navegador, prueba de trabajo y subida: puede tardar.
+        await pagina
+          .getByRole("button", { name: `Quitar ${archivo.name}` })
+          .waitFor({ timeout: 90_000 });
+      }
+      const rechazos = await pagina.getByText("Estos archivos no se enviaron").count();
+      if (rechazos > 0) {
+        throw new Error(
+          `Archivos rechazados: ${await pagina.locator("main [role=alert]").innerText()}`,
+        );
+      }
+    }
     await continuar.click();
   }
 

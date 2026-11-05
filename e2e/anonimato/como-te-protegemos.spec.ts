@@ -15,14 +15,17 @@ const COMPROBADAS = [
   "Tu frase y tu relato en claro nunca salen de tu dispositivo.",
   "Al enviar una denuncia no se pide nada a otros dominios.",
   "Tras enviar una denuncia, la base de datos no contiene tu relato, frase ni folio.",
+  "Tus evidencias se limpian de datos ocultos.",
   "Las estadísticas públicas no muestran números pequeños.",
 ];
 
-/** Lo que sigue sin prueba contra el despliegue: la página no debe afirmarlo. */
-const PENDIENTES = ["Tus evidencias se limpian de datos ocultos."];
+/** Lo que siga sin prueba contra el despliegue: la página no debe afirmarlo. Hoy, nada. */
+const PENDIENTES: string[] = [];
 
 test.describe("Página /como-te-protegemos", () => {
-  test("responde las preguntas del público y distingue lo pendiente", async ({ page }) => {
+  test("responde las preguntas del público y marca como comprobado solo lo demostrado", async ({
+    page,
+  }) => {
     await page.goto("/como-te-protegemos");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Cómo te protegemos");
     for (const nombre of SECCIONES) {

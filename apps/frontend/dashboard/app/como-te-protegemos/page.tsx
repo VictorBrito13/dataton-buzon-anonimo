@@ -54,9 +54,10 @@ const COMPROBACIONES: { texto: string; estado: Estado }[] = [
     estado: "comprobado",
   },
   {
-    // La limpieza tiene pruebas unitarias; el flujo de prueba aún no sube un archivo al despliegue.
+    // evidencias.spec.ts: foto con GPS y autor, y hoja de cálculo con ruta de usuario, subidas en el
+    // flujo real; ni el cuerpo enviado ni pg_dump los contienen, y el servidor limpia por su cuenta.
     texto: "Tus evidencias se limpian de datos ocultos.",
-    estado: "pendiente",
+    estado: "comprobado",
   },
   {
     // tablero.spec.ts: datos sintéticos en el despliegue, ninguna celda entre 1 y k − 1
