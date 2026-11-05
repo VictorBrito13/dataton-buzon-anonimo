@@ -32,22 +32,22 @@ aplicación importan Express, `pg`, `env` o infraestructura.
 
 El contrato es `packages/shared/src/api.ts`. Lo que el contrato deja abierto se indica aquí.
 
-| Método y ruta                                  | Descripción                                              | Respuesta                                 |
-| ---------------------------------------------- | -------------------------------------------------------- | ----------------------------------------- |
-| `GET /configuracion`                           | Clave pública y límites de evidencias                    | `respuestaConfiguracion`                  |
-| `GET /pow/reto`                                | Reto Altcha v2 (PBKDF2/SHA-256), firmado, con expiración | Reto del widget `altcha` 3                |
-| `POST /denuncias`                              | Crea la denuncia y devuelve el folio una sola vez        | 201 `{ folio }`                           |
-| `POST /evidencias?pow=…`                       | Binario en el cuerpo; se limpia y se sella               | 201 `respuestaEvidencia`                  |
-| `POST /acceso/consulta`                        | Seguimiento con folio o frase                            | 200 `respuestaConsulta`                   |
-| `POST /acceso/mensajes`                        | Mensaje sellado del denunciante                          | 201 `{ ok: true }`                        |
-| `POST /autoridad/sesion`                       | Inicia sesión; cookie `sesion_autoridad`                 | 200 `{ usuario }`                         |
-| `GET /autoridad/sesion`                        | Sesión actual                                            | 200 `{ usuario }`                         |
-| `DELETE /autoridad/sesion`                     | Cierra la sesión                                         | 204                                       |
-| `GET /autoridad/denuncias`                     | Hasta 500 resúmenes, por día e id, y el total            | 200 `respuestaListadoAutoridad`           |
-| `GET /autoridad/denuncias/:id`                 | Detalle con relato y mensajes sellados                   | 200 `detalleDenunciaAutoridad`            |
-| `POST /autoridad/denuncias/:id/etapa`          | Cambio validado con `TRANSICIONES`                       | 200 `{ etapa }`                           |
-| `POST /autoridad/denuncias/:id/mensajes`       | Mensaje de la autoridad                                  | 201 `{ ok: true }`                        |
-| `GET /autoridad/denuncias/:id/evidencias/:eid` | Blob sellado; tipo en `X-Evidencia-Tipo`                 | 200 binario                               |
+| Método y ruta                                  | Descripción                                              | Respuesta                       |
+| ---------------------------------------------- | -------------------------------------------------------- | ------------------------------- |
+| `GET /configuracion`                           | Clave pública y límites de evidencias                    | `respuestaConfiguracion`        |
+| `GET /pow/reto`                                | Reto Altcha v2 (PBKDF2/SHA-256), firmado, con expiración | Reto del widget `altcha` 3      |
+| `POST /denuncias`                              | Crea la denuncia y devuelve el folio una sola vez        | 201 `{ folio }`                 |
+| `POST /evidencias?pow=…`                       | Binario en el cuerpo; se limpia y se sella               | 201 `respuestaEvidencia`        |
+| `POST /acceso/consulta`                        | Seguimiento con folio o frase                            | 200 `respuestaConsulta`         |
+| `POST /acceso/mensajes`                        | Mensaje sellado del denunciante                          | 201 `{ ok: true }`              |
+| `POST /autoridad/sesion`                       | Inicia sesión; cookie `sesion_autoridad`                 | 200 `{ usuario }`               |
+| `GET /autoridad/sesion`                        | Sesión actual                                            | 200 `{ usuario }`               |
+| `DELETE /autoridad/sesion`                     | Cierra la sesión                                         | 204                             |
+| `GET /autoridad/denuncias`                     | Hasta 500 resúmenes, por día e id, y el total            | 200 `respuestaListadoAutoridad` |
+| `GET /autoridad/denuncias/:id`                 | Detalle con relato y mensajes sellados                   | 200 `detalleDenunciaAutoridad`  |
+| `POST /autoridad/denuncias/:id/etapa`          | Cambio validado con `TRANSICIONES`                       | 200 `{ etapa }`                 |
+| `POST /autoridad/denuncias/:id/mensajes`       | Mensaje de la autoridad                                  | 201 `{ ok: true }`              |
+| `GET /autoridad/denuncias/:id/evidencias/:eid` | Blob sellado; tipo en `X-Evidencia-Tipo`                 | 200 binario                     |
 
 La prueba de trabajo es el valor en base64 que produce el widget. `/publico/*` lo implementa el
 contexto de transparencia.

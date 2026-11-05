@@ -64,9 +64,9 @@ describe("nuevaDenuncia", () => {
   });
 
   it("rechaza un municipio de otro estado", () => {
-    expect(codigoDe(() => nuevaDenuncia({ ...datos, municipio: "09001" }, new Date(), MEXICO))).toBe(
-      "municipio_fuera_de_estado",
-    );
+    expect(
+      codigoDe(() => nuevaDenuncia({ ...datos, municipio: "09001" }, new Date(), MEXICO)),
+    ).toBe("municipio_fuera_de_estado");
   });
 
   it("permite omitir el municipio", () => {
@@ -83,8 +83,8 @@ describe("nuevaDenuncia", () => {
 
   it("elimina evidencias repetidas", () => {
     const id = "6a0d3f0e-3c1c-4b7c-8a55-0a5a9a8a7a11";
-    expect(nuevaDenuncia({ ...datos, evidenciaIds: [id, id] }, new Date(), MEXICO).evidenciaIds).toEqual([
-      id,
-    ]);
+    expect(
+      nuevaDenuncia({ ...datos, evidenciaIds: [id, id] }, new Date(), MEXICO).evidenciaIds,
+    ).toEqual([id]);
   });
 });

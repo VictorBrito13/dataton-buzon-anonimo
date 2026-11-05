@@ -18,7 +18,11 @@ export class EnviarMensajeDenunciante {
     const { puerta, repositorio, reloj } = this.puertos;
     const id = await puerta.abrir(pow, credencial);
     if (!id || !selloBienFormado(cuerpoSellado)) return false;
-    await repositorio.agregarMensajeDenunciante(id, cuerpoSellado, diaDe(reloj.ahora(), reloj.zona));
+    await repositorio.agregarMensajeDenunciante(
+      id,
+      cuerpoSellado,
+      diaDe(reloj.ahora(), reloj.zona),
+    );
     return true;
   }
 }
