@@ -35,6 +35,10 @@ if (!existe("DATABASE_URL")) {
   nuevas.push(`DATABASE_URL=postgres://dataton:${password}@db:5432/dataton`);
 }
 
+if (!existe("DATABASE_URL_PUBLICO")) {
+  nuevas.push(`DATABASE_URL_PUBLICO=postgres://buzon_lector_publico:${hex32()}@db:5432/dataton`);
+}
+
 if (!existe("CLAVE_PUBLICA_AUTORIDAD")) {
   let publica = process.env.CLAVE_PUBLICA_AUTORIDAD;
   if (!publica) {

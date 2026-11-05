@@ -93,9 +93,9 @@ Complementa a [`decisiones-arquitectura.md`](./decisiones-arquitectura.md). Los 
 
 | Amenaza                                 | Mitigación                                             | Cómo se prueba                             | Estado                 | Riesgo residual                                         |
 | --------------------------------------- | ------------------------------------------------------ | ------------------------------------------ | ---------------------- | ------------------------------------------------------- |
-| Celdas pequeñas                         | Umbral k = 5 (D6)                                      | Pruebas de ataque del módulo de datos      | Pendiente de verificar | Un valor de k bajo en un municipio muy pequeño          |
-| Resta en fila, columna, nivel y periodo | Supresión complementaria; trimestres cerrados          | Pruebas de ataque del módulo de datos      | Pendiente de verificar | Cruces con fuentes externas que no se pueden anticipar  |
-| Llegar a denuncias desde el tablero     | Rol de base de datos limitado a `agregados_publicos`   | Pendiente del módulo de datos              | Pendiente de verificar | Ninguno por esta vía si se aplica el rol                |
+| Celdas pequeñas                         | Umbral k = 5 (D6)                                      | Pruebas de ataque del módulo de datos (`npm run test:ataques -w @dataton/backend`) | Pruebas del módulo; publicación con datos sintéticos sin comprobar en el despliegue | Un valor de k bajo en un municipio muy pequeño          |
+| Resta en fila, columna, nivel y periodo | Supresión complementaria; trimestres cerrados          | Pruebas de ataque del módulo de datos (`npm run test:ataques -w @dataton/backend`) | Pruebas del módulo; publicación con datos sintéticos sin comprobar en el despliegue | Cruces con fuentes externas que no se pueden anticipar  |
+| Llegar a denuncias desde el tablero     | Rol de base de datos limitado a `agregados_publicos`, con contraseña generada al desplegar | `despliegue.spec.ts`: rechaza la contraseña de desarrollo y `SELECT` sobre `denuncias` | Verificado | Ninguno por esta vía                                    |
 
 ### A6. Dueño de un equipo compartido
 

@@ -216,6 +216,23 @@ test.describe("Bitácoras y base de datos", () => {
     expect(volcarBaseDeDatos()).not.toContain(marcador);
   });
 
+  test("el rol de la API pública no acepta la contraseña de desarrollo y no lee denuncias", () => {
+    const conectarConContrasenaDeDesarrollo = `new (require("pg").Client)({
+      connectionString: "postgres://buzon_lector_publico:lector_publico_solo_desarrollo@db:5432/dataton",
+    }).connect().then(() => process.exit(0), () => process.exit(1))`;
+    expect(() =>
+      compose(["exec", "-T", "backend", "node", "-e", conectarConContrasenaDeDesarrollo]),
+    ).toThrow();
+    expect(() =>
+      consultarBaseDeDatos("SET ROLE buzon_lector_publico; SELECT count(*) FROM denuncias;"),
+    ).toThrow(/permission denied/);
+    expect(
+      consultarBaseDeDatos(
+        "SET ROLE buzon_lector_publico; SELECT count(*) FROM agregados_publicos;",
+      ),
+    ).toContain("count");
+  });
+
   test("el esquema no tiene columnas de IP ni de user-agent", () => {
     const columnas = consultarBaseDeDatos(
       "SELECT column_name FROM information_schema.columns WHERE table_schema = 'public';",

@@ -22,6 +22,8 @@ COPY --from=construccion /repo/packages/shared/dist/ packages/shared/dist/
 COPY --from=construccion /repo/apps/backend/package.json apps/backend/
 COPY --from=construccion /repo/apps/backend/dist/ apps/backend/dist/
 COPY --from=construccion /repo/apps/backend/migrations/ apps/backend/migrations/
+COPY --from=construccion /repo/apps/backend/datos/ apps/backend/datos/
+COPY docker/rotar-rol-lector.mjs apps/backend/rotar-rol-lector.mjs
 COPY docker/cargar-secretos.sh /usr/local/bin/cargar-secretos.sh
 RUN chmod 555 /usr/local/bin/cargar-secretos.sh
 WORKDIR /app/apps/backend

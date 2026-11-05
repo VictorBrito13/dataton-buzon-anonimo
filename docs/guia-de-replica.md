@@ -42,7 +42,7 @@ Navegador ──HTTPS──▶ Caddy ──▶ frontend (Next.js standalone)
 | ------------- | --------------------------------------------------------------- | --------------- |
 | `secretos`    | Genera secretos si faltan y termina                             | No              |
 | `db`          | PostgreSQL                                                      | No              |
-| `migraciones` | Aplica `apps/backend/migrations` y termina                      | No              |
+| `migraciones` | Aplica `apps/backend/migrations`, cambia la contraseña del rol público y termina | No |
 | `backend`     | API en `/api`                                                   | No              |
 | `frontend`    | Aplicación Next.js                                              | No              |
 | `caddy`       | HTTPS, HSTS y único punto de entrada; sin bitácora de peticiones | 80 y 443        |
@@ -62,6 +62,10 @@ Para ver la privada generada en una demostración:
 ```bash
 docker compose run --rm --no-deps secretos cat /secretos/autoridad_clave_privada.jwk
 ```
+
+### Tablero y datos sintéticos
+
+El despliegue arranca sin denuncias, por lo que el tablero público no tendrá datos que mostrar. **Pendiente de verificar:** cargar datos sintéticos en este modo; `npm run sintetico` y `npm run agregar` del backend están pensados para el modo de desarrollo (sección 6), porque la base no publica puertos aquí.
 
 ## 3. Comprobar que funciona
 
