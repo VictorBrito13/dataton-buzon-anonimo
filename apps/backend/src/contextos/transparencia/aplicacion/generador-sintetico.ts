@@ -55,6 +55,7 @@ const PESOS_TIPO: Readonly<Record<TipoFalta, number>> = {
   desvio_recursos: 8,
   peculado: 7,
   otra: 6,
+  hecho_corrupcion: 5,
   conflicto_interes: 4,
   trafico_influencias: 2,
   falta_particulares: 2,
