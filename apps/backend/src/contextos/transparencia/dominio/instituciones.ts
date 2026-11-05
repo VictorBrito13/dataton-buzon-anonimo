@@ -207,7 +207,10 @@ export const cruzarPorNombreYJurisdiccion = (
     const comprador = compradores.get(normalizarNombre(institucion.nombre));
     if (!comprador) continue;
     if (comprador.jurisdicciones.length === 0) resultado.sinJurisdiccionConocida += 1;
-    else if (!comprador.jurisdicciones.includes(institucion.estado))
+    else if (
+      comprador.jurisdicciones.length > 1 ||
+      comprador.jurisdicciones[0] !== institucion.estado
+    )
       resultado.homonimosDescartados += 1;
     else
       resultado.coincidencias.push({

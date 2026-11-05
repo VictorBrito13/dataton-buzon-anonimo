@@ -110,6 +110,17 @@ describe("normalizarNombre con razón social", () => {
   });
 });
 
+describe("cruzarPorNombreYJurisdiccion con nombres repetidos", () => {
+  it("descarta un nombre que Cobertura registra en varias jurisdicciones: no se sabe cuál compró", () => {
+    const r = cruzarPorNombreYJurisdiccion(
+      [{ estado: "14", nombre: "SECRETARIA DE SALUD", conteo: 6 }],
+      [{ nombre: "Secretaría de Salud", procedimientos: 4915, jurisdicciones: ["00", "08", "14"] }],
+    );
+    expect(r.coincidencias).toEqual([]);
+    expect(r.homonimosDescartados).toBe(1);
+  });
+});
+
 describe("cruzarPorNombreYJurisdiccion", () => {
   const s3 = [
     { estado: "14", nombre: "SECRETARIA DE SALUD", conteo: 6 },
