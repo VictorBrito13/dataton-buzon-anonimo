@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buscarEntes,
+  debeCargarEntes,
   indexarEntes,
   municipiosDeEstado,
   nombreEnte,
@@ -89,5 +90,33 @@ describe("buscarEntes", () => {
   it("encuentra el nombre a partir de la clave guardada", () => {
     expect(nombreEnte(indice, "3")).toBe("AYUNTAMIENTO DE CUERNAVACA");
     expect(nombreEnte(indice, "999")).toBeNull();
+  });
+});
+
+describe("indexarEntes", () => {
+  it("ordena por nombre sin importar acentos ni mayúsculas", () => {
+    const orden = indexarEntes([
+      [1, "ZACATECAS", "32"],
+      [2, "Águila", "00"],
+      [3, "ayuntamiento", "00"],
+      [4, "Ñuu", "00"],
+      [5, "NAYARIT", "18"],
+    ]).map((e) => e.id);
+    expect(orden).toEqual([2, 3, 5, 4, 1]);
+  });
+});
+
+describe("debeCargarEntes", () => {
+  it("no baja el catálogo por entrar al campo o pasar por él", () => {
+    expect(debeCargarEntes("", "")).toBe(false);
+    expect(debeCargarEntes("   ", "")).toBe(false);
+  });
+
+  it("lo baja en cuanto la persona empieza a buscar", () => {
+    expect(debeCargarEntes("s", "")).toBe(true);
+  });
+
+  it("lo baja si ya hay un ente elegido, para mostrar su nombre", () => {
+    expect(debeCargarEntes("", "1234")).toBe(true);
   });
 });

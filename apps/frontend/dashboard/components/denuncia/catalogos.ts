@@ -24,5 +24,5 @@ const useCarga = <T>(cargar: () => Promise<T>, activo: boolean): Carga<T> => {
 
 export const useMunicipios = (): Carga<CatalogoMunicipios> => useCarga(cargarMunicipios, true);
 
-/** El catálogo pesa más: se baja solo cuando la persona va a buscar o ya tiene un ente elegido. */
+/** El catálogo pesa más: se baja solo cuando la persona ya busca o tiene un ente elegido. */
 export const useEntes = (activo: boolean): Carga<EnteLocal[]> => useCarga(cargarEntes, activo);

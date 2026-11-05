@@ -51,6 +51,13 @@ export const indexarEntes = (catalogo: CatalogoEntes): EnteLocal[] =>
     .map(([id, nombre, entidad]) => ({ id, nombre, entidad, normalizado: normalizar(nombre) }))
     .sort((a, b) => a.normalizado.localeCompare(b.normalizado, "es"));
 
+/**
+ * Entrar al campo no basta para bajar el catálogo: quien pasa por él con el tabulador o no va a
+ * buscar no gasta datos. La búsqueda sigue siendo local; el archivo es igual para todas las personas.
+ */
+export const debeCargarEntes = (consulta: string, enteId: string): boolean =>
+  consulta.trim().length > 0 || Boolean(enteId);
+
 /** El catálogo del S5 repite algunos entes con otro id; la persona no podría distinguirlos. */
 const sinRepetidos = (entes: readonly EnteLocal[]): EnteLocal[] => {
   const vistos = new Set<string>();
