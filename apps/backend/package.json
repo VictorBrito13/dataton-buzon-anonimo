@@ -6,11 +6,13 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
     "start": "node dist/server.js",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "migrate": "tsx src/db/migrate.ts",
+    "semilla:autoridad": "tsx src/scripts/semilla-autoridad.ts",
+    "claves:autoridad": "tsx src/scripts/generar-claves.ts",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
