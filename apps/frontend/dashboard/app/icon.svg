@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Buzón Anónimo">
+  <title>Buzón Anónimo</title>
+  <style>
+    .fondo { fill: #0b5563; }
+    .figura { fill: #f7f5f0; }
+    .solapa { fill: none; stroke: #0b5563; }
+    @media (prefers-color-scheme: dark) {
+      .fondo { fill: #7fd0de; }
+      .figura { fill: #11181f; }
+      .solapa { stroke: #7fd0de; }
+    }
+  </style>
+  <rect class="fondo" width="32" height="32" rx="7"/>
+  <circle class="figura" cx="16" cy="9.5" r="5"/>
+  <rect class="figura" x="6" y="16.5" width="20" height="11" rx="2"/>
+  <path class="solapa" d="M7 18l9 6 9-6" stroke-width="2"/>
+</svg>

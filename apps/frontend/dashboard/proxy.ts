@@ -35,6 +35,11 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // catalogos/: archivos públicos e iguales para todos; con no-store se volverían a bajar con mala señal.
-  matcher: [{ source: "/((?!api|_next/static|_next/image|catalogos/|favicon.ico).*)" }],
+  // catalogos/ e iconos: archivos públicos e iguales para todos; con no-store se volverían a bajar con mala señal.
+  matcher: [
+    {
+      source:
+        "/((?!api|_next/static|_next/image|catalogos/|iconos/|favicon.ico|icon.svg|apple-icon.png|manifest.webmanifest).*)",
+    },
+  ],
 };
