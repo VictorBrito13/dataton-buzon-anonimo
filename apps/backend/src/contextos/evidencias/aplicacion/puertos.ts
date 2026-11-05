@@ -14,7 +14,11 @@ export interface ResultadoLimpieza {
 }
 
 export interface Limpiador {
-  limpiar(tipo: string, categoria: CategoriaEvidencia, bytes: Uint8Array): Promise<ResultadoLimpieza>;
+  limpiar(
+    tipo: string,
+    categoria: CategoriaEvidencia,
+    bytes: Uint8Array,
+  ): Promise<ResultadoLimpieza>;
 }
 
 export interface SelladorEvidencias {

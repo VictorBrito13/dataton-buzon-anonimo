@@ -12,7 +12,9 @@ const esMetadato = (marca: number): boolean => marca === APP1 || marca === APP13
  * Sin recodificar, para no degradar fotos dentro de un PDF. Tras el inicio de escaneo los bytes
  * se conservan hasta el marcador EOI; lo que siga (datos ocultos) se descarta.
  */
-export const quitarMetadatosJpeg = (entrada: Uint8Array): { bytes: Uint8Array; cambio: boolean } => {
+export const quitarMetadatosJpeg = (
+  entrada: Uint8Array,
+): { bytes: Uint8Array; cambio: boolean } => {
   const sinCambio = { bytes: entrada, cambio: false };
   if (entrada[0] !== 0xff || entrada[1] !== SOI) return sinCambio;
 

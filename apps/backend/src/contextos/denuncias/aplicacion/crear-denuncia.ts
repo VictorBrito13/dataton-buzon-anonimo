@@ -46,7 +46,10 @@ export class CrearDenuncia {
       acceso: huellas.huella(solicitud.accesoId),
     });
     if (resultado === "acceso_duplicado") {
-      throw new ErrorDominio("acceso_duplicado", "No pudimos registrar la denuncia con esta frase.");
+      throw new ErrorDominio(
+        "acceso_duplicado",
+        "No pudimos registrar la denuncia con esta frase.",
+      );
     }
     if (resultado === "evidencia_invalida") {
       throw new ErrorDominio("evidencia_invalida", "Alguna evidencia ya no está disponible.");

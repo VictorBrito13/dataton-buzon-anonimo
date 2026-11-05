@@ -170,10 +170,8 @@ describe("reglas de Office", () => {
       anonimizarAutoresOffice("xl/comments1.xml", "<authors><author>Juana</author></authors>").xml,
     ).not.toMatch(/Juana/);
     expect(
-      anonimizarAutoresOffice(
-        "ppt/commentAuthors.xml",
-        '<p:cmAuthor name="Juana" initials="JP"/>',
-      ).xml,
+      anonimizarAutoresOffice("ppt/commentAuthors.xml", '<p:cmAuthor name="Juana" initials="JP"/>')
+        .xml,
     ).not.toMatch(/Juana|JP/);
   });
 
