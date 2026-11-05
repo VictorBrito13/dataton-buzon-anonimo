@@ -19,17 +19,42 @@ describe("cargarEnv", () => {
     CLAVE_PUBLICA_AUTORIDAD: JSON.stringify({ kty: "EC", crv: "P-256", x: "a", y: "b" }),
   };
 
-  it("usa valores de desarrollo fuera de producción", () => {
-    const env = cargarEnv({});
+  it.each(["development", "test"])("usa valores de desarrollo solo con NODE_ENV=%s", (nodeEnv) => {
+    const env = cargarEnv({ NODE_ENV: nodeEnv });
     expect(env.pimientaAcceso).toBe(VALORES_DESARROLLO.pimientaAcceso);
+    expect(env.esDesarrollo).toBe(true);
     expect(env.maxBytesEvidencia).toBe(20 * 1024 * 1024);
     expect(env.maxBytesEvidenciasTotal).toBe(100 * 1024 * 1024);
+    expect(env.powExpiraSeg).toBe(120);
     expect(env.s5.adaptador).toBe("mock");
     expect(env.s5.envioAutorizado).toBe(false);
   });
 
+  it.each([undefined, "", "Development", "staging", "prod", "production"])(
+    "con NODE_ENV=%s no hay valores por defecto para los secretos: lanza",
+    (nodeEnv) => {
+      expect(() => cargarEnv({ NODE_ENV: nodeEnv })).toThrow(/DATABASE_URL|PIMIENTA_ACCESO/);
+      const { NODE_ENV: _omitido, ...sinSecretos } = { ...produccion, NODE_ENV: nodeEnv };
+      for (const nombre of ["PIMIENTA_ACCESO", "CLAVE_PUBLICA_AUTORIDAD"] as const) {
+        const fuente: Record<string, string | undefined> = { ...sinSecretos, NODE_ENV: nodeEnv };
+        delete fuente[nombre];
+        expect(() => cargarEnv(fuente), nombre).toThrow(nombre);
+      }
+    },
+  );
+
+  it("fuera de desarrollo rechaza los valores de desarrollo aunque NODE_ENV falte", () => {
+    const { NODE_ENV: _omitido, ...sinNodeEnv } = produccion;
+    expect(() =>
+      cargarEnv({ ...sinNodeEnv, PIMIENTA_ACCESO: VALORES_DESARROLLO.pimientaAcceso }),
+    ).toThrow("PIMIENTA_ACCESO");
+    expect(cargarEnv(sinNodeEnv).esDesarrollo).toBe(false);
+  });
+
   it("acepta producción completa", () => {
-    expect(cargarEnv(produccion).pimientaAcceso).toBe("1".repeat(64));
+    const env = cargarEnv(produccion);
+    expect(env.pimientaAcceso).toBe("1".repeat(64));
+    expect(env.esDesarrollo).toBe(false);
   });
 
   it.each([
@@ -57,11 +82,12 @@ describe("cargarEnv", () => {
   });
 
   it("rechaza claves mal formadas y adaptador desconocido", () => {
-    expect(() => cargarEnv({ PIMIENTA_ACCESO: "corta" })).toThrow("PIMIENTA_ACCESO");
-    expect(() => cargarEnv({ CLAVE_PUBLICA_AUTORIDAD: "{no json" })).toThrow(
+    const dev = { NODE_ENV: "development" };
+    expect(() => cargarEnv({ ...dev, PIMIENTA_ACCESO: "corta" })).toThrow("PIMIENTA_ACCESO");
+    expect(() => cargarEnv({ ...dev, CLAVE_PUBLICA_AUTORIDAD: "{no json" })).toThrow(
       "CLAVE_PUBLICA_AUTORIDAD",
     );
-    expect(() => cargarEnv({ S5_ADAPTADOR: "otro" })).toThrow("S5_ADAPTADOR");
+    expect(() => cargarEnv({ ...dev, S5_ADAPTADOR: "otro" })).toThrow("S5_ADAPTADOR");
   });
 });
 

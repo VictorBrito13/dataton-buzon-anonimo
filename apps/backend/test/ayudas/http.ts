@@ -8,7 +8,10 @@ import { migrar } from "../../src/db/migrate.js";
 import { pool } from "../../src/db/postgres.js";
 import { hashSecret } from "../../src/security/argon2.js";
 
-/** Par de desarrollo documentado en .env.example; la pública es el valor por defecto de env.ts. */
+/**
+ * Par de desarrollo. La pública es el valor por defecto de env.ts; la privada vive solo aquí,
+ * como fixture de pruebas, y nunca en .env.example ni en el servidor.
+ */
 const CLAVE_PUBLICA_DESARROLLO = {
   kty: "EC",
   crv: "P-256",

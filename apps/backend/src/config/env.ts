@@ -47,21 +47,26 @@ const entero = (fuente: Fuente, nombre: string, porDefecto: number): number => {
   return numero;
 };
 
+/**
+ * Los valores de desarrollo solo existen con `NODE_ENV` exactamente `development` o `test`.
+ * En cualquier otro caso, incluido ausente, cada secreto es obligatorio y arrancar sin él falla.
+ */
 export const cargarEnv = (fuente: Fuente) => {
-  const nodeEnv = fuente.NODE_ENV ?? "development";
-  const produccion = nodeEnv === "production";
+  const nodeEnv = fuente.NODE_ENV ?? "";
+  const esDesarrollo = nodeEnv === "development" || nodeEnv === "test";
+  const fueraDeDesarrollo = `fuera de desarrollo (NODE_ENV="${nodeEnv}")`;
 
   const secretoHex = (nombre: string, desarrollo: string): string => {
     const valor = fuente[nombre];
     if (!valor) {
-      if (produccion) throw new Error(`${nombre} es obligatoria en producción`);
+      if (!esDesarrollo) throw new Error(`${nombre} es obligatoria ${fueraDeDesarrollo}`);
       return desarrollo;
     }
     if (!/^[0-9a-f]{64}$/.test(valor)) {
       throw new Error(`${nombre} debe tener 64 caracteres hexadecimales`);
     }
-    if (produccion && valor === desarrollo) {
-      throw new Error(`${nombre} no puede usar el valor de desarrollo en producción`);
+    if (!esDesarrollo && valor === desarrollo) {
+      throw new Error(`${nombre} no puede usar el valor de desarrollo ${fueraDeDesarrollo}`);
     }
     return valor;
   };
@@ -69,7 +74,9 @@ export const cargarEnv = (fuente: Fuente) => {
   const clavePublica = (): JsonWebKey => {
     const valor = fuente.CLAVE_PUBLICA_AUTORIDAD;
     if (!valor) {
-      if (produccion) throw new Error("CLAVE_PUBLICA_AUTORIDAD es obligatoria en producción");
+      if (!esDesarrollo) {
+        throw new Error(`CLAVE_PUBLICA_AUTORIDAD es obligatoria ${fueraDeDesarrollo}`);
+      }
       return VALORES_DESARROLLO.clavePublicaAutoridad;
     }
     let jwk: JsonWebKey;
@@ -81,16 +88,18 @@ export const cargarEnv = (fuente: Fuente) => {
     if (jwk.kty !== "EC" || jwk.crv !== "P-256" || !jwk.x || !jwk.y || jwk.d) {
       throw new Error("CLAVE_PUBLICA_AUTORIDAD debe ser la parte pública de un JWK EC P-256");
     }
-    if (produccion && jwk.x === VALORES_DESARROLLO.clavePublicaAutoridad.x) {
-      throw new Error("CLAVE_PUBLICA_AUTORIDAD no puede usar la clave de desarrollo en producción");
+    if (!esDesarrollo && jwk.x === VALORES_DESARROLLO.clavePublicaAutoridad.x) {
+      throw new Error(
+        `CLAVE_PUBLICA_AUTORIDAD no puede usar la clave de desarrollo ${fueraDeDesarrollo}`,
+      );
     }
     return { kty: jwk.kty, crv: jwk.crv, x: jwk.x, y: jwk.y };
   };
 
   const databaseUrl =
     fuente.DATABASE_URL ??
-    (produccion ? undefined : "postgres://dataton:dataton@localhost:5432/dataton");
-  if (!databaseUrl) throw new Error("DATABASE_URL es obligatoria en producción");
+    (esDesarrollo ? "postgres://dataton:dataton@localhost:5432/dataton" : undefined);
+  if (!databaseUrl) throw new Error(`DATABASE_URL es obligatoria ${fueraDeDesarrollo}`);
 
   const adaptador = fuente.S5_ADAPTADOR ?? "mock";
   if (adaptador !== "mock" && adaptador !== "real") {
@@ -99,6 +108,7 @@ export const cargarEnv = (fuente: Fuente) => {
 
   return {
     nodeEnv,
+    esDesarrollo,
     port: parsePort(fuente.PORT, 4000),
     corsOrigins: parseList(fuente.CORS_ORIGIN, ["http://localhost:3000"]),
     databaseUrl,
@@ -108,7 +118,7 @@ export const cargarEnv = (fuente: Fuente) => {
     clavePublicaAutoridad: clavePublica(),
     powCosto: entero(fuente, "POW_COSTO", 1000),
     powContadorMax: entero(fuente, "POW_CONTADOR_MAX", 2000),
-    powExpiraSeg: entero(fuente, "POW_EXPIRA_SEG", 300),
+    powExpiraSeg: entero(fuente, "POW_EXPIRA_SEG", 120),
     maxBytesEvidencia: entero(fuente, "MAX_BYTES_EVIDENCIA", 20 * 1024 * 1024),
     maxBytesEvidenciasTotal: entero(fuente, "MAX_BYTES_EVIDENCIAS_TOTAL", 100 * 1024 * 1024),
     accesoTiempoMinimoMs: entero(fuente, "ACCESO_TIEMPO_MINIMO_MS", 400),
@@ -125,4 +135,5 @@ export const cargarEnv = (fuente: Fuente) => {
 };
 
 export const env = cargarEnv(process.env);
-export const isProduction = env.nodeEnv === "production";
+/** Todo lo que no sea desarrollo o pruebas se trata como producción (cookies seguras, sin stack). */
+export const isProduction = !env.esDesarrollo;

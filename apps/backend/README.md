@@ -65,29 +65,35 @@ contexto de transparencia.
 
 ## Variables de entorno
 
-`.env.example` trae valores de desarrollo. **En producción, las marcadas son obligatorias y se
-rechazan los valores de desarrollo.**
+`.env.example` trae valores de desarrollo. **Solo existen con `NODE_ENV` exactamente
+`development` o `test`.** Con cualquier otro valor, o sin `NODE_ENV`, cada secreto marcado es
+obligatorio, se rechazan los valores de desarrollo y el servidor no arranca. `npm run dev:backend`
+fija `NODE_ENV=development`; `npm run migrate` y los scripts lo leen de `.env`.
 
-| Variable                                                    | Obligatoria     | Por defecto                                    | Uso                                                                        |
-| ----------------------------------------------------------- | --------------- | ---------------------------------------------- | -------------------------------------------------------------------------- |
-| `DATABASE_URL`                                              | Sí              | Postgres local                                 | Conexión                                                                   |
-| `PIMIENTA_ACCESO`                                           | Sí              | Desarrollo                                     | HMAC de folios y frases (64 hex)                                           |
-| `ALTCHA_CLAVE_HMAC`                                         | Sí              | Desarrollo                                     | Firma de los retos (64 hex)                                                |
-| `CLAVE_MENSAJES`                                            | Sí              | Desarrollo                                     | Cifrado de mensajes de la autoridad (64 hex)                               |
-| `CLAVE_PUBLICA_AUTORIDAD`                                   | Sí              | Desarrollo                                     | JWK público P-256; `npm run claves:autoridad -w @dataton/backend`          |
-| `NODE_ENV`, `PORT`, `CORS_ORIGIN`                           | No              | `development`, `4000`, `http://localhost:3000` | Servidor                                                                   |
-| `POW_COSTO`, `POW_CONTADOR_MAX`, `POW_EXPIRA_SEG`           | No              | `1000`, `2000`, `300`                          | Dificultad y vigencia de los retos                                         |
-| `MAX_BYTES_EVIDENCIA`                                       | No              | 20 MiB                                         | Por archivo                                                                |
-| `MAX_BYTES_EVIDENCIAS_TOTAL`                                | No              | 100 MiB                                        | Por denuncia. El máximo de 5 archivos es regla de dominio                  |
-| `ACCESO_TIEMPO_MINIMO_MS`                                   | No              | `400`                                          | Tiempo mínimo de `/acceso/*`                                               |
-| `ACCESO_INTENTOS_CREDENCIAL`, `ACCESO_VENTANA_MS`           | No              | `30`, 15 min                                   | Límite por HMAC de credencial                                              |
-| `ACCESO_LIMITE_GLOBAL`                                      | No              | `600`                                          | Intentos por minuto entre todas las credenciales                           |
-| `SESION_DURACION_MS`                                        | No              | 8 h                                            | Sesión del panel                                                           |
-| `SEMILLA_AUTORIDAD_USUARIO`, `SEMILLA_AUTORIDAD_CONTRASENA` | Para la semilla | Ninguno                                        | Solo los lee el script de semilla                                          |
-| `S5_ADAPTADOR`                                              | No              | `mock`                                         | `mock` o `real`                                                            |
-| `S5_BASE_URL`                                               | No              | Versión de pruebas                             | Base del S5                                                                |
-| `S5_ENVIO_AUTORIZADO`                                       | No              | `false`                                        | Ver abajo                                                                  |
-| `TEST_DATABASE_URL`                                         | Solo pruebas    | `localhost:5551`                               | Las pruebas vacían tablas. En CI usan `DATABASE_URL` si `CI` está definida |
+| Variable                                                    | Obligatoria     | Por defecto                      | Uso                                                                        |
+| ----------------------------------------------------------- | --------------- | -------------------------------- | -------------------------------------------------------------------------- |
+| `NODE_ENV`                                                  | Sí              | Ninguno                          | `development` o `test` habilitan los valores de desarrollo                 |
+| `DATABASE_URL`                                              | Sí              | Postgres local (solo desarrollo) | Conexión                                                                   |
+| `PIMIENTA_ACCESO`                                           | Sí              | Desarrollo                       | HMAC de folios y frases (64 hex)                                           |
+| `ALTCHA_CLAVE_HMAC`                                         | Sí              | Desarrollo                       | Firma de los retos (64 hex)                                                |
+| `CLAVE_MENSAJES`                                            | Sí              | Desarrollo                       | Cifrado de mensajes de la autoridad (64 hex)                               |
+| `CLAVE_PUBLICA_AUTORIDAD`                                   | Sí              | Desarrollo                       | JWK público P-256; `npm run claves:autoridad -w @dataton/backend`          |
+| `PORT`, `CORS_ORIGIN`                                       | No              | `4000`, `http://localhost:3000`  | Servidor                                                                   |
+| `POW_COSTO`, `POW_CONTADOR_MAX`, `POW_EXPIRA_SEG`           | No              | `1000`, `2000`, `120`            | Dificultad y vigencia de los retos                                         |
+| `MAX_BYTES_EVIDENCIA`                                       | No              | 20 MiB                           | Por archivo                                                                |
+| `MAX_BYTES_EVIDENCIAS_TOTAL`                                | No              | 100 MiB                          | Por denuncia. El máximo de 5 archivos es regla de dominio                  |
+| `CUOTA_HUERFANAS_BYTES`, `CUOTA_HUERFANAS_FILAS`            | No              | 2 GiB, `2000`                    | Cuota global de subidas sin denuncia; al llegar, 503                       |
+| `LIMPIEZAS_SIMULTANEAS`, `LIMPIEZAS_ESPERA_MS`              | No              | `2`, `10000`                     | Limpiezas de archivos a la vez y espera máxima antes de 503                |
+| `ACCESO_TIEMPO_MINIMO_MS`                                   | No              | `400`                            | Tiempo mínimo de `/acceso/*`                                               |
+| `ACCESO_INTENTOS_CREDENCIAL`, `ACCESO_VENTANA_MS`           | No              | `30`, 15 min                     | Límite por HMAC de credencial, en `/acceso/*` y en `POST /denuncias`       |
+| `ACCESO_LIMITE_GLOBAL`                                      | No              | `600`                            | Intentos por minuto entre todas las credenciales                           |
+| `SESION_DURACION_MS`                                        | No              | 8 h                              | Sesión del panel                                                           |
+| `SESION_LIMITE_GLOBAL`                                      | No              | `60`                             | Inicios de sesión por minuto en todo el panel                              |
+| `SEMILLA_AUTORIDAD_USUARIO`, `SEMILLA_AUTORIDAD_CONTRASENA` | Para la semilla | Ninguno                          | Solo los lee el script de semilla                                          |
+| `S5_ADAPTADOR`                                              | No              | `mock`                           | `mock` o `real`                                                            |
+| `S5_BASE_URL`                                               | No              | Versión de pruebas               | Base del S5                                                                |
+| `S5_ENVIO_AUTORIZADO`                                       | No              | `false`                          | Ver abajo                                                                  |
+| `TEST_DATABASE_URL`                                         | Solo pruebas    | `localhost:5551`                 | Las pruebas vacían tablas. En CI usan `DATABASE_URL` si `CI` está definida |
 
 ## Adaptador S5
 
@@ -168,8 +174,18 @@ lista de permitidos, el rechazo de contenido activo y la recodificación.
   encarece ese ataque, no lo impide.
 - Límites, retos usados y sesiones viven en memoria: se pierden al reiniciar y no se comparten
   entre instancias. El backend asume **una sola instancia**.
-- No hay límite de concurrencia para la limpieza de archivos ni cuota global de subidas sin
-  denuncia. La prueba de trabajo es la única barrera.
+- **Orden de llegada en el almacenamiento físico (riesgo residual).** El comentario de
+  `001_inicial.sql` dice que los identificadores aleatorios impiden inferir el orden de llegada.
+  Eso vale para quien consulta por SQL con el rol de la aplicación, no para quien tenga un volcado
+  físico: las columnas de sistema `xmin` y `ctid` de Postgres revelan el orden en que se insertó
+  cada fila de `denuncias`, `evidencias` y `mensajes`. Como la bitácora del panel comparte base,
+  ese orden se puede cruzar con sus marcas de tiempo. La migración `101` trunca `creado_en` a la
+  hora para que la ventana sea de una hora y no de segundos; **no elimina el riesgo**. Quitarlo
+  exige separar la bitácora en otra base o reescribir las tablas periódicamente (`VACUUM FULL` o
+  `CLUSTER` por una columna aleatoria), y ninguna de las dos está hecha.
+- La limpieza de archivos corre en el mismo proceso que atiende peticiones: `LIMPIEZAS_SIMULTANEAS`
+  acota cuántas a la vez y el resto espera o recibe 503. No corre en `worker_threads`, así que una
+  limpieza lenta sigue ocupando el hilo principal mientras dura.
 
 ## Pruebas
 
