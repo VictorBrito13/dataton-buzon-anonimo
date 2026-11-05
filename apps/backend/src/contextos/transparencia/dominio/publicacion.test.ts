@@ -117,6 +117,38 @@ describe("construirPublicacion", () => {
   });
 });
 
+describe("la protección no destruye más de lo necesario", () => {
+  it("un ente muy pequeño no arrastra el total nacional ni a los demás entes", () => {
+    const etapas = ["recibida", "turnada_investigadora", "archivada", "resuelta"];
+    const tipos = ["cohecho", "peculado", "otra"];
+    const filas: DenunciaAgregable[] = [];
+    const grandes = ["ente-a", "ente-b", "ente-c", "ente-d", "ente-e", "ente-f"];
+    grandes.forEach((ente, i) => {
+      for (const etapa of etapas) {
+        for (const tipoFalta of tipos) {
+          filas.push(denuncia({ ente, etapa, tipoFalta, n: 40 + i * 10 }));
+        }
+      }
+    });
+    // Tres denuncias del ente pequeño, cada una en una etapa distinta.
+    filas.push(denuncia({ ente: "ente-z", etapa: "recibida", n: 1 }));
+    filas.push(denuncia({ ente: "ente-z", etapa: "archivada", n: 1 }));
+    filas.push(denuncia({ ente: "ente-z", etapa: "resuelta", n: 1 }));
+
+    const publicacion = construirPublicacion(
+      filas,
+      { ...universo, entes: [...grandes, "ente-z"] },
+      { k },
+    );
+    expect(buscar(publicacion, "total", {})?.conteo).not.toBeNull();
+    expect(buscar(publicacion, "ente", { ente: "ente-z" })?.conteo).toBeNull();
+    const visibles = grandes.filter(
+      (ente) => buscar(publicacion, "ente", { ente })?.conteo !== null,
+    );
+    expect(visibles.length).toBeGreaterThanOrEqual(4);
+  });
+});
+
 describe("HU-31 · Ataques entre tablas de una misma publicación", () => {
   const entes = ["ente-a", "ente-b", "ente-c"];
   const municipios = [

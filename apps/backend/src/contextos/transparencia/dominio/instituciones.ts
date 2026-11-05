@@ -31,6 +31,7 @@ const simplificar = (texto: string): string =>
     .normalize("NFD")
     .replace(/\p{M}/gu, "")
     .toUpperCase()
+    .replace(/\./g, "")
     .replace(/[^A-Z0-9?\- ]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -150,6 +151,31 @@ export interface CompradorS6 {
   /** Claves de entidad según Cobertura ("00" es federal); vacío si no aparece allí. */
   jurisdicciones: string[];
 }
+
+/**
+ * La búsqueda de S6 no distingue mayúsculas: dos variantes así devuelven el mismo total y sumarlas
+ * contaría doble. Variantes con otra escritura (acentos) sí son búsquedas distintas y se suman.
+ */
+export const consolidarCompradores = (compradores: readonly CompradorS6[]): CompradorS6[] => {
+  const grupos = new Map<string, { primero: CompradorS6; escrituras: Map<string, number> }>();
+  const jurisdicciones = new Map<string, Set<string>>();
+  for (const comprador of compradores) {
+    const clave = normalizarNombre(comprador.nombre);
+    const grupo = grupos.get(clave) ?? { primero: comprador, escrituras: new Map() };
+    grupo.escrituras.set(comprador.nombre.toLowerCase(), comprador.procedimientos);
+    grupos.set(clave, grupo);
+    const propias = jurisdicciones.get(clave) ?? new Set<string>();
+    for (const j of comprador.jurisdicciones) propias.add(j);
+    jurisdicciones.set(clave, propias);
+  }
+  return [...grupos.entries()]
+    .map(([clave, { primero, escrituras }]) => ({
+      nombre: primero.nombre,
+      procedimientos: [...escrituras.values()].reduce((s, n) => s + n, 0),
+      jurisdicciones: [...(jurisdicciones.get(clave) ?? [])].sort(),
+    }))
+    .sort((a, b) => b.procedimientos - a.procedimientos || a.nombre.localeCompare(b.nombre));
+};
 
 export interface CoincidenciaPdn {
   nombre: string;

@@ -1,4 +1,4 @@
-import { acotarPorIntervalos, esLineaAbierta } from "./ataque-intervalos.js";
+import { acotarPorIntervalos, acotarRapido, esLineaAbierta } from "./ataque-intervalos.js";
 
 /**
  * Motor de k-anonimato (D6 de docs/decisiones-arquitectura.md). Función pura sobre una red de
@@ -58,6 +58,9 @@ const validar = ({ conteos, lineas }: RedConteos, k: number): void => {
     }
   }
 };
+
+const PROFUNDIDAD_REFUERZO = 2;
+const MAX_OPCIONES_PROBADAS = 12;
 
 class Protector {
   private readonly vista = new Map<string, CeldaVista>();
@@ -135,32 +138,54 @@ class Protector {
     }
   }
 
+  private atacante: typeof acotarPorIntervalos = acotarRapido;
+
+  private cumpleAncho(id: string): boolean {
+    const cota = this.atacante(this.vista, this.red.lineas, this.k).get(id);
+    return cota !== undefined && cota.max - cota.min >= anchoMinimo(this.k);
+  }
+
+  /** Oculta `id` si con eso la celda `objetivo` queda protegida; si no, lo deshace. */
+  private probar(id: string, objetivo: string): boolean {
+    const previa = this.vista.get(id);
+    if (!previa) return false;
+    this.ocultar(id);
+    if (this.cumpleAncho(objetivo)) return true;
+    this.vista.set(id, previa);
+    return false;
+  }
+
   /**
-   * La acción más barata para ensanchar la cota de `inicio`, buscando en sus líneas y, si en ellas ya
-   * no queda nada por ocultar, en las de las celdas ocultas vecinas.
+   * Ensancha la cota de `inicio` con la acción más barata que de verdad funcione. Ocultar a ciegas la
+   * siguiente celda vaciaría la tabla cuando la fuga no viene de una resta. Hay una que ocultar no
+   * corrige: el atacante cuenta partes positivas contra el tope de "menor_a_k" (1 + 1 + 1 + 1 bajo un
+   * total < 5). Ahí se retira el motivo. Si en sus líneas no queda opción, se buscan en las vecinas.
    */
-  private reforzar(inicio: string): boolean {
+  private reforzar(inicio: string): void {
     const visitadas = new Set([inicio]);
+    const sinMotivo = new Set<string>();
+    const cruces = new Set<string>();
+    const totales = new Set<string>();
+    const porValor = (ids: Iterable<string>): string[] =>
+      [...ids].sort((a, b) => this.valor(a) - this.valor(b));
+    // Un total aparece en muchas líneas y ocultarlo arrastra a más celdas, así que antes de tocar uno
+    // cercano se prueban las celdas de cruce de hasta PROFUNDIDAD_REFUERZO saltos.
+    const esTotal = (id: string): boolean =>
+      (this.lineasDe.get(id) ?? []).some((l) => l.total === id);
+
     let frontera = [inicio];
-    while (frontera.length > 0) {
+    for (let saltos = 0; frontera.length > 0; saltos += 1) {
       const siguienteFrontera: string[] = [];
-      let candidata: string | undefined;
-      let sinMotivo: string | undefined;
       for (const id of frontera) {
         for (const linea of this.lineasDe.get(id) ?? []) {
-          if (sinMotivo === undefined && esLineaAbierta(this.vista, linea)) {
-            sinMotivo = [linea.total, ...linea.partes].find(
-              (c) => this.vista.get(c)?.motivo === "menor_a_k",
-            );
+          if (esLineaAbierta(this.vista, linea)) {
+            for (const c of [linea.total, ...linea.partes]) {
+              if (this.vista.get(c)?.motivo === "menor_a_k") sinMotivo.add(c);
+            }
           }
           const parte = this.menorPublicada(linea.partes);
           const opcion = parte ?? (this.oculta(linea.total) ? undefined : linea.total);
-          if (
-            opcion !== undefined &&
-            (candidata === undefined || this.valor(opcion) < this.valor(candidata))
-          ) {
-            candidata = opcion;
-          }
+          if (opcion !== undefined) (esTotal(opcion) ? totales : cruces).add(opcion);
           for (const vecina of [linea.total, ...linea.partes]) {
             if (this.oculta(vecina) && !visitadas.has(vecina)) {
               visitadas.add(vecina);
@@ -169,34 +194,49 @@ class Protector {
           }
         }
       }
-      // Último recurso: el atacante también cuenta partes positivas contra el tope que da
-      // "menor_a_k" (1 + 1 + 1 + 1 bajo un total < 5). Ocultar no ayuda; se retira el motivo.
-      const accion = candidata ?? sinMotivo;
-      if (accion !== undefined) {
-        this.ocultar(accion);
-        return true;
-      }
+      const hayOpciones = sinMotivo.size + cruces.size + totales.size > 0;
+      if (hayOpciones && saltos >= PROFUNDIDAD_REFUERZO) break;
       frontera = siguienteFrontera;
     }
-    return false;
+
+    const ordenados = [
+      ...sinMotivo,
+      ...porValor(cruces).slice(0, MAX_OPCIONES_PROBADAS),
+      ...porValor(totales),
+    ];
+    if (ordenados.some((id) => this.probar(id, inicio))) return;
+    // Ninguna basta por sí sola: se avanza con la menos dañina y la siguiente ronda continúa.
+    const parcial = ordenados[0];
+    if (parcial === undefined) throw new Error(`No se pudo proteger la celda ${inicio}`);
+    this.ocultar(parcial);
+  }
+
+  private celdasSinAncho(): string[] {
+    const minimo = anchoMinimo(this.k);
+    const cotas = this.atacante(this.vista, this.red.lineas, this.k);
+    return [...this.vista]
+      .filter(([id, celda]) => {
+        if (celda.conteo !== null) return false;
+        const cota = cotas.get(id);
+        return cota !== undefined && cota.max - cota.min < minimo;
+      })
+      .map(([id]) => id);
   }
 
   proteger(): Map<string, CeldaVista> {
-    const minimo = anchoMinimo(this.k);
+    // El atacante completo es más lento: solo revisa lo que el rápido ya no logra romper.
     for (;;) {
       this.aplicarReglasDeLinea();
-      const cotas = acotarPorIntervalos(this.vista, this.red.lineas, this.k);
-      const fallas = [...this.vista]
-        .filter(([id, celda]) => {
-          if (celda.conteo !== null) return false;
-          const cota = cotas.get(id);
-          return cota !== undefined && cota.max - cota.min < minimo;
-        })
-        .map(([id]) => id);
-      if (fallas.length === 0) return this.vista;
-      if (!fallas.map((id) => this.reforzar(id)).some(Boolean)) {
-        throw new Error(`No se pudo proteger: ${fallas.slice(0, 5).join(", ")}`);
+      this.atacante = acotarRapido;
+      const [falla] = this.celdasSinAncho();
+      if (falla !== undefined) {
+        this.reforzar(falla);
+        continue;
       }
+      this.atacante = acotarPorIntervalos;
+      const [fallaFina] = this.celdasSinAncho();
+      if (fallaFina === undefined) return this.vista;
+      this.reforzar(fallaFina);
     }
   }
 }

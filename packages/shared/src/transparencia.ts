@@ -118,9 +118,9 @@ export const ENTES_SINTETICOS = [
   { id: "ficticio-01", etiqueta: "Ente ficticio 01 · Obras", peso: 22, atencion: 0.92 },
   { id: "ficticio-02", etiqueta: "Ente ficticio 02 · Salud", peso: 20, atencion: 0.85 },
   { id: "ficticio-03", etiqueta: "Ente ficticio 03 · Educación", peso: 16, atencion: 0.78 },
-  { id: "ficticio-04", etiqueta: "Ente ficticio 04 · Seguridad", peso: 14, atencion: 0.45 },
+  { id: "ficticio-04", etiqueta: "Ente ficticio 04 · Seguridad", peso: 14, atencion: 0.3 },
   { id: "ficticio-05", etiqueta: "Ente ficticio 05 · Hacienda", peso: 9, atencion: 0.7 },
-  { id: "ficticio-06", etiqueta: "Ente ficticio 06 · Movilidad", peso: 7, atencion: 0.35 },
+  { id: "ficticio-06", etiqueta: "Ente ficticio 06 · Movilidad", peso: 7, atencion: 0.2 },
   { id: "ficticio-07", etiqueta: "Ente ficticio 07 · Agua", peso: 5, atencion: 0.6 },
   { id: "ficticio-08", etiqueta: "Ente ficticio 08 · Cultura", peso: 0.05, atencion: 0.9 },
 ] as const;

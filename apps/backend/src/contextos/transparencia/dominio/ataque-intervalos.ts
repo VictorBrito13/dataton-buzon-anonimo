@@ -224,16 +224,69 @@ const reducir = (vista: Vista, lineas: readonly Linea[]): Ecuacion[] => {
   return [...filas];
 };
 
-/** Mejor rango que el atacante puede deducir para cada celda. */
+const sistemaDe = (vista: Vista, lineas: readonly Linea[]): Ecuacion[] => [
+  ...lineas.map(comoEcuacion),
+  ...reducir(vista, lineas),
+];
+
+const copiar = (cotas: ReadonlyMap<string, Cota>): Map<string, Cota> =>
+  new Map([...cotas].map(([id, c]) => [id, { min: c.min, max: c.max }]));
+
+/** Versión rápida, sin sondeo. La usa el motor para descartar opciones antes del ataque completo. */
+export const acotarRapido = (
+  vista: Vista,
+  lineas: readonly Linea[],
+  k: number,
+): Map<string, Cota> => {
+  const cotas = cotasIniciales(vista, lineas, k);
+  if (!propagarEcuaciones(cotas, sistemaDe(vista, lineas))) {
+    throw new Error("Lo publicado es incoherente con sus líneas");
+  }
+  return cotas;
+};
+
+/**
+ * Mejor rango que el atacante puede deducir para cada celda. Además de propagar, sondea: supone que
+ * una celda vale su extremo y descarta el valor si el sistema se vuelve imposible, hasta que nada
+ * cambie. Encuentra fugas que la propagación sola no ve. Solo sondea rangos cortos: en uno largo un
+ * extremo descartado no acerca la cota al ancho mínimo.
+ */
 export const acotarPorIntervalos = (
   vista: Vista,
   lineas: readonly Linea[],
   k: number,
 ): Map<string, Cota> => {
   const cotas = cotasIniciales(vista, lineas, k);
-  const ecuaciones = [...lineas.map(comoEcuacion), ...reducir(vista, lineas)];
-  if (!propagarEcuaciones(cotas, ecuaciones)) {
+  const sistema = sistemaDe(vista, lineas);
+  if (!propagarEcuaciones(cotas, sistema)) {
     throw new Error("Lo publicado es incoherente con sus líneas");
+  }
+  const maximoAncho = 3 * k;
+  const ocultas = [...vista].filter(([, c]) => c.conteo === null).map(([id]) => id);
+
+  const esPosible = (id: string, valor: number): boolean => {
+    const intento = copiar(cotas);
+    intento.set(id, { min: valor, max: valor });
+    return propagarEcuaciones(intento, sistema);
+  };
+
+  let cambio = true;
+  while (cambio) {
+    cambio = false;
+    for (const id of ocultas) {
+      const cota = cotas.get(id);
+      if (!cota || cota.max - cota.min > maximoAncho) continue;
+      let antes = `${cota.min}:${cota.max}`;
+      while (cota.min < cota.max && !esPosible(id, cota.min)) cota.min += 1;
+      while (cota.min < cota.max && !esPosible(id, cota.max)) cota.max -= 1;
+      if (`${cota.min}:${cota.max}` !== antes) {
+        antes = `${cota.min}:${cota.max}`;
+        cambio = true;
+        if (!propagarEcuaciones(cotas, sistema)) {
+          throw new Error("Lo publicado es incoherente con sus líneas");
+        }
+      }
+    }
   }
   return cotas;
 };

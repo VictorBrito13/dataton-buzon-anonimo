@@ -1,0 +1,4026 @@
+{
+  "fuente": {
+    "nombre": "S3, servidores públicos sancionados: conteos por institución",
+    "url": "https://api.plataformadigitalnacional.org/s3-wrapper/api/v1/providers",
+    "consultadoEl": "2026-11-05",
+    "licencia": "No encontrada. Pendiente de confirmar con SESNA.",
+    "cobertura": "22 proveedores estatales más el IFT, sin proveedor federal general. Solo los estados listados tienen registros con institución en este corte."
+  },
+  "umbralPorInstitucion": 5,
+  "registrosSinInstitucion": 38,
+  "instituciones": [
+    {
+      "estado": "01",
+      "nombre": "CONTRALORIA DEL ESTADO",
+      "conteo": 219
+    },
+    {
+      "estado": "01",
+      "nombre": "MUNICIPIO DE PABELLON DE ARTEAGA",
+      "conteo": 197
+    },
+    {
+      "estado": "01",
+      "nombre": "COLEGIO DE EDUCACION PROFESIONAL TECNICA DEL ESTADO DE AGUASCALIENTES",
+      "conteo": 67
+    },
+    {
+      "estado": "01",
+      "nombre": "FISCALIA GENERAL DEL ESTADO",
+      "conteo": 48
+    },
+    {
+      "estado": "01",
+      "nombre": "MUNICIPIO DE AGUASCALIENTES",
+      "conteo": 43
+    },
+    {
+      "estado": "01",
+      "nombre": "SECRETARIA DE FINANZAS",
+      "conteo": 37
+    },
+    {
+      "estado": "01",
+      "nombre": "MUNICIPIO DE JESUS MARIA",
+      "conteo": 34
+    },
+    {
+      "estado": "01",
+      "nombre": "MUNICIPIO DE SAN JOSE DE GRACIA",
+      "conteo": 34
+    },
+    {
+      "estado": "01",
+      "nombre": "RADIO Y TELEVISION DE AGUASCALIENTES",
+      "conteo": 33
+    },
+    {
+      "estado": "01",
+      "nombre": "INSTITUTO DEL AGUA",
+      "conteo": 31
+    },
+    {
+      "estado": "01",
+      "nombre": "MUNICIPIO DE SAN FRANCISCO DE LOS ROMO",
+      "conteo": 26
+    },
+    {
+      "estado": "01",
+      "nombre": "SECRETARIA GENERAL DE GOBIERNO",
+      "conteo": 25
+    },
+    {
+      "estado": "01",
+      "nombre": "INSTITUTO CULTURAL DE AGUASCALIENTES",
+      "conteo": 24
+    },
+    {
+      "estado": "01",
+      "nombre": "MUNICIPIO DE RINCON DE ROMOS",
+      "conteo": 21
+    },
+    {
+      "estado": "01",
+      "nombre": "SUPREMO TRIBUNAL DE JUSTICIA DE AGUASCALIENTES",
+      "conteo": 18
+    },
+    {
+      "estado": "01",
+      "nombre": "INSTITUTO DE SEGURIDAD Y SERVICIOS SOCIALES PARA LOS SERVIDORES PUBLICOS DEL ESTADO DE AGUASCALIENTES",
+      "conteo": 17
+    },
+    {
+      "estado": "01",
+      "nombre": "INSTITUTO DE SERVICIOS DE SALUD DEL ESTADO",
+      "conteo": 17
+    },
+    {
+      "estado": "01",
+      "nombre": "UNIVERSIDAD POLITECNICA DE AGUASCALIENTES",
+      "conteo": 17
+    },
+    {
+      "estado": "01",
+      "nombre": "SECRETARIA DE SEGURIDAD PUBLICA",
+      "conteo": 15
+    },
+    {
+      "estado": "01",
+      "nombre": "INSTITUTO DEL DEPORTE DEL ESTADO DE AGUASCALIENTES",
+      "conteo": 14
+    },
+    {
+      "estado": "01",
+      "nombre": "INSTITUTO PARA LA EDUCACION DE LAS PERSONAS JOVENES Y ADULTAS DE AGUASCALIENTES",
+      "conteo": 12
+    },
+    {
+      "estado": "01",
+      "nombre": "UNIVERSIDAD AUTONOMA DE AGUASCALIENTES",
+      "conteo": 10
+    },
+    {
+      "estado": "01",
+      "nombre": "MUNICIPIO DE ASIENTOS",
+      "conteo": 9
+    },
+    {
+      "estado": "01",
+      "nombre": "SECRETARIA DE OBRAS PUBLICAS DEL ESTADO",
+      "conteo": 9
+    },
+    {
+      "estado": "01",
+      "nombre": "SECRETARIA DE DESARROLLO SOCIAL",
+      "conteo": 8
+    },
+    {
+      "estado": "01",
+      "nombre": "CENTRO DE CONCILIACION LABORAL DEL ESTADO DE AGUASCALIENTES",
+      "conteo": 7
+    },
+    {
+      "estado": "01",
+      "nombre": "MUNICIPIO DE COSIO",
+      "conteo": 7
+    },
+    {
+      "estado": "01",
+      "nombre": "REGIMEN ESTATAL DE PROTECCION SOCIAL EN SALUD DEL ESTADO",
+      "conteo": 7
+    },
+    {
+      "estado": "01",
+      "nombre": "INSTITUTO DE CAPACITACION PARA EL TRABAJO DEL ESTADO DE AGUASCALIENTES",
+      "conteo": 6
+    },
+    {
+      "estado": "01",
+      "nombre": "INSTITUTO ESTATAL ELECTORAL",
+      "conteo": 6
+    },
+    {
+      "estado": "01",
+      "nombre": "SECRETARIA DE ADMINISTRACION",
+      "conteo": 6
+    },
+    {
+      "estado": "01",
+      "nombre": "SECRETARIA DE DESARROLLO RURAL Y AGROEMPRESARIAL",
+      "conteo": 6
+    },
+    {
+      "estado": "01",
+      "nombre": "SECRETARIA DE SUSTENTABILIDAD MEDIO AMBIENTE Y AGUA",
+      "conteo": 6
+    },
+    {
+      "estado": "01",
+      "nombre": "SISTEMA PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DEL ESTADO",
+      "conteo": 6
+    },
+    {
+      "estado": "01",
+      "nombre": "COMISION ESTATAL DE ARBITRAJE MEDICO",
+      "conteo": 5
+    },
+    {
+      "estado": "01",
+      "nombre": "H CONGRESO DEL ESTADO DE AGUASCALIENTES",
+      "conteo": 5
+    },
+    {
+      "estado": "01",
+      "nombre": "SECRETARIA DE GESTION URBANISTICA ORDENAMIENTO TERRITORIAL REGISTRAL Y CATASTRAL",
+      "conteo": 5
+    },
+    {
+      "estado": "01",
+      "nombre": "INSTITUTO ESTATAL DE SEGURIDAD PUBLICA DE AGUASCALIENTES",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "OFICINA DEL DESPACHO DEL GOBERNADOR",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "UNIVERSIDAD TECNOLOGICA DE AGUASCALIENTES",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "INSTITUTO DE VIVIENDA SOCIAL Y ORDENAMIENTO DE LA PROPIEDAD",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "COORDINACION GENERAL DE MOVILIDAD",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "INSTITUTO DE INFRAESTRUCTURA FISICA EDUCATIVA DEL ESTADO DE AGUASCALIENTES",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "MODELO INTEGRAL DE AGUAS DE AGUASCALIENTES",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "SECRETARIA DE COMUNICACION SOCIAL Y VOCERIA DE GOBIERNO DEL ESTADO",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "SECRETARIA DE DESARROLLO ECONOMICO CIENCIA Y TECNOLOGIA",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "SECRETARIA DE LA FAMILIA",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "UNIVERSIDAD TECNOLOGICA DE CALVILLO",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "COORDINACION GENERAL EJECUTIVA DE GABINETE",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "FIDEICOMISO SISTEMA DE FINANCIAMIENTO DE AGUASCALIENTES",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "INSTITUTO DE EDUCACION DE AGUASCALIENTES",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "MUNICIPIO DE CALVILLO",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "ORGANISMO OPERADOR DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DE RINCON DE ROMOS",
+      "conteo": null
+    },
+    {
+      "estado": "01",
+      "nombre": "PROCURADURIA ESTATAL DE PROTECCION AL AMBIENTE",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "SECRETARIA DE EDUCACION PUBLICA DEL GOBIERNO DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": 114
+    },
+    {
+      "estado": "03",
+      "nombre": "PROCURADURIA GENERAL DE JUSTICIA DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": 11
+    },
+    {
+      "estado": "03",
+      "nombre": "SECRETARIA DE SALUD DEL GOBIERNO DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": 10
+    },
+    {
+      "estado": "03",
+      "nombre": "SECRETARIA DE SEGURIDAD PUBLICA DEL GOBIERNO DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": 10
+    },
+    {
+      "estado": "03",
+      "nombre": "SECRETARIA GENERAL DE GOBIERNO DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": 7
+    },
+    {
+      "estado": "03",
+      "nombre": "COLEGIO DE BACHILLERES DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": 6
+    },
+    {
+      "estado": "03",
+      "nombre": "COLEGIO DE ESTUDIOS CIENTIFICOS Y TECNOLOGICOS DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "INSTITUTO TECNOLOGICO SUPERIOR DE CIUDAD CONSTITUCION DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "JUNTA ESTATAL DE CAMINOS DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "INSTITUTO SUDCALIFORNIANO DE CULTURA DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "SECRETARIA DE FINANZAS Y ADMINISTRACION DEL GOBIERNO DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "ESCUELA NORMAL SUPERIOR DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "INSTITUTO SUDCALIFORNIANO DEL DEPORTE",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "SECRETARIA DE PLANEACION URBANA INFRAESTRUCTURA MOVILIDAD MEDIO AMBIENTE Y RECURSOS NATURALES DEL GOBIERNO DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "SECRETARIA DEL TRABAJO BIENESTAR Y DESARROLLO SOCIAL DEL GOBIERNO DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "ADMINISTRACION PORTUARIA INTEGRAL DE BAJA CALIFORNIA SUR SA DE CV",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "CONTRALORIA GENERAL DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "H AYUNTAMIENTO DE LA PAZ",
+      "conteo": null
+    },
+    {
+      "estado": "03",
+      "nombre": "INSTITUTO DE CAPACITACION PARA LOS TRABAJADORES DEL ESTADO DE BAJA CALIFORNIA SUR",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE JUAREZ",
+      "conteo": 13
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE CUAUHTEMOC",
+      "conteo": 11
+    },
+    {
+      "estado": "08",
+      "nombre": "SECRETARIA DE HACIENDA",
+      "conteo": 9
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE CHIHUAHUA - DIRECCION DE SEGURIDAD",
+      "conteo": 8
+    },
+    {
+      "estado": "08",
+      "nombre": "FISCALIA GENERAL DEL ESTADO",
+      "conteo": 7
+    },
+    {
+      "estado": "08",
+      "nombre": "INSTITUTO CHIHUAHUENSE DE SALUD",
+      "conteo": 7
+    },
+    {
+      "estado": "08",
+      "nombre": "CONGRESO DEL ESTADO",
+      "conteo": 6
+    },
+    {
+      "estado": "08",
+      "nombre": "DESARROLLO INTEGRAL DE LA FAMILIA DEL ESTADO DE CHIHUAHUA DIF",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE CHIHUAHUA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "SECRETARIA DE DESARROLLO RURAL",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "SECRETARIA DE LA FUNCION PUBLICA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "COLEGIO DE BACHILLERES DEL ESTADO DE CHIHUAHUA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "COMISION ESTATAL DE LOS DERECHOS HUMANOS",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE MADERA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "SECRETARIA DE SEGURIDAD PUBLICA DEL ESTADO DE CHIHUAHUA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "COLEGIO DE ESTUDIOS CIENTIFICOS Y TECNOLOGICOS DEL ESTADO DE CHIHUAHUA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "COMISION ESTATAL PARA LA PROTECCION CONTRA RIESGOS SANITARIOS",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "COORDINACION DE COMUNICACION",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "FIDEICOMISO DE PUENTES FRONTERIZOS",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "INSTITUTO CHIHUAHUENSE DE INFRAESTRUCTURA FISICA EDUCATIVA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "INSTITUTO CHIHUAHUENSE DE LA JUVENTUD ICHIJUV",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "JUNTA MUNICIPAL DE AGUA Y SANEAMIENTO DE JUAREZ",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "JUNTA MUNICIPAL DE AGUA Y SANEAMIENTO DE OJINAGA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE BATOPILAS DE MANUEL GOMEZ MORIN",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE CHIHUAHUA - DIF",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE CHIHUAHUA - DIRECCION DE DESARROLLO HUMANO Y EDUCACION",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE CHIHUAHUA - DIRECCION DE DESARROLLO URBANO Y ECOLOGIA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE CHIHUAHUA - DIRECCION DE SERVICIOS PUBLICOS MUNICIPALES",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE CHIHUAHUA - INSTITUTO DE PLANEACION INTEGRAL DEL MUNICIPIO DE CHIHUAHUA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE IGNACIO ZARAGOZA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE OJINAGA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "MUNICIPIO DE SAN FRANCISCO DEL ORO",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "SECRETARIA DE COMUNICACIONES Y OBRAS PUBLICAS",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "SECRETARIA DE DESARROLLO URBANO Y ECOLOGIA",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "SECRETARIA DE SALUD",
+      "conteo": null
+    },
+    {
+      "estado": "08",
+      "nombre": "SERVICIOS DE SALUD DE CHIHUAHUA",
+      "conteo": null
+    },
+    {
+      "estado": "10",
+      "nombre": "DIRECCION MUNICIPAL DE ADMINISTRACION Y FINANZAS",
+      "conteo": null
+    },
+    {
+      "estado": "10",
+      "nombre": "H AYUNTAMIENTO DEL MUNICIPIO DE DURANGO Y SINDICATO UNICO DE TRABAJADORES MUNICIPALES DE LA CAPITAL DEL ESTADO DE DURANGO",
+      "conteo": null
+    },
+    {
+      "estado": "10",
+      "nombre": "SECRETARIA DE FINANZAS Y DE ADMINISTRACION",
+      "conteo": null
+    },
+    {
+      "estado": "10",
+      "nombre": "SECRETARIA GENERAL DE GOBIERNO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "CONSEJO DEL PODER JUDICIAL",
+      "conteo": 20
+    },
+    {
+      "estado": "11",
+      "nombre": "MUNICIPIO DE LEON",
+      "conteo": 9
+    },
+    {
+      "estado": "11",
+      "nombre": "MUNICIPIO DE SILAO DE LA VICTORIA",
+      "conteo": 5
+    },
+    {
+      "estado": "11",
+      "nombre": "UNIVERSIDAD TECNOLOGICA DEL SUROESTE DE GUANAJUATO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "INSTITUTO DE SALUD PUBLICA DEL ESTADO DE GUANAJUATO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "INSTITUTO DE SEGURIDAD SOCIAL DEL ESTADO DE GUANAJUATO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "MUNICIPIO DE GUANAJUATO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "MUNICIPIO DE PENJAMO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "MUNICIPIO DE SAN MIGUEL DE ALLENDE",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "PARQUE AGRO TECNOLOGICO XONOTLI SA DE CV",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "UNIVERSIDAD DE GUANAJUATO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "UNIVERSIDAD TECNOLOGICA DE SALAMANCA",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "MUNICIPIO DE ACAMBARO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "MUNICIPIO DE IRAPUATO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "MUNICIPIO DE JERECUARO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "MUNICIPIO DE SALAMANCA",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "MUNICIPIO DE SAN FRANCISCO DEL RINCON",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "MUNICIPIO DE SAN JOSE ITURBIDE",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "PROCURADURIA ESTATAL DE PROTECCION DE NINAS NINOS Y ADOLESCENTES",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "SECRETARIA DE DESARROLLO SOCIAL Y HUMANO DEL ESTADO DE GUANAJUATO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "SECRETARIA DE EDUCACION",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "SECRETARIA DE EDUCACION DE GUANAJUATO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "SECRETARIA DE GOBIERNO",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "SECRETARIA DE INFRAESTRUCTURA CONECTIVIDAD Y MOVILIDAD",
+      "conteo": null
+    },
+    {
+      "estado": "11",
+      "nombre": "SISTEMA DE AGUA POTABLE Y ALCANTARILLADO DE LEON",
+      "conteo": null
+    },
+    {
+      "estado": "12",
+      "nombre": "INSTITUTO ELECTORAL Y DE PARTICIPACION CIUDADANA DEL ESTADO DE GUERRERO",
+      "conteo": 10
+    },
+    {
+      "estado": "12",
+      "nombre": "ZIHUATANEJO DE AZUETA",
+      "conteo": 7
+    },
+    {
+      "estado": "12",
+      "nombre": "FISCALIA GENERAL DEL ESTADO DE GUERRRERO",
+      "conteo": null
+    },
+    {
+      "estado": "12",
+      "nombre": "AUDITORIA SUPERIOR DEL ESTADO DE GUERRERO",
+      "conteo": null
+    },
+    {
+      "estado": "12",
+      "nombre": "FIDEICOMISO PARA LA PROMOCION TURISTICA DE ACAPULCO",
+      "conteo": null
+    },
+    {
+      "estado": "12",
+      "nombre": "H AYUNTAMIENTO MUNICIPAL CONSTITUCIONAL DE EDUARDO NERI GUERRERO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "AYUNTAMIENTO DE TLAJOMULCO",
+      "conteo": 1902
+    },
+    {
+      "estado": "14",
+      "nombre": "OPD HOSPITAL CIVIL DE GUADALAJARA",
+      "conteo": 147
+    },
+    {
+      "estado": "14",
+      "nombre": "SERVICIOS DE SALUD DEL MUNICIPIO DE ZAPOPAN",
+      "conteo": 138
+    },
+    {
+      "estado": "14",
+      "nombre": "AYUNTAMIENTO DE ZAPOPAN",
+      "conteo": 87
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO ELECTORAL Y DE PARTICIPACION CIUDADANA",
+      "conteo": 80
+    },
+    {
+      "estado": "14",
+      "nombre": "COMISION ESTATAL DE DERECHOS HUMANOS JALISCO CEDHJ",
+      "conteo": 71
+    },
+    {
+      "estado": "14",
+      "nombre": "PODER LEGISLATIVO DEL ESTADO DE JALISCO",
+      "conteo": 71
+    },
+    {
+      "estado": "14",
+      "nombre": "AYUNTAMIENTO DE GUADALAJARA",
+      "conteo": 54
+    },
+    {
+      "estado": "14",
+      "nombre": "CONGRESO DEL ESTADO",
+      "conteo": 53
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO JALISCIENSE DE CIENCIAS FORENSES",
+      "conteo": 47
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO TECNOLOGICO JOSE MARIO MOLINA PASQUEL Y HENRIQUEZ",
+      "conteo": 44
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DEL SISTEMA DE ASISTENCIA SOCIAL",
+      "conteo": 44
+    },
+    {
+      "estado": "14",
+      "nombre": "PROCURADURIA SOCIAL",
+      "conteo": 42
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE TRANSPORTE",
+      "conteo": 39
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE INFRAESTRUCTURA Y OBRA PUBLICA",
+      "conteo": 36
+    },
+    {
+      "estado": "14",
+      "nombre": "FISCALIA GENERAL DEL ESTADO",
+      "conteo": 35
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA GENERAL DE GOBIERNO",
+      "conteo": 35
+    },
+    {
+      "estado": "14",
+      "nombre": "OPD SERVICIOS DE SALUD JALISCO",
+      "conteo": 32
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE EDUCACION",
+      "conteo": 32
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE LA HACIENDA PUBLICA",
+      "conteo": 28
+    },
+    {
+      "estado": "14",
+      "nombre": "COLEGIO DE BACHILLERES DEL ESTADO DE JALISCO COBAEJ",
+      "conteo": 27
+    },
+    {
+      "estado": "14",
+      "nombre": "COLEGIO DE EDUCACION PROFESIONAL TECNICA DEL ESTADO DE JALISCO CONALEP",
+      "conteo": 25
+    },
+    {
+      "estado": "14",
+      "nombre": "AYUNTAMIENTO DE CHAPALA",
+      "conteo": 23
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE INSPECCION Y VIGILANCIA",
+      "conteo": 22
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE SERVICIOS MEDICOS MUNICIPALES",
+      "conteo": 19
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO DE PENSIONES DEL ESTADO DE JALISCO IPEJAL",
+      "conteo": 19
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE SEGURIDAD",
+      "conteo": 19
+    },
+    {
+      "estado": "14",
+      "nombre": "FISCALIA DEL ESTADO",
+      "conteo": 18
+    },
+    {
+      "estado": "14",
+      "nombre": "AYUNTAMIENTO DE TONALA",
+      "conteo": 17
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE ASEO PUBLICO",
+      "conteo": 15
+    },
+    {
+      "estado": "14",
+      "nombre": "SISTEMA PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DIF",
+      "conteo": 13
+    },
+    {
+      "estado": "14",
+      "nombre": "TRIBUNAL DE JUSTICIA ADMINISTRATIVA DEL ESTADO",
+      "conteo": 12
+    },
+    {
+      "estado": "14",
+      "nombre": "AYUNTAMIENTO DE TLAQUEPAQUE",
+      "conteo": 11
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DEL TRABAJO Y PREVISION SOCIAL",
+      "conteo": 11
+    },
+    {
+      "estado": "14",
+      "nombre": "CONSEJO ESTATAL PARA EL FOMENTO DEPORTIVO CODE",
+      "conteo": 10
+    },
+    {
+      "estado": "14",
+      "nombre": "FISCALIA ESTATAL",
+      "conteo": 10
+    },
+    {
+      "estado": "14",
+      "nombre": "PATRONATO DE LAS FIESTAS DE OCTUBRE DE LA ZONA METROPOLITANA DE GUADALAJARA",
+      "conteo": 10
+    },
+    {
+      "estado": "14",
+      "nombre": "DESPACHO DEL GOBERNADOR",
+      "conteo": 8
+    },
+    {
+      "estado": "14",
+      "nombre": "SISTEMA INTERMUNICIPAL DE LOS SERVICIOS DE AGUA POTABLE Y ALCANTARILLADO SIAPA",
+      "conteo": 8
+    },
+    {
+      "estado": "14",
+      "nombre": "AYUNTAMIENTO DE TECOLOTLAN",
+      "conteo": 7
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE OBRAS PUBLICAS",
+      "conteo": 7
+    },
+    {
+      "estado": "14",
+      "nombre": "HOGAR CABANAS INSTITUTO CABANAS",
+      "conteo": 7
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE CULTURA",
+      "conteo": 7
+    },
+    {
+      "estado": "14",
+      "nombre": "UNIVERSIDAD TECNOLOGICA DE JALISCO UTJ",
+      "conteo": 7
+    },
+    {
+      "estado": "14",
+      "nombre": "REGIMEN ESTATAL DE PROTECCION SOCIAL EN SALUD DE JALISCO",
+      "conteo": 6
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE IGUALDAD SUSTANTIVA ENTRE MUJERES Y HOMBRES",
+      "conteo": 6
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE SALUD",
+      "conteo": 6
+    },
+    {
+      "estado": "14",
+      "nombre": "CONTRALORIA DEL ESTADO",
+      "conteo": 5
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE PARQUES Y JARDINES",
+      "conteo": 5
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO DE TRANSPARENCIA",
+      "conteo": 5
+    },
+    {
+      "estado": "14",
+      "nombre": "OIC SERVICIOS DE SALUD DEL MUNICIPIO DE ZAPOPAN",
+      "conteo": 5
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE ADMINISTRACION",
+      "conteo": 5
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE MOVILIDAD",
+      "conteo": 5
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE INGRESOS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO JALISCIENSE DE ASISTENCIA SOCIAL IJAS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "OIC OPD HOSPITAL CIVIL DE GUADALAJARA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "OIC SECRETARIA DEL SISTEMA DE ASISTENCIA SOCIAL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE DESARROLLO ECONOMICO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "CONSEJO MUNICIPAL DEL DEPORTE COMUDE ZAPOPAN",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "COORDINACION GENERAL ESTRATEGICA DE SEGURIDAD",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE ADQUISICIONES",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE CULTURA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE GESTION DE ZONAS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE INGRESOS DE LA TESORERIA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE PROGRAMAS SOCIALES MUNICIPALES",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO DE FORMACION PARA EL TRABAJO DEL ESTADO DE JALISCO IDEFT",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO DE INFRAESTRUCTURA FISICA EDUCATIVA DEL ESTADO INFEJAL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "OPD C5 JALISCO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "SERVICIOS Y TRANSPORTES SYT",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "AGENCIA METROPOLITANA DE BOSQUES URBANOS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "AYUNTAMIENTO DE LA HUERTA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "AYUNTAMIENTO DE SAN IGNACIO CERRO GORDO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "AYUNTAMIENTO DE TAMAZULA DE GORDIANO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "COLEGIO DE ESTUDIOS CIENTIFICOS Y TECNOLOGICOS DEL ESTADO DE JALISCO CECYTEJ",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "COMISION ESTATAL DE DERECHOS HUMANOS JALISCO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "COMISION PARA LA PROTECCION CONTRA RIESGOS SANITARIOS DEL ESTADO COPRISJAL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "CONSEJO DE LA JUDICATURA FEDERAL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE CEMENTERIOS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE JUSTICIA CIVICA MUNICIPAL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE PROGRAMAS COMUNITARIOS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE PROTECCION ANIMAL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "ESCUELA DE CONSERVACION Y RESTAURACION DE OCCIDENTE ECRO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "H AYUNTAMIENTO DE AUTLAN DE NAVARRO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "INMUJERES",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO DE FORMACION TERRITORIAL DEL ESTADO DE JALISCO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO ESTATAL PARA LA EDUCACION DE JOVENES Y ADULTOS INEEJAD",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO JALISCIENSE DE ALIVIO AL DOLOR Y CUIDADOS PALIATIVOS PALIA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "OIC OPD SERVICIOS DE SALUD JALISCO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "OIC SECRETARIA DE LA HACIENDA PUBLICA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "OPD POLICIA METROPOLITANA DE GUADALAJARA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA GENERAL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "SINDICATURA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "SISTEMA DIF GUADALAJARA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "UNIDAD ESTATAL DE PROTECICON CIVIL Y BOMBEROS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "UNIVERSIDAD TECNOLOGICA DE LA ZONA METROPOLITANA DE GUADALAJARA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "AYUNTAMIENTO DE EL SALTO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "AYUNTAMIENTO DE TEPATITLAN DE MORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "COMISARIA DE LA POLICIA DE GUADALAJARA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "COMISARIA DE LA POLICIA PREVENTIVA MUNICIPAL GDL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "COORDINACION DE PROTECCION CIVIL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "COORDINACION GENERAL DE DESARROLLO ECONOMICO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE ADMINISTRACION",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE ASUNTOS RELIGIOSOS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE BOMBEROS Y PROTECCION CIVIL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE DESARROLLO ECONOMICO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE EDUCACION",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE EVALUACION Y SEGUIMIENTO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE LO JURIDICO CONTENCIOSO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE MANTENIMIENTO URBANO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE MERCADOS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE MOVILIDAD",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE MOVILIDAD Y TRANSPORTE",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE PROTECCION CIVIL Y BOMBEROS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE PROYECTOS ESPECIALES",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE RASTRO PUBLICO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE RELACIONES PUBLICAS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE TIANGUIS Y COMERCIO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DE TIANGUIS Y ESPACIOS ABIERTOS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION DEL REGISTRO CIVIL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIRECCION JURIDICO DE LO CONTENCIOSO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "DIVISION DE OPERACIONES REGIONALES Y AGRUPAMIENTOS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "FIDEICOMISO PARA LA PROTECCION DEL ESTERO EL SALADO Y DESARROLLO DE LAS AREAS COLINDANTES",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "FONDO DE JALISCO DE FOMENTO EMPRESARIAL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "GERENCIA MUNICIPAL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "H AYUNTAMIENTO DE AUTLAN DE NAVARRO JALISCO",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "HOSPITAL GENERAL DE OCCIDENTE",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "HOSPITAL MATERNO INFANTIL ESPERANZA LOPEZ MATEOS",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO DE FOMENTO AL COMERCIO EXTERIOR DEL ESTADO DE JALISCO JALTRADE",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO DE JUSTICIA ALTERNATIVA DEL ESTADO IJA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "INSTITUTO JALISCIENSE DE LA JUVENTUD",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "OIC AYUNTAMIENTO DE TLAJOMULCO DE ZUNIGA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "OIC INSTITUTO JALISCIENSE DE CIENCIAS FORENSES",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "OIC SECRETARIA DE IGUALDAD SUSTANTIVA ENTRE MUJERES Y HOMBRES",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "OIC SECRETARIA DE INFRAESTRUCTURA Y OBRA PUBLICA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "OPD COMUDE GUADALAJARA",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE AGRICULTURA Y DESARROLLO RURAL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA DE MEDIO AMBIENTE Y DESARROLLO TERRITORIAL",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "SECRETARIA PARTICULAR",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "SISTEMA DE TREN ELECTRICO URBANO SITEUR",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "SISTEMA JALISCIENSE DE RADIO Y TELEVISION SJRTV",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "SUPREMA CORTE DE JUSTICIA DE LA NACION",
+      "conteo": null
+    },
+    {
+      "estado": "14",
+      "nombre": "TESORERIA MUNICIPAL",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "TLALNEPANTLA DE BAZ",
+      "conteo": 1631
+    },
+    {
+      "estado": "15",
+      "nombre": "PODER LEGISLATIVO DEL ESTADO DE MEXICO",
+      "conteo": 1316
+    },
+    {
+      "estado": "15",
+      "nombre": "TOLUCA",
+      "conteo": 949
+    },
+    {
+      "estado": "15",
+      "nombre": "NAUCALPAN",
+      "conteo": 795
+    },
+    {
+      "estado": "15",
+      "nombre": "METEPEC",
+      "conteo": 638
+    },
+    {
+      "estado": "15",
+      "nombre": "ECATEPEC DE MORELOS",
+      "conteo": 624
+    },
+    {
+      "estado": "15",
+      "nombre": "COACALCO DE BERRIOZABAL",
+      "conteo": 565
+    },
+    {
+      "estado": "15",
+      "nombre": "FISCALIA GENERAL DE JUSTICIA DEL ESTADO DE MEXICO",
+      "conteo": 535
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO ELECTORAL DEL ESTADO DE MEXICO",
+      "conteo": 391
+    },
+    {
+      "estado": "15",
+      "nombre": "PODER JUDICIAL",
+      "conteo": 351
+    },
+    {
+      "estado": "15",
+      "nombre": "APAXCO",
+      "conteo": 337
+    },
+    {
+      "estado": "15",
+      "nombre": "ATIZAPAN DE ZARAGOZA",
+      "conteo": 287
+    },
+    {
+      "estado": "15",
+      "nombre": "ZINACANTEPEC",
+      "conteo": 273
+    },
+    {
+      "estado": "15",
+      "nombre": "JILOTZINGO",
+      "conteo": 246
+    },
+    {
+      "estado": "15",
+      "nombre": "NEZAHUALCOYOTL",
+      "conteo": 185
+    },
+    {
+      "estado": "15",
+      "nombre": "LA PAZ",
+      "conteo": 138
+    },
+    {
+      "estado": "15",
+      "nombre": "FISCALIA GENERAL DE JUSTICIA DEL ESTADO DE MEXICO - FGJEM",
+      "conteo": 129
+    },
+    {
+      "estado": "15",
+      "nombre": "ZUMPANGO",
+      "conteo": 123
+    },
+    {
+      "estado": "15",
+      "nombre": "SAN JOSE DEL RINCON",
+      "conteo": 97
+    },
+    {
+      "estado": "15",
+      "nombre": "HUEHUETOCA",
+      "conteo": 93
+    },
+    {
+      "estado": "15",
+      "nombre": "VALLE DE CHALCO SOLIDARIDAD",
+      "conteo": 93
+    },
+    {
+      "estado": "15",
+      "nombre": "CUAUTITLAN IZCALLI",
+      "conteo": 91
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE NAUCALPAN DE JUAREZ",
+      "conteo": 90
+    },
+    {
+      "estado": "15",
+      "nombre": "UNIVERSIDAD AUTONOMA DEL ESTADO DE MEXICO",
+      "conteo": 90
+    },
+    {
+      "estado": "15",
+      "nombre": "COMISION DE DERECHOS HUMANOS DEL ESTADO DE MEXICO",
+      "conteo": 85
+    },
+    {
+      "estado": "15",
+      "nombre": "NICOLAS ROMERO",
+      "conteo": 81
+    },
+    {
+      "estado": "15",
+      "nombre": "CALIMAYA",
+      "conteo": 80
+    },
+    {
+      "estado": "15",
+      "nombre": "CAPULHUAC",
+      "conteo": 72
+    },
+    {
+      "estado": "15",
+      "nombre": "TECAMAC",
+      "conteo": 71
+    },
+    {
+      "estado": "15",
+      "nombre": "MALINALCO",
+      "conteo": 70
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE APAXCO",
+      "conteo": 68
+    },
+    {
+      "estado": "15",
+      "nombre": "CHAPA DE MOTA",
+      "conteo": 63
+    },
+    {
+      "estado": "15",
+      "nombre": "ALMOLOYA DEL RIO",
+      "conteo": 59
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DEL MUNICIPIO DE NAUCALPAN DE JUAREZ",
+      "conteo": 59
+    },
+    {
+      "estado": "15",
+      "nombre": "TLALMANALCO",
+      "conteo": 58
+    },
+    {
+      "estado": "15",
+      "nombre": "TEOLOYUCAN",
+      "conteo": 57
+    },
+    {
+      "estado": "15",
+      "nombre": "TULTITLAN",
+      "conteo": 55
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DEL MUNICIPIO DE METEPEC",
+      "conteo": 53
+    },
+    {
+      "estado": "15",
+      "nombre": "SAN MATEO ATENCO",
+      "conteo": 52
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE METEPEC - DIFMETEPEC",
+      "conteo": 52
+    },
+    {
+      "estado": "15",
+      "nombre": "LERMA",
+      "conteo": 51
+    },
+    {
+      "estado": "15",
+      "nombre": "HUEYPOXTLA",
+      "conteo": 49
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE CUAUTITLAN IZCALLI",
+      "conteo": 48
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE ECATEPEC DE MORELOS - DIFECATEPEC",
+      "conteo": 47
+    },
+    {
+      "estado": "15",
+      "nombre": "ATLACOMULCO",
+      "conteo": 44
+    },
+    {
+      "estado": "15",
+      "nombre": "ISIDRO FABELA",
+      "conteo": 44
+    },
+    {
+      "estado": "15",
+      "nombre": "VILLA DEL CARBON",
+      "conteo": 43
+    },
+    {
+      "estado": "15",
+      "nombre": "TRIBUNAL DE JUSTICIA ADMINISTRATIVA DEL ESTADO DE MEXICO - TRIJAEM",
+      "conteo": 41
+    },
+    {
+      "estado": "15",
+      "nombre": "TONATICO",
+      "conteo": 39
+    },
+    {
+      "estado": "15",
+      "nombre": "JILOTEPEC",
+      "conteo": 38
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DEL MUNICIPIO DE METEPEC - OASMETEPEC",
+      "conteo": 37
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE TLALNEPANTLA DE BAZ - DIFTLALNEPANTLA",
+      "conteo": 37
+    },
+    {
+      "estado": "15",
+      "nombre": "HUIXQUILUCAN",
+      "conteo": 36
+    },
+    {
+      "estado": "15",
+      "nombre": "COYOTEPEC",
+      "conteo": 34
+    },
+    {
+      "estado": "15",
+      "nombre": "TRIBUNAL DE JUSTICIA ADMINISTRATIVA DEL ESTADO DE MEXICO",
+      "conteo": 32
+    },
+    {
+      "estado": "15",
+      "nombre": "OTZOLOTEPEC",
+      "conteo": 31
+    },
+    {
+      "estado": "15",
+      "nombre": "VALLE DE BRAVO",
+      "conteo": 31
+    },
+    {
+      "estado": "15",
+      "nombre": "CHIMALHUACAN",
+      "conteo": 30
+    },
+    {
+      "estado": "15",
+      "nombre": "TEMAMATLA",
+      "conteo": 28
+    },
+    {
+      "estado": "15",
+      "nombre": "TEMASCALCINGO",
+      "conteo": 28
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO ELECTORAL DEL ESTADO DE MEXICO - IEEM",
+      "conteo": 27
+    },
+    {
+      "estado": "15",
+      "nombre": "TIANGUISTENCO",
+      "conteo": 27
+    },
+    {
+      "estado": "15",
+      "nombre": "OCOYOACAC",
+      "conteo": 26
+    },
+    {
+      "estado": "15",
+      "nombre": "SAN MARTIN DE LAS PIRAMIDES",
+      "conteo": 26
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TEQUIXQUIAC",
+      "conteo": 25
+    },
+    {
+      "estado": "15",
+      "nombre": "CHIAUTLA",
+      "conteo": 23
+    },
+    {
+      "estado": "15",
+      "nombre": "DONATO GUERRA",
+      "conteo": 21
+    },
+    {
+      "estado": "15",
+      "nombre": "TEMASCALTEPEC",
+      "conteo": 21
+    },
+    {
+      "estado": "15",
+      "nombre": "OTUMBA",
+      "conteo": 20
+    },
+    {
+      "estado": "15",
+      "nombre": "CHICOLOAPAN",
+      "conteo": 19
+    },
+    {
+      "estado": "15",
+      "nombre": "XONACATLAN",
+      "conteo": 19
+    },
+    {
+      "estado": "15",
+      "nombre": "COCOTITLAN",
+      "conteo": 18
+    },
+    {
+      "estado": "15",
+      "nombre": "IXTAPAN DE LA SAL",
+      "conteo": 18
+    },
+    {
+      "estado": "15",
+      "nombre": "TEJUPILCO",
+      "conteo": 18
+    },
+    {
+      "estado": "15",
+      "nombre": "TENANCINGO",
+      "conteo": 18
+    },
+    {
+      "estado": "15",
+      "nombre": "IXTAPALUCA",
+      "conteo": 17
+    },
+    {
+      "estado": "15",
+      "nombre": "JOQUICINGO",
+      "conteo": 17
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DEL MUNICIPIO DE TULTITLAN",
+      "conteo": 17
+    },
+    {
+      "estado": "15",
+      "nombre": "TEQUIXQUIAC",
+      "conteo": 17
+    },
+    {
+      "estado": "15",
+      "nombre": "ZUMPAHUACAN",
+      "conteo": 17
+    },
+    {
+      "estado": "15",
+      "nombre": "COATEPEC HARINAS",
+      "conteo": 16
+    },
+    {
+      "estado": "15",
+      "nombre": "NOPALTEPEC",
+      "conteo": 16
+    },
+    {
+      "estado": "15",
+      "nombre": "CHALCO",
+      "conteo": 15
+    },
+    {
+      "estado": "15",
+      "nombre": "JALTENCO",
+      "conteo": 14
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE SAN JOSE DEL RINCON",
+      "conteo": 14
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TIANGUISTENCO",
+      "conteo": 14
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE ZUMPANGO",
+      "conteo": 14
+    },
+    {
+      "estado": "15",
+      "nombre": "ZACUALPAN",
+      "conteo": 14
+    },
+    {
+      "estado": "15",
+      "nombre": "ACAMBAY DE RUIZ CASTANEDA",
+      "conteo": 13
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TEPOTZOTLAN",
+      "conteo": 13
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE METEPEC",
+      "conteo": 13
+    },
+    {
+      "estado": "15",
+      "nombre": "ALMOLOYA DE JUAREZ",
+      "conteo": 12
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE JILOTZINGO",
+      "conteo": 12
+    },
+    {
+      "estado": "15",
+      "nombre": "TEPETLIXPA",
+      "conteo": 12
+    },
+    {
+      "estado": "15",
+      "nombre": "TEPOTZOTLAN",
+      "conteo": 12
+    },
+    {
+      "estado": "15",
+      "nombre": "AMANALCO",
+      "conteo": 11
+    },
+    {
+      "estado": "15",
+      "nombre": "MELCHOR OCAMPO",
+      "conteo": 11
+    },
+    {
+      "estado": "15",
+      "nombre": "MORELOS",
+      "conteo": 11
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TONANITLA",
+      "conteo": 11
+    },
+    {
+      "estado": "15",
+      "nombre": "TEMOAYA",
+      "conteo": 11
+    },
+    {
+      "estado": "15",
+      "nombre": "ATENCO",
+      "conteo": 10
+    },
+    {
+      "estado": "15",
+      "nombre": "ATLAUTLA",
+      "conteo": 10
+    },
+    {
+      "estado": "15",
+      "nombre": "CUAUTITLAN",
+      "conteo": 10
+    },
+    {
+      "estado": "15",
+      "nombre": "JIQUIPILCO",
+      "conteo": 10
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO DESCENTRALIZADO DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DE NEZAHUALCOYOTL ODAPAS - OASNEZAHUALCOYOTL",
+      "conteo": 10
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE CUAUTITLAN IZCALLI - DIFCUAUTITLANIZCALLI",
+      "conteo": 10
+    },
+    {
+      "estado": "15",
+      "nombre": "CHAPULTEPEC",
+      "conteo": 9
+    },
+    {
+      "estado": "15",
+      "nombre": "JUNTA DE CAMINOS DEL ESTADO DE MEXICO",
+      "conteo": 9
+    },
+    {
+      "estado": "15",
+      "nombre": "MEXICALTZINGO",
+      "conteo": 9
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE XONACATLAN",
+      "conteo": 9
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DEL MUNICIPIO DE LA PAZ MEXICO OPDAPAS - OASLAPAZ",
+      "conteo": 9
+    },
+    {
+      "estado": "15",
+      "nombre": "PAPALOTLA",
+      "conteo": 9
+    },
+    {
+      "estado": "15",
+      "nombre": "SECRETARIA DE EDUCACION",
+      "conteo": 9
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE NAUCALPAN DE JUAREZ - DIFNAUCALPAN",
+      "conteo": 9
+    },
+    {
+      "estado": "15",
+      "nombre": "TENANGO DEL VALLE",
+      "conteo": 9
+    },
+    {
+      "estado": "15",
+      "nombre": "XALATLACO",
+      "conteo": 9
+    },
+    {
+      "estado": "15",
+      "nombre": "JOCOTITLAN",
+      "conteo": 8
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE NAUCALPAN DE JUAREZ",
+      "conteo": 8
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE NEZAHUALCOYOTL",
+      "conteo": 8
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TLALNEPANTLA DE BAZ",
+      "conteo": 8
+    },
+    {
+      "estado": "15",
+      "nombre": "PODER JUDICIAL - PJEDOMEX",
+      "conteo": 8
+    },
+    {
+      "estado": "15",
+      "nombre": "SAN FELIPE DEL PROGRESO",
+      "conteo": 8
+    },
+    {
+      "estado": "15",
+      "nombre": "COMISION DE DERECHOS HUMANOS DEL ESTADO DE MEXICO - CODHEM",
+      "conteo": 7
+    },
+    {
+      "estado": "15",
+      "nombre": "EL ORO",
+      "conteo": 7
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE ECATEPEC DE MORELOS",
+      "conteo": 7
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE CUAUTITLAN IZCALLI",
+      "conteo": 7
+    },
+    {
+      "estado": "15",
+      "nombre": "TEOTIHUACAN",
+      "conteo": 7
+    },
+    {
+      "estado": "15",
+      "nombre": "TONANITLA",
+      "conteo": 7
+    },
+    {
+      "estado": "15",
+      "nombre": "IXTLAHUACA",
+      "conteo": 6
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TEJUPILCO",
+      "conteo": 6
+    },
+    {
+      "estado": "15",
+      "nombre": "OTZOLOAPAN",
+      "conteo": 6
+    },
+    {
+      "estado": "15",
+      "nombre": "SANTO TOMAS",
+      "conteo": 6
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE NICOLAS ROMERO",
+      "conteo": 6
+    },
+    {
+      "estado": "15",
+      "nombre": "TEPETLAOXTOC",
+      "conteo": 6
+    },
+    {
+      "estado": "15",
+      "nombre": "ECATEPEC",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "ECATZINGO",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO DE SALUD DEL ESTADO DE MEXICO",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE ATIZAPAN DE ZARAGOZA",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE CUAUTITLAN",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE JALTENCO",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DE ATIZAPAN DE ZARAGOZA POR SUS SIGLAS SAPASA",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "OZUMBA",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE CAPULHUAC",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE COYOTEPEC",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE JILOTZINGO - DIFJILOTZINGO",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "TEMASCALAPA",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "TEZOYUCA",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "TIMILPAN",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "TRIBUNAL ELECTORAL DEL ESTADO DE MEXICO",
+      "conteo": 5
+    },
+    {
+      "estado": "15",
+      "nombre": "ACOLMAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ATIZAPAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "JUCHITEPEC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "LUVIANOS",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE AMECAMECA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE METEPEC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE NOPALTEPEC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE PAPALOTLA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TEOLOYUCAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO AGUA Y SANEAMIENTO DE TOLUCA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DEL MUNICIPIO DE ECATEPEC DE MORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE IXTAPAN DE LA SAL",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE TOLUCA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "TEXCALYACAC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "VILLA VICTORIA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ACAMBAY",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "AMATEPEC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "AYAPANGO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO MUNICIPAL DE CULTURA FISICA Y DEPORTE DE TECAMAC - IMCUFIDETECAMAC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE HUEYPOXTLA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE JILOTZINGO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE JUCHITEPEC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE OTZOLOTEPEC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE SAN FELIPE DEL PROGRESO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TECAMAC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TEMAMATLA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE VALLE DE CHALCO SOLIDARIDAD",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "OCUILAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DE IXTAPAN DE LA SAL",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "PROTECTORA DE BOSQUES DEL ESTADO DE MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "RAYON",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SAN ANTONIO LA ISLA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE HUIXQUILUCAN - DIFHUIXQUILUCAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE SAN JOSE DEL RINCON - DIFSANJOSEDELRINCON",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE TECAMAC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE TEPOTZOTLAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "TECNOLOGICO DE ESTUDIOS SUPERIORES DE CHICOLOAPAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "UNIVERSIDAD POLITECNICA DE CUAUTITLAN IZCALLI",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "UNIVERSIDAD POLITECNICA DE TEXCOCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ACULCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "AMECAMECA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "COLEGIO DE EDUCACION PROFESIONAL TECNICA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "CONSEJO DE INVESTIGACION Y EVALUACION DE LA POLITICA SOCIAL",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO MUNICIPAL DE CULTURA FISICA Y DEPORTE DE SAN SIMON DE GUERRERO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE ALMOLOYA DEL RIO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE CHIAUTLA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE CHICONCUAC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE DONATO GUERRA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE IXTLAHUACA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE JOQUICINGO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE OCOYOACAC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TENANGO DEL VALLE",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TEOTIHUACAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE ZUMPAHUACAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "NAUCALPAN DE JUAREZ",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "NEXTLALPAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DE TENANCINGO - OASTENANCINGO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "POLOTITLAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "PROTECCION CIVIL DEL ESTADO DE MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SECRETARIA GENERAL DE GOBIERNO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE MORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE OTZOLOTEPEC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE TECAMAC - DIFTECAMAC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE TEMASCALCINGO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE TEZOYUCA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE TIANGUISTENCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE ZINACANTEPEC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SULTEPEC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "TENANGO DEL AIRE",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "TEXCALTITLAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "TEXCOCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "TRIBUNAL ELECTORAL DEL ESTADO DE MEXICO - TEEMMX",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "UNIVERSIDAD POLITECNICA DE CHIMALHUACAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "VILLA GUERRERO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ALMOLOYA DE ALQUISIRAS",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "AXAPUSCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "CHICONCUAC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "COACALCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "COLEGIO DE BACHILLERES DEL ESTADO DE MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "COLEGIO DE ESTUDIOS CIENTIFICOS Y TECNOLOGICOS DEL ESTADO DE MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "COMISION PARA EL DESARROLLO TURISTICO DEL VALLE DE TEOTIHUACAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO DE ADMINISTRACION PUBLICA DEL ESTADO DE MEXICO AC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO DE INVESTIGACION Y CAPACITACION AGROPECUARIA ACUICOLA Y FORESTAL DEL ESTADO DE MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO DE SALUD DEL ESTADO DE MEXICO - ISEM",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO DE TRANSPARENCIA ACCESO A LA INFORMACION PUBLICA Y PROTECCION DE DATOS PERSONALES DEL ESTADO DE MEXICO Y MUNICIPIOS",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO MEXIQUENSE DE LA PIROTECNIA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO MEXIQUENSE DEL EMPRENDEDOR",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO MEXIQUENSE PARA LA PROTECCION E INTEGRACION AL DESARROLLO DE LAS PERSONAS CON DISCAPACIDAD",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "INSTITUTO MUNICIPAL DE CULTURA FISICA Y DEPORTE DE ATLACOMULCO - IMCUFIDEATLACOMULCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE ALMOLOYA DE JUAREZ",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE ATLAUTLA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE AXAPUSCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE AYAPANGO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE CALIMAYA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE CAPULHUAC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE CHALCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE COACALCO DE BERRIOZABAL",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE EL ORO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE HUIXQUILUCAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE IXTAPALUCA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE JIQUIPILCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE LA PAZ",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE MELCHOR OCAMPO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE MORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE NAUCALPAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE OTZOLOAPAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE OZUMBA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE POLOTITLAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE RAYON",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE SAN ANTONIO LA ISLA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE SAN MATEO ATENCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE SOYANIQUILPAN DE JUAREZ",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TEMASCALAPA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TEMASCALCINGO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TEMOAYA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TEXCALYACAC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TLALMANALCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE TOLUCA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE VILLA DEL CARBON",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE VILLA GUERRERO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "MUNICIPIO DE VILLA VICTORIA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DEL AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DE TECAMAC - OASTECAMAC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO MUNICIPAL PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE DRENAJE ALCANTARILLADO Y SANEAMIENTO DE CALIMAYA MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO MUNICIPAL PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE DRENAJE ALCANTARILLADO Y SANEAMIENTO DE CALIMAYA MEXICO - OASCALIMAYA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DE TENANGO DEL VALLE ESTADO DE MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DEL MUNICIPIO DE LA PAZ",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DEL MUNICIPIO DE LERMA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DEL MUNICIPIO DE NAUCALPAN DE JUAREZ - OASNAUCALPAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE LOS SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DEL MUNICIPIO DE TLALNEPANTLA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ORGANISMO PUBLICO DESCENTRALIZADO PARA LA PRESTACION DE SERVICIOS DE AGUA POTABLE ALCANTARILLADO Y SANEAMIENTO DE COACALCO DE BERRIOZABAL",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "PODER LEGISLATIVO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "PROCURADURIA DE PROTECCION AL AMBIENTE DEL ESTADO DE MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SAN SIMON DE GUERRERO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SECRETARIA DE CULTURA - SCEM",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SECRETARIA DE LA MUJER - SM",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SECRETARIA DE MOVILIDAD",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SECRETARIA DE SEGURIDAD DEL ESTADO DE MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SECRETARIA DEL TRABAJO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SERVICIOS EDUCATIVOS INTEGRADOS AL ESTADO DE MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SERVICIOS EDUCATIVOS INTEGRADOS AL ESTADO DE MEXICO - SEIEM",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA DE TRANSPORTE MASIVO Y TELEFERICO DEL ESTADO DE MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE ACAMBAY",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE ACAMBAY - DIFACAMBAY",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE CALIMAYA - DIFCALIMAYA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE EL ORO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE HUIXQUILUCAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE MORELOS - DIFMORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE NAUCALPAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE NOPALTEPEC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE SANTO TOMAS - DIFSANTOTOMAS",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE TEMAMATLA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE TENANCINGO - DIFTENANCINGO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE VALLE DE BRAVO - DIFVALLEDEBRAVO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SISTEMA MUNICIPAL PARA EL DESARROLLO INTEGRAL DE LA FAMILIA DE ZUMPANGO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "SOYANIQUILPAN",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "TECNOLOGICO DE ESTUDIOS SUPERIORES DE COACALCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "TECNOLOGICO DE ESTUDIOS SUPERIORES DE ECATEPEC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "TENANGO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "TULTEPEC",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "UNIVERSIDAD INTERCULTURAL DEL ESTADO DE MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "UNIVERSIDAD POLITECNICA DE ATLACOMULCO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "UNIVERSIDAD POLITECNICA DEL VALLE DE MEXICO",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "UNIVERSIDAD POLITECNICA DEL VALLE DE TOLUCA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "UNIVERSIDAD TECNOLOGICA DEL VALLE DE TOLUCA",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "VILLA DE ALLENDE",
+      "conteo": null
+    },
+    {
+      "estado": "15",
+      "nombre": "ZACAZONAPAN",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "SAHUAYO",
+      "conteo": 22
+    },
+    {
+      "estado": "16",
+      "nombre": "SECRETARIA DE CONTRALORIA DEL ESTADO DE MICHOACAN",
+      "conteo": 16
+    },
+    {
+      "estado": "16",
+      "nombre": "JIQUILPAN",
+      "conteo": 9
+    },
+    {
+      "estado": "16",
+      "nombre": "LAZARO CARDENAS",
+      "conteo": 9
+    },
+    {
+      "estado": "16",
+      "nombre": "URUAPAN",
+      "conteo": 8
+    },
+    {
+      "estado": "16",
+      "nombre": "HONORABLE AYUNTAMIENTO DE LAZARO CARDENAS",
+      "conteo": 6
+    },
+    {
+      "estado": "16",
+      "nombre": "SECRETARIA DE FINANZAS Y ADMINISTRACION",
+      "conteo": 6
+    },
+    {
+      "estado": "16",
+      "nombre": "ZAMORA",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "TRIBUNAL DE JUSTICIA ADMINISTRATIVA DEL ESTADO",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "COMISION ESTATAL DEL AGUA Y GESTION DE CUENCAS",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "HONORABLE AYUNTAMIENTO DE JOSE SIXTO VERDUZCO",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "INSTITUTO DE DEFENSORIA PUBLICA DEL ESTADO DE MICHOACAN",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "INSTITUTO ELECTORAL DE MICHOACAN",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "PUREPERO",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "SECRETARIA DE EDUCACION",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "TRIBUNAL EN MATERIA ANTICORRUPCION Y ADMINISTRATIVA DEL ESTADO DE MICHOACAN",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "COMISION ESTATAL DE ARBITRAJE MEDICO DE MICHOACAN",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "COMISION ESTATAL DE DERECHOS HUMANOS",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "CONSEJO ESTATAL PARA PREVENIR Y ELIMINAR LA DISCRIMINACION Y LA VIOLENCIA",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "JUNTA DE CAMINOS DEL ESTADO DE MICHOACAN DE OCAMPO",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "SECRETARIA DE DESARROLLO ECONOMICO",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "SECRETARIA DE GOBIERNO",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "SECRETARIA DE SEGURIDAD PUBLICA",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "SECRETARIA DEL BIENESTAR",
+      "conteo": null
+    },
+    {
+      "estado": "16",
+      "nombre": "UNIVERSIDAD TECNOLOGICA DE MORELIA",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "SERVICIOS DE SALUD DE MORELOS",
+      "conteo": 17
+    },
+    {
+      "estado": "17",
+      "nombre": "COMISARIO PUBLICO EN SERVICIOS DE SALUD DE MORELOS",
+      "conteo": 8
+    },
+    {
+      "estado": "17",
+      "nombre": "HOSPITAL GENERAL DE CUERNAVACA DR JOSE G PARRES",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "INSTITUTO DE LA EDUCACION BASICA DEL ESTADO DE MORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "INSTITUTO ESTATAL PRO-VETERANOS DE LA REVOLUCION DEL SUR",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "AYUNTAMIENTO DE CUERNAVACA",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "COLEGIO DE BACHILLERES DEL ESTADO DE MORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "COMISARIO PUBLICO DEL HOSPITAL DEL NINO MORELENSE",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "COMISION ESTATAL DE SEGUIDAS PUBLICA",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "DIRECCION GENERAL DE CENTROS PENITENCIARIOS DE LA COMISION ESTATAL DE SEGURIDAD PUBLICA",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "DIRECION DE INGENIERIA INDUSTRIAL DE LA UNIVERSIDAD POLITECNICA DEL ESTADO DE MORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "HOSPITAL COMUNITARIO DE PUENTE DE IXTLA",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "HOSPITAL GENERAL DE JOJULTA MORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "HOSPITAL GENERAL DE JOJUTLA ERNESTO MEANA SAN ROMAN",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "HOSPITAL GENERAL DE TETECALA",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "HOSPITAL GENERAL DE TETECALA SR RODOLFO BECERRIL DE LA PAZ",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "INSTITUTO DE EDUCACION BASICA DEL ESTADO DE MORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "INSTITUTO ESTATAL DE INFRAESTRUCTURA EDUCATIVA DE MORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "INSTITUTO ESTATAL PRO VETERANOS DE LA REVOLICION DEL SUR",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "SECRETARIA DE EDUCACION",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "SECRETARIA DE GOBIERNO",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "SECRETARIA DE HACIENDA",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "SECRETARIA DE SEGURIDAD PUBLICA",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "SECRETARIA DE TURISMO Y CULTURA",
+      "conteo": null
+    },
+    {
+      "estado": "17",
+      "nombre": "SERVICIOS DE SALUD D E MORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "AYUNTAMIENTO DE PUEBLA PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "SECRETARIA DE CULTURA DEL ESTADO DE PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "SECRETARIA DE EDUCACION PUBLICA DEL ESTADO DE PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "CENTRO DE REINSERCION SOCIAL REGIONAL DE CHOLULA PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "COLEGIO DE BACHILLERES DEL ESTADO DE PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "COLEGIO DE ESTUDIOS CIENTIFICOS Y TECNOLOGICOS DEL ESTADO DE PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "DIRECCION DE OBRAS PUBLICAS DE CALIDAD DIRECCION GENERAL DE DESARROLO URBANO OBRAS Y SERVICIOS PUBLICOS DE CALIDAD DEL H AYUNTAMIENTO DE ATLIXCO PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "H AYUNTAMIENTO DE ATLIXCO PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "H AYUNTAMIENTO DE SAN ANDRES CHOLULA PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "H AYUNTAMIENTO DE ZACAPOAXTLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "INSTITUTO DE SEGURIDAD DE SERVICIOS SOCIALES DE LOS TRABAJADORES AL SERVICIO DE LOS PODERES DEL ESTADO DE PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "JUNTA AUXILIAR DE JILOTZINGO MUNICIPIO DE ZACATLAN PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "SECRETARIA DE EDUCACION DEL ESTADO DE PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "SECRETARIA DE FINANZAS Y ADMINISTRACION",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "SECRETARIA DE SEGURIDAD PUBLICA DEL ESTADO DE PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "21",
+      "nombre": "SERVICIOS DE SALUD DEL ESTADO DE PUEBLA",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "FISCALIA GENERAL DEL ESTADO DE QUINTANA ROO",
+      "conteo": 123
+    },
+    {
+      "estado": "23",
+      "nombre": "AYUNTAMIENTO DE OTHON POMPEYO BLANCO",
+      "conteo": 63
+    },
+    {
+      "estado": "23",
+      "nombre": "H AYUNTAMIENTO DE OTHON P BLANCO",
+      "conteo": 51
+    },
+    {
+      "estado": "23",
+      "nombre": "CONTRALORIA MUNICIPAL",
+      "conteo": 27
+    },
+    {
+      "estado": "23",
+      "nombre": "AYUNTAMIENTO DEL MUNICIPIO DE COZUMEL QUINTANA ROO",
+      "conteo": 20
+    },
+    {
+      "estado": "23",
+      "nombre": "MUNICIPIO DE ISLA MUJERES QUINTANA ROO",
+      "conteo": 13
+    },
+    {
+      "estado": "23",
+      "nombre": "TRIBUNAL ELECTORAL DE QUINTANA ROO",
+      "conteo": 8
+    },
+    {
+      "estado": "23",
+      "nombre": "AYUNTAMIENTO DE TULUM",
+      "conteo": 6
+    },
+    {
+      "estado": "23",
+      "nombre": "AYUNTAMIENTO MUNICIPAL DE COZUMEL QUINTANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "HAYUNTAMIENTO DE OTHON P BLANCO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "DIRECCION GENERAL DE DESARROLLO URBANO EL MUNICIPIO BENITO JUAREZ",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "ORGANO INTERNO DE CONTROL DEL MUNICIPIO DE TULUM",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "PODER LEGISLATIVO DEL ESTADO DE QUINTANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "SECRETARIA MUNICIPAL DE SEGURIDAD PUBLICA Y TRANSITO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "AYUNTAMIENTO DEL MUNCIPIO DE COZUMEL QUINTANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "AYUTAMIENTO DEL MUNICIPIO DE COZUMEL QUINTANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "CONTRALORIA MUNICIAL",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "COORDINACION DEL REGISTRO CIVIL",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "DIRECCION DE INGRESOS COORDINADOS Y COBRANZA DEL MUNICIPIO DE BENITO JUAREZ QUINTANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "DIRECCION DE JUZGADOS CIVICOS DEL MUNICIPIO DE B J QROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "DIRECCION DE SERVICIOS PUBLICOS MUNICIPALES DE BENITO JUAREZ QUINTANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "DIRECCION DE ZONA FEDERAL MARITIMO TERRESTRE EN EL MUNICIPIO DE SOLIDARIDAD QUINTANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "DIRECCION DEL TALLER MUNICIPAL DE BENITO JUAREZ",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "DIRECCION GENERAL DE DESARROLLO SOCIAL DEL AYUNTAMIENTO DE SOLIDARIDAD QUINTANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "DIRECCION GENERAL DE DESARROLLO SOCIAL DEL MUNICIPIO DE SOLIDARIDAD",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "DIRECCION SE RECURSOS HUMANOS DEL MUNICIPIO DE BENITO JUAREZ QUINTANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "FISCALIA GENERAL DEL ESTADO DE QUITANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "H AYUNTAMIENTO DE OTHON",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "H AYUNTAMIENTO DE OTHON P BLANCOQ",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "HEROICO CUERPO DE BOMBEROS DEL MUNICIPIO DE BENITO JUAREZ",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "HONORABLE AYUNTAMIENTO DE JOSE MARIA MORELOS QUINTANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "HONORABLE AYUNTAMIENTO DE OTHON POMPEYO BLANCO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "MECANICO DEL TALLER MUNICIPAL DE BENITO JUAREZ",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "MUNICIPIO DE ISLA MUJERES",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "MUNICIPIO DE PLAYA DEL CARMEN",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "MUNICIPIO DE SOLIDARIDAD QUINTANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "REGISTRO CIVIL DEL MUNICIPIO DE BENITO JUAREZ QUINTANA ROO",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "SECRETARIA DE DESARROLLO URBANO Y ECOLOGIA DEL AYUNTAMIENTO MUNICIPAL DE PUERTO MORELOS",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "SECRETARIA DE SEGURIDAD PUBLICA Y TRANSITO DEL MUNICIPIO DE BENITO JUAREZ",
+      "conteo": null
+    },
+    {
+      "estado": "23",
+      "nombre": "SISTEMA INTEGRAL PARA EL DESARROLLO DE LA FAMILIA DEL MUNICIPIO DE BENITO JUAREZ",
+      "conteo": null
+    },
+    {
+      "estado": "25",
+      "nombre": "AYUNTAMIENTO DE MAZATLAN",
+      "conteo": 521
+    },
+    {
+      "estado": "25",
+      "nombre": "AYUNTAMIENTO DE CULIACAN",
+      "conteo": 253
+    },
+    {
+      "estado": "25",
+      "nombre": "AYUNTAMIENTO DE AHOME",
+      "conteo": 71
+    },
+    {
+      "estado": "25",
+      "nombre": "AYUNTAMIENTO DE ELOTA",
+      "conteo": null
+    },
+    {
+      "estado": "25",
+      "nombre": "TRIBUNAL DE JUSTICIA ADMINISTRATIVA DEL ESTADO DE SINALOA",
+      "conteo": null
+    },
+    {
+      "estado": "25",
+      "nombre": "AYUNTAMIENTO DE ESCUINAPA",
+      "conteo": null
+    },
+    {
+      "estado": "25",
+      "nombre": "AYUNTAMIENTO DE NAVOLATO",
+      "conteo": null
+    },
+    {
+      "estado": "25",
+      "nombre": "COMISION ESTATAL DE LOS DERECHOS HUMANOS",
+      "conteo": null
+    },
+    {
+      "estado": "28",
+      "nombre": "AUDITORIA SUPERIOR DEL ESTADO",
+      "conteo": null
+    },
+    {
+      "estado": "28",
+      "nombre": "AUDITORIA SUPERIOR DEL ESTADO DE TAMAULIPAS",
+      "conteo": null
+    },
+    {
+      "estado": "28",
+      "nombre": "AUDITORIA SUPERIOR DEL ESTADO DEL ESTADO DE TAMAULIPAS",
+      "conteo": null
+    },
+    {
+      "estado": "28",
+      "nombre": "SECRETARIA EJECUTIVA DEL SISTEMA ESTATAL ANTICORRUPCION",
+      "conteo": null
+    },
+    {
+      "estado": "29",
+      "nombre": "PODER JUDICIAL DEL ESTADO DE TLAXCALA",
+      "conteo": 69
+    },
+    {
+      "estado": "29",
+      "nombre": "HONORABLE AYUNTAMIENTO DE SAN PABLO DEL MONTE",
+      "conteo": null
+    },
+    {
+      "estado": "29",
+      "nombre": "TRIBUNAL ELECTORAL DE TLAXCALA",
+      "conteo": null
+    },
+    {
+      "estado": "29",
+      "nombre": "PODER JUDICIAL DE TLAXCALA",
+      "conteo": null
+    },
+    {
+      "estado": "29",
+      "nombre": "PODER JUDICIAL DEL ESTADO TLAXCALA",
+      "conteo": null
+    },
+    {
+      "estado": "29",
+      "nombre": "TRIBUNAL SUPERIOR DE JUSTICIA DEL ESTADO DE TLAXCALA",
+      "conteo": null
+    },
+    {
+      "estado": "30",
+      "nombre": "CONTRALORIA GENERAL DEL ESTADO DE VERACRUZ",
+      "conteo": 24
+    },
+    {
+      "estado": "30",
+      "nombre": "ORGANO DE FISCALIZACION SUPERIOR DEL ESTADO DE VERACRUZ",
+      "conteo": 18
+    },
+    {
+      "estado": "30",
+      "nombre": "PODER JUDICIAL DEL ESTADO DE VERACRUZ",
+      "conteo": 13
+    },
+    {
+      "estado": "30",
+      "nombre": "PODER JUDICIAL DEL ESTADO DE VERACRUZ DE IGNACIO DE LA LLAVE",
+      "conteo": 12
+    },
+    {
+      "estado": "30",
+      "nombre": "PODER LEGISLATIVO",
+      "conteo": 5
+    },
+    {
+      "estado": "30",
+      "nombre": "COMANDANCIA POLICIA MUNICIPAL HUAYACOCOTLA",
+      "conteo": null
+    },
+    {
+      "estado": "30",
+      "nombre": "AYUNTAMIENTO DE XALAPA",
+      "conteo": null
+    },
+    {
+      "estado": "30",
+      "nombre": "FISCALIA GENERAL DEL ESTADO DE VERACRUZ DE IGNACIO DE LA LLAVE",
+      "conteo": null
+    },
+    {
+      "estado": "30",
+      "nombre": "TRIBUNAL DE JUSTICIA ADMINISTRATIVA DEL ESTADO DE VERACRUZ",
+      "conteo": null
+    },
+    {
+      "estado": "30",
+      "nombre": "AREA DE ALUMBRADO PUBLICO",
+      "conteo": null
+    },
+    {
+      "estado": "30",
+      "nombre": "COLEGIO DE BACHILLERES DEL ESTADO DE VERACRUZ",
+      "conteo": null
+    },
+    {
+      "estado": "30",
+      "nombre": "INSTITUTO TECNOLOGICO SUPERIOR DE ALAMO TEMAPACHE",
+      "conteo": null
+    },
+    {
+      "estado": "30",
+      "nombre": "MUNICIPIO TLILAPAN",
+      "conteo": null
+    },
+    {
+      "estado": "30",
+      "nombre": "SECRETARIA DE FINANZAS Y PLANEACION",
+      "conteo": null
+    },
+    {
+      "estado": "30",
+      "nombre": "SECRETARIA DE SALUD Y SERVICIOS DE VERACRUZ",
+      "conteo": null
+    },
+    {
+      "estado": "31",
+      "nombre": "INSTITUTO DE SEGURIDAD SOCIAL DE LOS TRABAJADORES DEL ESTADO DE YUCATAN",
+      "conteo": null
+    },
+    {
+      "estado": "31",
+      "nombre": "CONSEJO DE LA JUDICATURA DEL PODER JUDICIAL DEL ESTADO DE YUCATAN",
+      "conteo": null
+    },
+    {
+      "estado": "31",
+      "nombre": "INSTITUTO DE SEGURIDAD JURIDICA PATRIMONIAL DE YUCATAN",
+      "conteo": null
+    },
+    {
+      "estado": "31",
+      "nombre": "INSTITUTO PARA LA CONSTRUCCION Y CONSERVACION DE OBRA PUBLICA EN YUCATAN",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "MUNICIPIO DE VILLA GARCIA",
+      "conteo": 12
+    },
+    {
+      "estado": "32",
+      "nombre": "AYUNTAMIENTO DE APULCO",
+      "conteo": 7
+    },
+    {
+      "estado": "32",
+      "nombre": "FISCALIA GENERAL DE JUSTICIA DEL ESTADO",
+      "conteo": 7
+    },
+    {
+      "estado": "32",
+      "nombre": "SECRETARIA DE OBRAS PUBLICAS",
+      "conteo": 7
+    },
+    {
+      "estado": "32",
+      "nombre": "AYUNTAMIENTO DE JIMENEZ DEL TEUL",
+      "conteo": 6
+    },
+    {
+      "estado": "32",
+      "nombre": "AYUNTAMIENTO DE VILLA GARCIA",
+      "conteo": 6
+    },
+    {
+      "estado": "32",
+      "nombre": "MUNICIPIO DE SAIN ALTO",
+      "conteo": 6
+    },
+    {
+      "estado": "32",
+      "nombre": "COMISION DE DERECHOS HUMANOS DEL ESTADO",
+      "conteo": 5
+    },
+    {
+      "estado": "32",
+      "nombre": "SECRETARIA DE ADMINISTRACION",
+      "conteo": 5
+    },
+    {
+      "estado": "32",
+      "nombre": "AYUNTAMIENTO DE JUAN ALDAMA",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "AYUNTAMIENTO DE NOCHISTLAN DE MEJIA",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "SECRETARIA DE DESARROLLO SOCIAL",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "SECRETARIA DE EDUCACION",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "INSTITUTO ELECTORAL DEL ESTADO DE ZACATECAS",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "MUNICIPIO DE GENERAL ENRIQUE ESTRADA",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "MUNICIPIO DE GENERAL FRANCISCO R MURGUIA",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "MUNICIPIO DE JIMENEZ DEL TEUL",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "MUNICIPIO DE MAZAPIL",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "MUNICIPIO DE MIGUEL AUZA",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "MUNICIPIO DE PINOS",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "AYUNTAMIENTO DE MAZAPIL",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "COLEGIO DE BACHILLERES DEL ESTADO DE ZACATECAS",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "JEFATURA DE OFICINA DEL GOBERNADOR",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "MUNICIPIO DE EL SALVADOR",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "MUNICIPIO DE VETAGRANDE",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "UNIVERSIDAD POLITECNICA DE ZACATECAS",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "AYUNTAMIENTO DE EL SALVADOR",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "AYUNTAMIENTO DE GUADALUPE",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "AYUNTAMIENTO DE VALPARAISO",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "COLEGIO DE ESTUDIOS CIENTIFICOS Y TECNOLOGICOS DEL ESTADO DE ZACATECAS",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "INSTITUTO DE LA DEFENSORIA PUBLICA DEL ESTADO DE ZACATECAS",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "INSTITUTO DE SEGURIDAD Y SERVICIOS SOCIALES PARA LOS TRABAJADORES DEL ESTADO DE ZACATECAS",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "INSTITUTO REGIONAL DE PATRIMONIO MUNDIAL",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "INSTITUTO TECNOLOGICO SUPERIOR DE LORETO",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "MUNICIPIO DE ZACATECAS",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "SECRETARIA DE LAS MUJERES",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "SECRETARIA DE SALUD",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "SECRETARIA DE SEGURIDAD PUBLICA",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "SECRETARIA GENERAL DE GOBIERNO",
+      "conteo": null
+    },
+    {
+      "estado": "32",
+      "nombre": "SERVICIOS DE SALUD DE ZACATECAS",
+      "conteo": null
+    }
+  ],
+  "porEstado": [
+    {
+      "estado": "01",
+      "registros": 1092,
+      "instituciones": 54
+    },
+    {
+      "estado": "03",
+      "registros": 188,
+      "instituciones": 19
+    },
+    {
+      "estado": "08",
+      "registros": 103,
+      "instituciones": 36
+    },
+    {
+      "estado": "10",
+      "registros": 4,
+      "instituciones": 4
+    },
+    {
+      "estado": "11",
+      "registros": 66,
+      "instituciones": 25
+    },
+    {
+      "estado": "12",
+      "registros": 26,
+      "instituciones": 6
+    },
+    {
+      "estado": "14",
+      "registros": 3549,
+      "instituciones": 142
+    },
+    {
+      "estado": "15",
+      "registros": 13212,
+      "instituciones": 315
+    },
+    {
+      "estado": "16",
+      "registros": 106,
+      "instituciones": 25
+    },
+    {
+      "estado": "17",
+      "registros": 52,
+      "instituciones": 25
+    },
+    {
+      "estado": "21",
+      "registros": 19,
+      "instituciones": 16
+    },
+    {
+      "estado": "23",
+      "registros": 351,
+      "instituciones": 40
+    },
+    {
+      "estado": "25",
+      "registros": 854,
+      "instituciones": 8
+    },
+    {
+      "estado": "28",
+      "registros": 9,
+      "instituciones": 4
+    },
+    {
+      "estado": "29",
+      "registros": 77,
+      "instituciones": 6
+    },
+    {
+      "estado": "30",
+      "registros": 87,
+      "instituciones": 15
+    },
+    {
+      "estado": "31",
+      "registros": 5,
+      "instituciones": 4
+    },
+    {
+      "estado": "32",
+      "registros": 124,
+      "instituciones": 40
+    }
+  ],
+  "registrosConNombreNoInterpretable": 28
+}

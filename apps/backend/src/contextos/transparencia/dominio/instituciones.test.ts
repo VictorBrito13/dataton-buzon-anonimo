@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  consolidarCompradores,
   consolidarConteosS3,
   cruzarPorNombreYJurisdiccion,
   esNombreDeInstitucion,
@@ -79,6 +80,33 @@ describe("consolidarConteosS3", () => {
     expect(() =>
       consolidarConteosS3([{ carpeta: "Atlantida", ente: "X", n: 1 }], { umbral: 5 }),
     ).toThrow(/Atlantida/);
+  });
+});
+
+describe("consolidarCompradores", () => {
+  it("no duplica variantes de mayúsculas: S6 ignora mayúsculas y da el mismo total a ambas", () => {
+    expect(
+      consolidarCompradores([
+        { nombre: "Diconsa, S.A. de C.V.", procedimientos: 100, jurisdicciones: [] },
+        { nombre: "DICONSA, S.A. DE C.V.", procedimientos: 100, jurisdicciones: [] },
+      ]),
+    ).toEqual([{ nombre: "Diconsa, S.A. de C.V.", procedimientos: 100, jurisdicciones: [] }]);
+  });
+
+  it("suma variantes con otra escritura: son búsquedas distintas", () => {
+    const [unico, ...resto] = consolidarCompradores([
+      { nombre: "Secretaría de Salud", procedimientos: 30, jurisdicciones: ["00"] },
+      { nombre: "SECRETARIA DE SALUD", procedimientos: 12, jurisdicciones: [] },
+    ]);
+    expect(resto).toEqual([]);
+    expect(unico?.procedimientos).toBe(42);
+    expect(unico?.jurisdicciones).toEqual(["00"]);
+  });
+});
+
+describe("normalizarNombre con razón social", () => {
+  it("une S.A. de C.V. y SA DE CV", () => {
+    expect(normalizarNombre("Diconsa, S.A. de C.V.")).toBe(normalizarNombre("DICONSA SA DE CV"));
   });
 });
 

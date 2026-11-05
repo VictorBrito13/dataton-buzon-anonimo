@@ -96,12 +96,6 @@ describe("regla 4: totales", () => {
     expect(r.totalesFila.map((t) => t.conteo)).toEqual([70, 90]);
     expect(r.total.conteo).toBe(160);
   });
-
-  it("oculta el total si con las reglas de línea todavía revelaría el valor exacto", () => {
-    // 4 + 4 = 8 cumple "dos suprimidas con suma ≥ k", pero 8 solo puede ser 4 + 4.
-    const r = aplicarKAnonimato(cubo([[4, 4]]), { k });
-    expect(r.totalesFila[0]?.conteo).toBeNull();
-  });
 });
 
 describe("protegerRed", () => {

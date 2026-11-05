@@ -21,7 +21,7 @@ export const REGLAS = [
 /** Lo que se puede afirmar con exactitud. Probado en ataques-k-anonimato.test.ts. */
 export const textoGarantia = (k: number): string =>
   `Dentro de la publicación de un trimestre, a partir de los conteos, motivos, k y las sumas entre tablas y niveles, ` +
-  `combinar restas (eliminación de variables) y propagar intervalos no permite acotar una celda oculta a un rango con ` +
+  `combinar restas (eliminación de variables), propagar intervalos y sondear valores extremos no permite acotar una celda oculta a un rango con ` +
   `diferencia menor que ${anchoMinimo(k)} entre máximo y mínimo: con k = ${k}, siempre quedan al menos ${anchoMinimo(k) + 1} valores ` +
   `posibles. El motor lo comprueba en cada publicación y se niega a publicar si falla. En pruebas con semilla fija, ` +
   `además, enumerar todas las soluciones enteras de tablas de hasta 4 × 4 tampoco lo rompió.`;
