@@ -15,8 +15,11 @@ out
 coverage
 **/coverage
 docs
-e2e
 scripts
+# Las pruebas no van en las imágenes; las E2E usan dependencias de la raíz que allí no se instalan.
+**/e2e
+**/*.test.ts
+**/*.test.tsx
 test-results
 playwright-report
 **/*.tsbuildinfo
