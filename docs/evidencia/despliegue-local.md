@@ -79,7 +79,22 @@ En el despliegue del proyecto, `despliegue.spec.ts` provoca el mismo 502 y compr
 
 `POSTGRES_PORT=15432 docker compose up -d --wait postgres` lo levantó como servicio aparte, y `npm run migrate` se aplicó contra él. No forma parte de `docker compose up`.
 
+## Datos de demostración
+
+Corrida del 5 de noviembre de 2026 sobre el mismo tipo de despliegue (proyecto y puertos propios), ya levantado y con la base vacía:
+
+```text
+$ docker compose run --rm sintetico
+[sintetico] 30000 denuncias sintéticas (semilla 2026)
+[agregacion] publicados: 2025-T3, 2025-T4, 2026-T1, 2026-T2, 2026-T3
+
+$ curl -k https://localhost:18453/api/v1/publico/periodos
+{"periodos":[{"periodo":"2026-T3","k":5},{"periodo":"2026-T2","k":5},{"periodo":"2026-T1","k":5},{"periodo":"2025-T4","k":5},{"periodo":"2025-T3","k":5}],"rezagoDias":14,"datosSinteticos":true}
+```
+
+`/tablero` mostró el trimestre 2026-T3 con el aviso de denuncias sintéticas. La misma secuencia la ejecuta y revisa `e2e/anonimato/tablero.spec.ts` en cada corrida del [reporte](./reporte-anonimato.md).
+
 ## Límites de esta evidencia
 
 - Es un solo equipo. El trabajo `imagenes` de CI cubre Linux x86-64.
-- El flujo de denuncia aún no está integrado: lo que depende de él sigue pendiente en el [reporte](./reporte-anonimato.md).
+- El flujo de denuncia está integrado y lo recorre `flujo.spec.ts` en el [reporte](./reporte-anonimato.md); lo que el flujo de prueba aún no hace es subir una evidencia.

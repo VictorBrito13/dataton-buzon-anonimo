@@ -12,34 +12,57 @@ const documento = (ruta: string) => `${REPOSITORIO}/blob/main/${ruta}`;
 type Estado = "comprobado" | "pendiente";
 
 /**
- * Cada afirmación lleva su estado real. Al integrar los frentes, pasa a "comprobado" solo lo que
- * `npm run test:anonimato` demuestre en docs/evidencia/reporte-anonimato.md.
+ * Cada afirmación lleva su estado real: es "comprobado" solo lo que `npm run test:anonimato`
+ * demuestra contra el despliegue real en docs/evidencia/reporte-anonimato.md (la prueba se nombra
+ * junto a cada una). Lo demás sigue pendiente aunque haya pruebas unitarias.
  */
 const COMPROBACIONES: { texto: string; estado: Estado }[] = [
   {
+    // despliegue.spec.ts: páginas públicas
     texto: "Esta página y la de inicio no piden nada a otros dominios ni dejan cookies.",
     estado: "comprobado",
   },
   {
-    texto: "El sitio envía las cabeceras de seguridad y no permite scripts incrustados.",
+    // despliegue.spec.ts: cabeceras de seguridad. Hay un script del propio sitio con nonce.
+    texto:
+      "El sitio envía las cabeceras de seguridad y solo ejecuta scripts del propio sitio, autorizados uno por uno; ninguno de otros dominios.",
     estado: "comprobado",
   },
   {
+    // despliegue.spec.ts: bitácoras con errores 404 y 502
     texto: "Los servidores no registran tu dirección IP ni tu navegador, ni siquiera al fallar.",
     estado: "comprobado",
   },
   {
+    // despliegue.spec.ts: catálogo de columnas
     texto: "La base de datos no tiene ningún campo para dirección IP ni navegador.",
     estado: "comprobado",
   },
-  { texto: "Tu frase y tu relato en claro nunca salen de tu dispositivo.", estado: "pendiente" },
-  { texto: "Al enviar una denuncia no se pide nada a otros dominios.", estado: "pendiente" },
   {
+    // flujo.spec.ts: cuerpo, URL y cabeceras de cada petición
+    texto: "Tu frase y tu relato en claro nunca salen de tu dispositivo.",
+    estado: "comprobado",
+  },
+  {
+    // flujo.spec.ts: ningún request sale a un dominio distinto del propio
+    texto: "Al enviar una denuncia no se pide nada a otros dominios.",
+    estado: "comprobado",
+  },
+  {
+    // flujo.spec.ts: pg_dump
     texto: "Tras enviar una denuncia, la base de datos no contiene tu relato, frase ni folio.",
+    estado: "comprobado",
+  },
+  {
+    // La limpieza tiene pruebas unitarias; el flujo de prueba aún no sube un archivo al despliegue.
+    texto: "Tus evidencias se limpian de datos ocultos.",
     estado: "pendiente",
   },
-  { texto: "Tus evidencias se limpian de datos ocultos.", estado: "pendiente" },
-  { texto: "Las estadísticas públicas no muestran números pequeños.", estado: "pendiente" },
+  {
+    // tablero.spec.ts: datos sintéticos en el despliegue, ninguna celda entre 1 y k − 1
+    texto: "Las estadísticas públicas no muestran números pequeños.",
+    estado: "comprobado",
+  },
 ];
 
 const ETIQUETA_ESTADO: Record<Estado, { texto: string; clase: string }> = {
@@ -101,7 +124,7 @@ export default function ComoTeProtegemos() {
             "Tu dirección IP ni el tipo de navegador o de dispositivo que usas.",
             "Cookies que te sigan, ni herramientas de analítica o de publicidad.",
             "Tu frase de recuperación ni tu folio tal como los ves.",
-            "La hora en que enviaste tu denuncia: solo el día.",
+            "La hora en que enviaste tu denuncia: solo el día. Un matiz: quien obtenga una copia física de la base de datos podría acotar el orden en que llegaron las denuncias y su hora aproximada por rastros internos de PostgreSQL, aunque esa hora no se guarda como dato.",
           ]}
         />
       </Seccion>
@@ -125,6 +148,7 @@ export default function ComoTeProtegemos() {
             "De que el momento en que envías se relacione con otro hecho que ya se conozca, como un conflicto reciente.",
             "De quien tenga tu frase o tu folio: con ellos puede ver el avance de tu denuncia. Guárdalos como guardarías una llave.",
             "De quien use tu mismo equipo. Si activas el borrador, queda en ese dispositivo. Si activas la detección de nombres, el navegador conserva el modelo, y eso muestra que usaste este sitio. En un equipo compartido, mejor no los actives.",
+            "De lo que ve el sitio al que te lleva la salida rápida. El botón «Salida rápida» (o Esc tres veces) abre Google, un sitio ajeno a nosotros: como cualquier página que visites, recibe tu dirección IP y la hora. Antes de salir borra el borrador y el tema guardados en este sitio, pero no borra el historial del navegador ni el modelo de detección de nombres, si lo descargaste.",
             "De un sitio alterado. Si alguien modifica el código que se te entrega, estas protecciones podrían dejar de funcionar. Por eso el código es público y se puede revisar.",
             "De la revisión de tus evidencias. Por un momento, el servidor las ve: las revisa, las sella y descarta el original. En esa etapa dependemos de que corra el código publicado.",
           ]}

@@ -74,7 +74,9 @@ export default class ReporteAnonimato implements Reporter {
       "|---|---|---|---|---|",
       `| ${contar("Aprobada")} | ${contar("Fallida")} | ${contar("Pendiente (fixme)")} | ${contar("Omitida")} | ${filas.length} |`,
       "",
-      "Ninguna prueba queda pendiente ni omitida: todas corren contra el despliegue real.",
+      contar("Pendiente (fixme)") + contar("Omitida") === 0
+        ? "Ninguna prueba queda pendiente ni omitida: todas corren contra el despliegue real."
+        : "Hay pruebas pendientes u omitidas: lo que afirman no debe leerse como comprobado.",
       "",
     ];
 

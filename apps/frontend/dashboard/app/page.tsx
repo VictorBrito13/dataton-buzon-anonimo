@@ -57,7 +57,8 @@ const VISIBILIDAD = [
   {
     dato: "La hora en que denunciaste",
     autoridad: "No",
-    detalle: "Solo se guarda el día.",
+    detalle:
+      "Solo se guarda el día. Una copia física de la base podría acotar el orden de llegada y la hora aproximada.",
   },
   {
     dato: "Tu frase de 6 palabras",
@@ -73,7 +74,11 @@ const GARANTIAS = [
     texto: "Solo la autoridad puede abrirlo; este sistema no.",
   },
   { titulo: "Tu frase nunca sale de tu dispositivo", texto: "Es tu llave para volver." },
-  { titulo: "Solo se guarda el día", texto: "No la hora en que denunciaste." },
+  {
+    titulo: "Solo se guarda el día",
+    texto:
+      "No la hora en que denunciaste. Solo una copia física de la base dejaría acotarla de forma aproximada.",
+  },
 ];
 
 export default function Inicio() {
@@ -106,7 +111,9 @@ export default function Inicio() {
           </div>
           <p className="mt-5 max-w-2xl text-tinta-suave">
             Si alguien se acerca, usa «Salida rápida», arriba, o pulsa Esc tres veces. Te lleva a
-            otro sitio y borra lo que este sitio guardó en tu dispositivo.
+            Google, un sitio ajeno que recibe tu IP y la hora como cualquier página que abras, y
+            antes borra el borrador y el tema que este sitio guardó. No borra el historial del
+            navegador ni el modelo de detección de nombres, si lo activaste.
           </p>
         </div>
 

@@ -7,7 +7,7 @@ Esta declaración atiende la base Sexta de la convocatoria, que pide declarar el
 | Herramienta                        | Dónde se usa          | Finalidad                                       | ¿Forma parte del producto? | Estado                 |
 | ---------------------------------- | --------------------- | ----------------------------------------------- | -------------------------- | ---------------------- |
 | Claude Code (Anthropic)            | Desarrollo            | Asistencia en código, pruebas y documentación   | No                         | En uso                 |
-| Modelo NER local en el navegador   | Depurador de texto    | Sugerir nombres, lugares y organizaciones para redactar | Sí, opcional               | Pendiente de confirmar |
+| Modelo NER local en el navegador   | Revisión de `/denunciar` | Sugerir nombres, lugares y organizaciones para redactar | Sí, opcional               | Integrado              |
 
 El **orientador de faltas no usa IA**: funciona con reglas locales y catálogos, y su resultado es solo una orientación.
 
@@ -30,7 +30,7 @@ El **orientador de faltas no usa IA**: funciona con reglas locales y catálogos,
 
 ## 2. En el producto: modelo NER local
 
-**Estado: Pendiente de confirmar** que llegue a la entrega integrado en el flujo de denuncia. La librería ya lo incluye como capa opcional. El modelo, su revisión, su peso y su licencia están en el [README de la librería de privacidad](../apps/frontend/dashboard/lib/privacidad/README.md#capa-2-modelo).
+**Estado: integrado** en el paso de revisión de `/denunciar`, como la opción «Buscar también nombres, cargos y lugares», apagada por defecto. El modelo es `Xenova/distilbert-base-multilingual-cased-ner-hrl` (revisión `c2a4dbf`, cuantizado, licencia Academic Free License 3.0; ver [`AVISOS-TERCEROS.md`](../AVISOS-TERCEROS.md)); su peso y sus límites están en el [README de la librería de privacidad](../apps/frontend/dashboard/lib/privacidad/README.md#capa-2-modelo). Se sirve desde el propio sitio cuando la imagen se construye con `DESCARGAR_MODELO_NER=1` (el valor por defecto); sin él, la opción lo dice y el depurador sigue con reglas.
 
 **Finalidad.** Sugerir nombres de personas, lugares y organizaciones que convenga redactar del relato (HU-15).
 
@@ -39,7 +39,7 @@ El **orientador de faltas no usa IA**: funciona con reglas locales y catálogos,
 - Corre en el navegador de la persona, y solo si la persona lo activa.
 - Solo sugiere: la persona decide qué redactar.
 - Sus archivos se sirven desde el mismo sitio. La descarga desde su origen ocurre al construir la imagen, no en el dispositivo.
-- **Pendiente de verificar** con el flujo integrado que el texto no salga del dispositivo durante el análisis.
+- Comprobado con el modelo real en `apps/frontend/dashboard/e2e/busqueda-modelo.spec.ts`: durante el análisis ninguna petición sale a otro dominio y el relato no aparece en el tráfico; sin activar la opción no se pide ningún archivo del modelo.
 
 **Límites.** Su precisión no se ha medido con denuncias ni con nombres mexicanos, y puede omitir nombres o confundir otros. Se ofrece como ayuda, no como garantía. Al usarlo, queda en la caché del navegador.
 
