@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   output: "standalone",
   outputFileTracingRoot: new URL("../../../", import.meta.url).pathname,
+  // /denunciar comprueba si existen estos archivos; solo los sirve public/, sin duplicarlos.
+  outputFileTracingExcludes: { "/*": ["public/modelos/**"] },
   turbopack: {
     root: new URL("../../../", import.meta.url).pathname,
     rules: {
