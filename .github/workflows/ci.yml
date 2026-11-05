@@ -8,12 +8,17 @@ on:
       - dev
       - main
       - "feat/**"
+  # También al integrar: un merge puede romper lo que cada PR pasó por separado.
+  push:
+    branches:
+      - dev
+      - main
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.event.pull_request.number }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -136,6 +141,10 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Pruebas de anonimato contra el despliegue real
         run: npm run test:anonimato
+      # Unos 165 MB con revisión y SHA-256 fijos. Con el modelo presente, busqueda-modelo.spec.ts corre
+      # sus casos reales en vez de omitirlos; si la descarga falla, se avisa y la suite sigue con reglas.
+      - name: Modelo NER real para las pruebas del depurador
+        run: node apps/frontend/dashboard/scripts/descargar-modelo.mjs || echo "::warning::Sin modelo NER; busqueda-modelo.spec.ts omitirá los casos con modelo"
       - name: Otras suites E2E del repositorio
         run: |
           find apps packages -name playwright.config.ts -not -path '*/node_modules/*' -print0 |

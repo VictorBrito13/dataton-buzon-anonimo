@@ -205,6 +205,18 @@ describe("descargas", () => {
     expect(cuerpoDe(r).filas.length).toBe(4);
   });
 
+  it("las descargas se pueden cachear como el resto de lo público: un trimestre publicado no cambia", async () => {
+    for (const ruta of [
+      "/descargas/agregados.csv?periodo=2026-T3",
+      "/descargas/agregados.json?periodo=2026-T3",
+      "/descargas/diccionario.json",
+    ]) {
+      const r = await request(app).get(ruta);
+      expect(r.status, ruta).toBe(200);
+      expect(r.headers["cache-control"], ruta).toBe("public, max-age=300");
+    }
+  });
+
   it("publica el diccionario de datos por separado", async () => {
     const r = await request(app).get("/descargas/diccionario.json");
     expect(r.status).toBe(200);

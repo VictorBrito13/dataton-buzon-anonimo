@@ -184,6 +184,7 @@ export const crearRutasPublicas = ({
 
   rutas.get("/descargas/agregados.csv", async (req, res) => {
     const [periodo, filas] = await filasDelPeriodo(req.query.periodo);
+    cachearPublico(res);
     res.setHeader("Content-Type", "text/csv; charset=utf-8");
     res.setHeader("Content-Disposition", `attachment; filename="agregados-${periodo}.csv"`);
     res.send(comoCsv(periodo, soloTablas(filas)));
@@ -191,6 +192,7 @@ export const crearRutasPublicas = ({
 
   rutas.get("/descargas/agregados.json", async (req, res) => {
     const [periodo, filas] = await filasDelPeriodo(req.query.periodo);
+    cachearPublico(res);
     res.setHeader("Content-Disposition", `attachment; filename="agregados-${periodo}.json"`);
     res.json({
       periodo,
