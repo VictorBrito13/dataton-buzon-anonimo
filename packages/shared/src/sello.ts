@@ -75,11 +75,14 @@ export const abrir = async (
 };
 
 /** Base64url en ambos entornos, para transportar sellos dentro de JSON. */
-export const aBase64Url = (bytes: Uint8Array): string =>
-  btoa(String.fromCharCode(...bytes))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+export const aBase64Url = (bytes: Uint8Array): string => {
+  // Por bloques: pasar todos los bytes como argumentos desborda la pila cerca de 125 KB.
+  let binario = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) {
+    binario += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  }
+  return btoa(binario).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+};
 
 export const deBase64Url = (texto: string): Uint8Array<ArrayBuffer> =>
   Uint8Array.from(atob(texto.replace(/-/g, "+").replace(/_/g, "/")), (c) => c.charCodeAt(0));
