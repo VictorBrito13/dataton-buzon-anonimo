@@ -47,7 +47,7 @@ function Selector(props: {
   alCambiar: (valor: string) => void;
 }) {
   return (
-    <div className="min-w-48 flex-1">
+    <div className="min-w-[min(12rem,100%)] flex-1">
       <label htmlFor={props.id} className={ETIQUETA}>
         {props.etiqueta}
       </label>

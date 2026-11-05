@@ -63,7 +63,7 @@ export function TablaEquivalente({
 }) {
   return (
     <details className="text-sm">
-      <summary className="cursor-pointer text-marca underline underline-offset-4">
+      <summary className="flex min-h-11 cursor-pointer items-center text-marca underline underline-offset-4">
         {resumen}
       </summary>
       <div className="mt-2">{children}</div>

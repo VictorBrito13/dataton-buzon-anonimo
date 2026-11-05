@@ -110,7 +110,7 @@ export default async function Tablero({ searchParams }: PageProps<"/tablero">) {
     <div className="space-y-8">
       <header className="space-y-3">
         <h1 className="text-3xl font-semibold">Tablero público</h1>
-        <p>
+        <p className="max-w-prose">
           Cuántas denuncias hay, dónde y en qué etapa van. Ninguna cifra puede señalar a quien
           denunció, y todo lo que ves se puede descargar.
         </p>
@@ -119,7 +119,7 @@ export default async function Tablero({ searchParams }: PageProps<"/tablero">) {
           method="get"
           className="flex flex-wrap items-end gap-3 rounded-md border border-borde bg-superficie p-3"
         >
-          <div>
+          <div className="max-w-full min-w-0">
             <label htmlFor="periodo" className="block text-sm font-semibold">
               Trimestre
             </label>
@@ -127,7 +127,7 @@ export default async function Tablero({ searchParams }: PageProps<"/tablero">) {
               id="periodo"
               name="periodo"
               defaultValue={periodo}
-              className="mt-1 rounded border border-borde-fuerte bg-superficie px-2 py-1.5"
+              className="mt-1 min-h-11 max-w-full rounded border border-borde-fuerte bg-superficie px-2 py-1.5"
             >
               {periodos.periodos.map((p) => (
                 <option key={p.periodo} value={p.periodo}>
@@ -139,7 +139,7 @@ export default async function Tablero({ searchParams }: PageProps<"/tablero">) {
           {estado ? <input type="hidden" name="estado" value={estado} /> : null}
           <button
             type="submit"
-            className="rounded bg-marca px-4 py-1.5 font-semibold text-marca-tinta"
+            className="min-h-11 rounded bg-marca px-4 py-1.5 font-semibold text-marca-tinta"
           >
             Ver trimestre
           </button>
@@ -193,7 +193,7 @@ export default async function Tablero({ searchParams }: PageProps<"/tablero">) {
           />
         ) : null}
 
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <Panel titulo="Por tipo de falta">
             <GraficaBarras
               titulo="Denuncias por tipo de falta"
@@ -234,7 +234,7 @@ export default async function Tablero({ searchParams }: PageProps<"/tablero">) {
                 <a
                   href={d.href}
                   download
-                  className="inline-block rounded border border-marca px-3 py-1.5 text-sm text-marca underline-offset-4 hover:underline"
+                  className="inline-flex min-h-11 items-center rounded border border-marca px-3 py-1.5 text-sm text-marca underline-offset-4 hover:underline"
                 >
                   {d.texto}
                 </a>

@@ -40,12 +40,12 @@ export function ComoProtegemos({ metodologia }: { metodologia: RespuestaMetodolo
   );
   return (
     <div className="space-y-4">
-      <p>
+      <p className="max-w-prose">
         Una cifra pequeña puede señalar a quien denunció. En un municipio con una sola dependencia,
         «1 denuncia de cohecho» casi le pone nombre. Por eso ninguna cifra menor que {k} se publica.
         Pero ocultarla no basta.
       </p>
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-2">
           <h3 className="font-semibold">El ataque: una resta</h3>
           <TablaEjemplo titulo="Ejemplo sin supresión complementaria" filas={sinProteccion} k={k} />

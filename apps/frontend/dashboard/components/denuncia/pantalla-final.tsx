@@ -34,7 +34,7 @@ export function PantallaFinal({ folio }: { folio: string }) {
         className="area-impresion border-2 border-marca bg-superficie p-5"
       >
         <p className="font-semibold">Tu folio</p>
-        <p className="mt-2 font-mono text-xl font-semibold break-all sm:text-2xl">{folio}</p>
+        <p className="mt-2 font-mono text-xl font-semibold sm:text-2xl">{folio}</p>
       </section>
 
       <div className="flex flex-col gap-3 sm:flex-row">

@@ -50,7 +50,7 @@ export function DetalleDenuncia({ id }: { id: string }) {
       {!denuncia && cargando && <p className="text-sm text-tinta-suave">Cargando denuncia…</p>}
 
       {denuncia && (
-        <div className="grid items-start gap-4 lg:grid-cols-3">
+        <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
           <div className="space-y-4 lg:col-span-2">
             <section aria-labelledby="titulo-relato" className={SECCION}>
               <h2 id="titulo-relato" className={TITULO_SECCION}>

@@ -49,7 +49,7 @@ export function BarraSesion() {
       aria-label="Sesión y clave privada"
       className={`${SECCION} flex flex-wrap items-end justify-between gap-4`}
     >
-      <div className="min-w-64 flex-1">
+      <div className="min-w-[min(16rem,100%)] flex-1">
         <p role="status" className="mb-2 text-sm">
           {clave ? (
             <>
@@ -77,7 +77,7 @@ export function BarraSesion() {
               type="file"
               accept=".jwk,.json,application/json"
               onChange={cargarClave}
-              className="block w-full max-w-md text-sm text-tinta file:mr-3 file:rounded-sm file:border file:border-borde-fuerte file:bg-superficie file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-tinta"
+              className="block min-h-11 w-full max-w-md text-sm text-tinta file:mr-3 file:min-h-11 file:rounded-sm file:border file:border-borde-fuerte file:bg-superficie file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-tinta"
             />
           </>
         )}
