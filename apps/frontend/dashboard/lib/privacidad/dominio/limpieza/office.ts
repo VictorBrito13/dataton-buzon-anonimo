@@ -76,6 +76,36 @@ const sustituir = (
   return resultado;
 };
 
+/** Destino inofensivo para vínculos y plantillas con rutas del equipo. */
+const DESTINO_NEUTRO = "about:blank";
+/** `file:`, `C:\…`, `\\servidor\…` y cualquier esquema que no sea http(s). */
+const RUTA_LOCAL = /^(?:file:|[a-z]:[\\/]|\\\\|\/\/)/i;
+const ESQUEMA_PERMITIDO = /^https?:\/\//i;
+
+const destinoRevelador = (relacion: string) => {
+  const destino = /\bTarget="([^"]*)"/.exec(relacion)?.[1];
+  if (destino === undefined || destino === DESTINO_NEUTRO) return false;
+  if (RUTA_LOCAL.test(destino)) return true;
+  return /\bTargetMode="External"/i.test(relacion) && !ESQUEMA_PERMITIDO.test(destino);
+};
+
+/**
+ * Comprobación posterior sobre cada XML de salida: si algo sobrevive, se rechaza el archivo.
+ * Nunca se afirma que está limpio lo que no se comprobó.
+ */
+const RASTROS = [/="(?:file:|[a-z]:\\|\\\\)/i, /:absPath\b/, /\brsid/i, /(docProps|customXml)\//i];
+const sobrevivenRastros = (xml: string) => RASTROS.some((patron) => patron.test(xml));
+
+const IMAGEN_NO_LIMPIABLE =
+  "Este documento contiene una imagen en un formato que no podemos limpiar (como TIFF, GIF, BMP o EMF) y podría llevar tu ubicación. Conviértela a JPEG o PNG y vuelve a intentarlo.";
+const INCRUSTADO_NO_LIMPIABLE =
+  "Este documento contiene un objeto incrustado (PDF, documento con macros u otro archivo) que no podemos limpiar. Quítalo y vuelve a intentarlo.";
+const RASTRO_SOBREVIVIENTE =
+  "No pudimos quitar todas las rutas o identificadores de este documento. Guárdalo de nuevo desde tu programa de oficina o conviértelo a PDF.";
+
+const INCRUSTADOS_REPROCESABLES = /\.(docx|xlsx|pptx)$/i;
+const MAX_PROFUNDIDAD = 2;
+
 const rutaDeDestino = (rutaRels: string, destino: string) => {
   if (destino.startsWith("/")) return destino.slice(1);
   const base = rutaRels.replace(/_rels\/[^/]*$/, "");
@@ -120,11 +150,14 @@ const limpiarXml = (ruta: string, original: string, eliminados: Set<string>) => 
   const esComentarios = /comments?/i.test(ruta);
 
   if (ruta.endsWith(".rels")) {
+    // Se vacía el destino y se conserva la relación: otras partes referencian su Id.
     return sustituir(
       xml,
-      /\bTarget="(?:file:[^"]*|[A-Za-z]:\\[^"]*|\\\\[^"]*)"/g,
-      (coincidencia) =>
-        coincidencia === 'Target="file:///eliminado"' ? coincidencia : 'Target="file:///eliminado"',
+      /<Relationship\b[^>]*\/>/g,
+      (relacion) =>
+        destinoRevelador(relacion)
+          ? relacion.replace(/\bTarget="[^"]*"/, `Target="${DESTINO_NEUTRO}"`)
+          : relacion,
       rutas,
     );
   }
@@ -192,8 +225,12 @@ const tipoDeOffice = (tipos: string): TipoOffice => {
   return tipos.includes("spreadsheetml.sheet.main") ? "xlsx" : "pptx";
 };
 
-export const limpiarOffice = async (
+export const limpiarOffice = (bytes: Uint8Array): Promise<BytesLimpios & { tipo: TipoOffice }> =>
+  limpiarPaquete(bytes, 0);
+
+const limpiarPaquete = async (
   bytes: Uint8Array,
+  profundidad: number,
 ): Promise<BytesLimpios & { tipo: TipoOffice }> => {
   const zip = await leerPaquete(bytes);
   const entradaTipos = zip.file("[Content_Types].xml");
@@ -247,22 +284,35 @@ export const limpiarOffice = async (
     let limpio = contenido;
     if (typeof contenido === "string") {
       limpio = limpiarXml(ruta, contenido, eliminados);
-    } else if (/^(?:word|xl|ppt)\/media\//.test(ruta)) {
+      if (sobrevivenRastros(limpio)) throw new ErrorLimpieza(RASTRO_SOBREVIVIENTE);
+    } else if (/\/media\//i.test(ruta)) {
+      // Nombre y contenido deben coincidir con un formato que sí se limpia; si no, se rechaza.
       const formato = detectarFormato(contenido);
-      if (formato === "jpeg" || formato === "png" || formato === "webp") {
-        try {
-          const imagen = limpiarImagen(contenido, formato as FormatoImagen);
-          if (imagen.eliminados.length > 0) eliminados.add("Metadatos de fotos incrustadas");
-          limpio = imagen.bytes;
-        } catch (error) {
-          if (error instanceof ErrorLimpieza) {
-            throw new ErrorLimpieza(
-              "Este documento contiene una imagen dañada que no podemos limpiar. Quítala y vuelve a intentarlo.",
-            );
-          }
-          throw error;
-        }
+      if (
+        !/\.(jpe?g|png|webp)$/i.test(ruta) ||
+        (formato !== "jpeg" && formato !== "png" && formato !== "webp")
+      ) {
+        throw new ErrorLimpieza(IMAGEN_NO_LIMPIABLE);
       }
+      try {
+        const imagen = limpiarImagen(contenido, formato as FormatoImagen);
+        if (imagen.eliminados.length > 0) eliminados.add("Metadatos de fotos incrustadas");
+        limpio = imagen.bytes;
+      } catch (error) {
+        if (error instanceof ErrorLimpieza) {
+          throw new ErrorLimpieza(
+            "Este documento contiene una imagen dañada que no podemos limpiar. Quítala y vuelve a intentarlo.",
+          );
+        }
+        throw error;
+      }
+    } else if (/\/embeddings\//i.test(ruta)) {
+      if (!INCRUSTADOS_REPROCESABLES.test(ruta) || profundidad >= MAX_PROFUNDIDAD) {
+        throw new ErrorLimpieza(INCRUSTADO_NO_LIMPIABLE);
+      }
+      const interno = await limpiarPaquete(contenido, profundidad + 1);
+      if (interno.eliminados.length > 0) eliminados.add("Metadatos de documentos incrustados");
+      limpio = interno.bytes;
     }
     salida.file(ruta, limpio, { date: FECHA_FIJA, createFolders: false });
   }

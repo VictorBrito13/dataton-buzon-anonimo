@@ -52,7 +52,7 @@ export const solicitudDenuncia = z.object({
   tipoFalta: esquemaTipoFalta,
   enteId: z.string().max(64).optional(),
   relatoSellado: base64url.max(MAX_SELLO_B64),
-  evidenciaIds: z.array(z.uuid()).max(10),
+  evidenciaIds: z.array(z.uuid()).max(5),
 });
 export const respuestaDenuncia = z.object({ folio: esquemaFolio });
 

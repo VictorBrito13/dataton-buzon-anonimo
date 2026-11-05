@@ -1,4 +1,5 @@
 import pg from "pg";
+import { registrarError } from "../compartido/infraestructura/registro.js";
 import { env } from "../config/env.js";
 
 const { Pool } = pg;
@@ -11,7 +12,7 @@ export const pool = new Pool({
 });
 
 pool.on("error", (error) => {
-  console.error("[backend] unexpected postgres pool error", error);
+  registrarError("postgres", error);
 });
 
 export const checkDatabase = async (): Promise<void> => {
