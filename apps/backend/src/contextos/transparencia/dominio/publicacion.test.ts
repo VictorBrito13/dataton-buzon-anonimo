@@ -1,4 +1,4 @@
-import { CLAVES_ETAPA, TRANSICIONES, type Etapa } from "@dataton/shared";
+import { CLAVES_ETAPA, TRANSICIONES, type Dimension, type Etapa } from "@dataton/shared";
 import { describe, expect, it } from "vitest";
 import { acotarConIndicadores, desigualdadesDeIndicador } from "./ataque-indicadores.js";
 import { acotarPorIntervalos } from "./ataque-intervalos.js";
@@ -10,6 +10,7 @@ import {
   claveMunicipioSinEspecificar,
   construirPublicacion,
   construirRed,
+  idDeClaves,
   normalizarDimensiones,
   TABLAS_PUBLICADAS,
   type DenunciaAgregable,
@@ -62,6 +63,25 @@ describe("dimensiones", () => {
     for (const tabla of TABLAS_PUBLICADAS) {
       expect(tabla.split(",").length).toBeLessThanOrEqual(2);
     }
+  });
+
+  it("cada tabla publicada lleva su nombre normalizado: así /agregados puede servirla", () => {
+    for (const tabla of TABLAS_PUBLICADAS) {
+      expect(normalizarDimensiones(tabla.split(",") as Dimension[])).toBe(tabla);
+    }
+  });
+
+  it("las filas publicadas y sus identificadores no dependen del orden de las claves", () => {
+    const filas = construirPublicacion([denuncia({ n: 50 })], universo, { k });
+    for (const fila of filas) {
+      if (fila.dimensiones === "total") continue;
+      expect(normalizarDimensiones(fila.dimensiones.split(",") as Dimension[])).toBe(
+        fila.dimensiones,
+      );
+    }
+    expect(idDeClaves({ ente: "ente-a", etapa: "recibida" })).toBe(
+      idDeClaves({ etapa: "recibida", ente: "ente-a" }),
+    );
   });
 });
 
