@@ -1,6 +1,10 @@
 .git
 .gitignore
 .github
+.claude
+.dockerignore
+docker-compose*.yml
+**/Dockerfile
 node_modules
 **/node_modules
 dist
@@ -9,8 +13,22 @@ dist
 **/.next
 out
 coverage
+**/coverage
 docs
+e2e
+scripts
+test-results
+playwright-report
+**/*.tsbuildinfo
+**/*.log
+.DS_Store
+**/.DS_Store
+
+# Secretos: nunca dentro de una imagen, en ninguna carpeta.
 .env
 .env.*
-!.env.example
-*.log
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+**/*.key
