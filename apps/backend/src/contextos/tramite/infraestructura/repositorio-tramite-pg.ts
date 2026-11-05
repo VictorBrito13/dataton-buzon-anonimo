@@ -1,4 +1,4 @@
-import type { Etapa, TipoFalta } from "@dataton/shared";
+import type { ConsultaListadoAutoridad, Etapa, TipoFalta } from "@dataton/shared";
 import type { PoolClient } from "pg";
 import { enTransaccion } from "../../../compartido/infraestructura/transaccion.js";
 import { pool } from "../../../db/postgres.js";
@@ -8,8 +8,6 @@ import type {
   RepositorioTramite,
   TransaccionTramite,
 } from "../aplicacion/puertos.js";
-
-const MAX_LISTADO = 500;
 
 const COLUMNAS_RESUMEN = `id, estado, municipio, tipo_falta AS "tipoFalta", ente_id AS "enteId",
   etapa, to_char(recibida_dia, 'YYYY-MM-DD') AS "recibidaDia"`;
@@ -66,14 +64,35 @@ export class RepositorioTramitePg implements RepositorioTramite {
     await pool.query(INSERTAR_BITACORA, [usuarioId, accion, denunciaId]);
   }
 
-  /** Por día e identificador aleatorio: el orden no permite inferir el orden de llegada. */
-  async listar(): Promise<{ denuncias: FilaResumen[]; total: number }> {
+  /**
+   * Por día e identificador aleatorio: el orden es estable entre páginas y no permite inferir el
+   * orden de llegada. Los filtros van parametrizados y ya validados contra los catálogos.
+   */
+  async listar(
+    consulta: ConsultaListadoAutoridad,
+  ): Promise<{ denuncias: FilaResumen[]; total: number }> {
+    const condiciones: string[] = [];
+    const valores: unknown[] = [];
+    for (const [columna, valor] of [
+      ["etapa", consulta.etapa],
+      ["estado", consulta.estado],
+      ["tipo_falta", consulta.tipoFalta],
+    ] as const) {
+      if (valor === undefined) continue;
+      valores.push(valor);
+      condiciones.push(`${columna} = $${valores.length}`);
+    }
+    const donde = condiciones.length > 0 ? `WHERE ${condiciones.join(" AND ")}` : "";
     const [filas, conteo] = await Promise.all([
       pool.query<FilaResumen>(
-        `SELECT ${COLUMNAS_RESUMEN} FROM denuncias ORDER BY recibida_dia DESC, id LIMIT $1`,
-        [MAX_LISTADO],
+        `SELECT ${COLUMNAS_RESUMEN} FROM denuncias ${donde}
+         ORDER BY recibida_dia DESC, id LIMIT $${valores.length + 1} OFFSET $${valores.length + 2}`,
+        [...valores, consulta.porPagina, (consulta.pagina - 1) * consulta.porPagina],
       ),
-      pool.query<{ total: number }>("SELECT count(*)::int AS total FROM denuncias"),
+      pool.query<{ total: number }>(
+        `SELECT count(*)::int AS total FROM denuncias ${donde}`,
+        valores,
+      ),
     ]);
     return { denuncias: filas.rows, total: conteo.rows[0]?.total ?? 0 };
   }

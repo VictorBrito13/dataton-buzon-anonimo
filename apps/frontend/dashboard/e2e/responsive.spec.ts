@@ -123,7 +123,12 @@ const simularAutoridad = async (page: Page) => {
     }
     if (camino === "/autoridad/denuncias") {
       return ruta.fulfill({
-        json: { denuncias: [resumen, { ...resumen, id: ID.replace("6f", "7a") }], total: 2 },
+        json: {
+          denuncias: [resumen, { ...resumen, id: ID.replace("6f", "7a") }],
+          total: 2,
+          pagina: 1,
+          porPagina: 50,
+        },
       });
     }
     if (camino === `/autoridad/denuncias/${ID}`) {

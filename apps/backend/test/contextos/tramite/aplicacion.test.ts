@@ -1,4 +1,4 @@
-import type { Etapa } from "@dataton/shared";
+import type { ConsultaListadoAutoridad, Etapa } from "@dataton/shared";
 import { beforeEach, describe, expect, it } from "vitest";
 import { LimiteIntentos } from "../../../src/compartido/dominio/limite-intentos.js";
 import { CasosDenunciasAutoridad } from "../../../src/contextos/tramite/aplicacion/casos-denuncias.js";
@@ -27,6 +27,7 @@ class RepositorioFalso implements RepositorioTramite {
   mensajes: { cifrado: Uint8Array; dia: string }[] = [];
   evidencias = new Map([["e1", { tipo: "image/png", blobSellado: new Uint8Array([9]) }]]);
   fallarAlRegistrar = false;
+  consultasRecibidas: ConsultaListadoAutoridad[] = [];
 
   private readonly tx: TransaccionTramite = {
     etapaBloqueada: (id) => Promise.resolve(this.etapas.get(id) ?? null),
@@ -50,7 +51,8 @@ class RepositorioFalso implements RepositorioTramite {
     this.bitacora.push({ usuarioId, accion, denunciaId });
     return Promise.resolve();
   }
-  listar() {
+  listar(consulta: ConsultaListadoAutoridad) {
+    this.consultasRecibidas.push(consulta);
     return Promise.resolve({
       denuncias: [
         {
@@ -135,10 +137,14 @@ describe("CasosDenunciasAutoridad", () => {
     expect(repo.mensajes[0]?.dia).toBe("2026-11-04");
   });
 
-  it("lista y lo registra en la bitácora", async () => {
-    const listado = await casos.listar(sesion);
+  it("lista la página pedida, con filtros, y lo registra en la bitácora", async () => {
+    const consulta = { pagina: 2, porPagina: 25, etapa: "recibida" } as const;
+    const listado = await casos.listar(sesion, consulta);
     expect(listado.denuncias).toHaveLength(1);
     expect(listado.total).toBe(3);
+    expect(listado.pagina).toBe(2);
+    expect(listado.porPagina).toBe(25);
+    expect(repo.consultasRecibidas).toEqual([consulta]);
     expect(repo.bitacora).toEqual([
       { usuarioId: "u1", accion: "denuncias_listadas", denunciaId: null },
     ]);

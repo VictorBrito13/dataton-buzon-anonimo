@@ -2,7 +2,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { defineConfig, devices } from "@playwright/test";
 
-const PUERTO = 3217;
+const PUERTO = Number(process.env.PUERTO_PANEL ?? 3217);
 
 /** La API se simula con page.route: estas pruebas no necesitan backend ni base de datos. */
 export default defineConfig({

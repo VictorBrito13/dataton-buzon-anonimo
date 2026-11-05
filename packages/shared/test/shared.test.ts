@@ -5,14 +5,17 @@ import {
   abrir,
   aBase64Url,
   CLAVES_ETAPA,
+  consultaListadoAutoridad,
   deBase64Url,
   derivarAccesoId,
   esquemaFolio,
   fraseValida,
   generarFrase,
   generarParDeClaves,
+  LISTADO_AUTORIDAD,
   normalizarFrase,
   normalizarPalabra,
+  respuestaListadoAutoridad,
   sellar,
   TIPOS_FALTA,
   TRANSICIONES,
@@ -21,6 +24,53 @@ import {
 describe("zod", () => {
   it("no usa eval: la CSP estricta lo bloquearía en el navegador", () => {
     expect(z.config().jitless).toBe(true);
+  });
+});
+
+describe("paginación del listado de autoridad", () => {
+  it("sin parámetros, primera página con el tamaño por defecto", () => {
+    expect(consultaListadoAutoridad.parse({})).toEqual({
+      pagina: 1,
+      porPagina: LISTADO_AUTORIDAD.porPaginaPorDefecto,
+    });
+  });
+
+  it("acepta los parámetros de la URL como texto y los filtros de catálogo", () => {
+    expect(
+      consultaListadoAutoridad.parse({
+        pagina: "3",
+        porPagina: "25",
+        etapa: "recibida",
+        estado: "17",
+        tipoFalta: "cohecho",
+      }),
+    ).toEqual({ pagina: 3, porPagina: 25, etapa: "recibida", estado: "17", tipoFalta: "cohecho" });
+  });
+
+  it.each([
+    { pagina: "0" },
+    { pagina: "-1" },
+    { pagina: "1.5" },
+    { pagina: "abc" },
+    { pagina: String(LISTADO_AUTORIDAD.paginaMaxima + 1) },
+    { porPagina: "0" },
+    { porPagina: String(LISTADO_AUTORIDAD.porPaginaMaximo + 1) },
+    { etapa: "inventada" },
+    { estado: "99" },
+    { tipoFalta: "<script>" },
+  ])("rechaza %j", (consulta) => {
+    expect(consultaListadoAutoridad.safeParse(consulta).success).toBe(false);
+  });
+
+  it("la respuesta conserva el total y dice qué página es", () => {
+    const respuesta = respuestaListadoAutoridad.parse({
+      denuncias: [],
+      total: 1234,
+      pagina: 2,
+      porPagina: 50,
+    });
+    expect(respuesta).toEqual({ denuncias: [], total: 1234, pagina: 2, porPagina: 50 });
+    expect(respuestaListadoAutoridad.safeParse({ denuncias: [], total: 1 }).success).toBe(false);
   });
 });
 

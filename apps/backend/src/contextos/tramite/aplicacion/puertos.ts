@@ -1,4 +1,9 @@
-import type { Etapa, ResumenDenunciaAutoridad, TipoFalta } from "@dataton/shared";
+import type {
+  ConsultaListadoAutoridad,
+  Etapa,
+  ResumenDenunciaAutoridad,
+  TipoFalta,
+} from "@dataton/shared";
 import type { Sesion } from "../dominio/sesion.js";
 
 export interface UsuarioAutoridad {
@@ -59,7 +64,8 @@ export interface EvidenciaParaAutoridad {
 
 export interface RepositorioTramite extends Bitacora {
   transaccion<T>(fn: (tx: TransaccionTramite) => Promise<T>): Promise<T>;
-  listar(): Promise<{
+  /** La página pedida y cuántas denuncias cumplen los filtros en total. */
+  listar(consulta: ConsultaListadoAutoridad): Promise<{
     denuncias: (Omit<ResumenDenunciaAutoridad, "estado"> & { estado: string })[];
     total: number;
   }>;

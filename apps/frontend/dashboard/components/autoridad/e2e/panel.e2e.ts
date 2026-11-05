@@ -87,14 +87,26 @@ const simularApi = async (page: Page, publica: JsonWebKey) => {
       });
     }
     if (ruta === "/autoridad/denuncias") {
-      // Un dato de más en la respuesta no debe llegar a la pantalla.
+      // Filtra y pagina como el servidor real; un dato de más en la respuesta no debe llegar a la pantalla.
+      const consulta = new URL(peticion.url()).searchParams;
+      const porPagina = Number(consulta.get("porPagina") ?? 50);
+      const pagina = Number(consulta.get("pagina") ?? 1);
+      const coinciden = [ID_BIFURCA, ID_RECIBIDA]
+        .map(resumenDe)
+        .filter(
+          (d) =>
+            (!consulta.get("etapa") || d.etapa === consulta.get("etapa")) &&
+            (!consulta.get("estado") || d.estado === consulta.get("estado")) &&
+            (!consulta.get("tipoFalta") || d.tipoFalta === consulta.get("tipoFalta")),
+        );
       return route.fulfill({
         json: {
-          denuncias: [ID_BIFURCA, ID_RECIBIDA].map((id) => ({
-            ...resumenDe(id),
-            ip: "203.0.113.9",
-          })),
-          total: 2,
+          denuncias: coinciden
+            .slice((pagina - 1) * porPagina, pagina * porPagina)
+            .map((d) => ({ ...d, ip: "203.0.113.9" })),
+          total: coinciden.length,
+          pagina,
+          porPagina,
         },
       });
     }
@@ -235,11 +247,13 @@ const recorrer = async (page: Page, auditarPantalla: Auditoria) => {
   await expect(page.getByLabel("Estado").locator("option")).toHaveCount(33);
   await auditarPantalla("2-lista");
 
+  // Los filtros los aplica el servidor: el total es el de la selección.
   await page.getByLabel("Etapa").selectOption("recibida");
-  await expect(page.getByText("1 de 2 denuncias")).toBeVisible();
+  await expect(page.getByText("1 de 1 denuncias")).toBeVisible();
   await expect(page).toHaveURL(/etapa=recibida/);
   await page.getByLabel("Estado").selectOption("09");
   await expect(page.getByText("Ninguna denuncia coincide")).toBeVisible();
+  await expect(page.getByText("Sin denuncias para estos filtros")).toBeVisible();
   await page.getByRole("button", { name: "Limpiar filtros" }).click();
   await expect(page.getByText("2 de 2 denuncias")).toBeVisible();
   await expect(page).toHaveURL(/\/autoridad$/);

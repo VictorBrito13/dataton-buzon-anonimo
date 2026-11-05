@@ -1,92 +1,116 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import type { ResumenDenunciaAutoridad } from "@dataton/shared";
 import {
   FILTROS_VACIOS,
   OPCIONES_ESTADO,
   cambiarFiltro,
-  describirListado,
-  filtrarDenuncias,
+  cambiarPagina,
+  consultaDeFiltros,
+  describirPagina,
   filtrosAConsulta,
   leerFiltros,
+  totalPaginas,
 } from "./filtros";
 
-const denuncia = (parcial: Partial<ResumenDenunciaAutoridad>): ResumenDenunciaAutoridad => ({
-  id: "6f1c1c1e-3f0a-4a53-9a55-0d3f6a1b2c3d",
-  estado: "17",
-  municipio: null,
-  tipoFalta: "cohecho",
-  enteId: null,
-  etapa: "recibida",
-  recibidaDia: "2026-03-01",
-  ...parcial,
-});
-
-const a = denuncia({ recibidaDia: "2026-01-10", etapa: "recibida", estado: "17" });
-const b = denuncia({ recibidaDia: "2026-03-10", etapa: "archivada", estado: "09" });
-const c = denuncia({
-  recibidaDia: "2026-02-10",
-  etapa: "recibida",
-  estado: "09",
-  tipoFalta: "peculado",
-});
-
 describe("leerFiltros", () => {
-  it("lee valores de catálogo", () => {
-    const filtros = leerFiltros(new URLSearchParams("etapa=recibida&estado=09&tipo=peculado"));
-    expect(filtros).toEqual({ etapa: "recibida", estado: "09", tipoFalta: "peculado" });
+  it("lee valores de catálogo y la página", () => {
+    const filtros = leerFiltros(
+      new URLSearchParams("etapa=recibida&estado=09&tipo=peculado&pagina=3"),
+    );
+    expect(filtros).toEqual({ etapa: "recibida", estado: "09", tipoFalta: "peculado", pagina: 3 });
   });
 
-  it("descarta lo que no está en el catálogo", () => {
-    const filtros = leerFiltros(new URLSearchParams("etapa=hackeada&estado=99&tipo=<script>"));
-    expect(filtros).toEqual(FILTROS_VACIOS);
+  it("descarta lo que no está en el catálogo y las páginas inválidas", () => {
+    expect(
+      leerFiltros(new URLSearchParams("etapa=hackeada&estado=99&tipo=<script>&pagina=0")),
+    ).toEqual(FILTROS_VACIOS);
+    expect(leerFiltros(new URLSearchParams("pagina=abc")).pagina).toBe(1);
+    expect(leerFiltros(new URLSearchParams("pagina=2.5")).pagina).toBe(1);
+    expect(leerFiltros(new URLSearchParams("pagina=-4")).pagina).toBe(1);
+    expect(leerFiltros(new URLSearchParams("pagina=999999999")).pagina).toBe(1);
   });
 });
 
 describe("filtrosAConsulta", () => {
-  it("omite los vacíos y vuelve a leerse igual", () => {
-    const filtros = { ...FILTROS_VACIOS, estado: "09" as const };
+  it("omite los vacíos y la primera página, y vuelve a leerse igual", () => {
+    const filtros = { ...FILTROS_VACIOS, estado: "09" as const, pagina: 2 };
     const consulta = filtrosAConsulta(filtros);
-    expect(consulta).toBe("estado=09");
+    expect(consulta).toBe("estado=09&pagina=2");
     expect(leerFiltros(new URLSearchParams(consulta))).toEqual(filtros);
     expect(filtrosAConsulta(FILTROS_VACIOS)).toBe("");
+    expect(filtrosAConsulta({ ...FILTROS_VACIOS, pagina: 1 })).toBe("");
+  });
+});
+
+describe("consultaDeFiltros", () => {
+  it("traduce los filtros a los parámetros del contrato de la API", () => {
+    expect(
+      consultaDeFiltros({ etapa: "recibida", estado: null, tipoFalta: "peculado", pagina: 4 }),
+    ).toEqual({ pagina: 4, etapa: "recibida", tipoFalta: "peculado" });
+    expect(consultaDeFiltros(FILTROS_VACIOS)).toEqual({ pagina: 1 });
   });
 });
 
 describe("cambiarFiltro", () => {
-  const base = { etapa: "recibida", estado: "09", tipoFalta: null } as const;
+  const base = { etapa: "recibida", estado: "09", tipoFalta: null, pagina: 3 } as const;
 
-  it("cambia un filtro sin tocar los demás", () => {
+  it("cambia un filtro sin tocar los demás y vuelve a la primera página", () => {
     expect(cambiarFiltro(base, "tipoFalta", "peculado")).toEqual({
       ...base,
       tipoFalta: "peculado",
+      pagina: 1,
     });
   });
 
   it("un valor vacío o ajeno al catálogo deja el filtro sin aplicar", () => {
-    expect(cambiarFiltro(base, "etapa", "")).toEqual({ ...base, etapa: null });
-    expect(cambiarFiltro(base, "estado", "99")).toEqual({ ...base, estado: null });
+    expect(cambiarFiltro(base, "etapa", "")).toEqual({ ...base, etapa: null, pagina: 1 });
+    expect(cambiarFiltro(base, "estado", "99")).toEqual({ ...base, estado: null, pagina: 1 });
   });
 });
 
-describe("filtrarDenuncias", () => {
-  it("sin filtros devuelve todas, de la más reciente a la más antigua", () => {
-    expect(filtrarDenuncias([a, b, c], FILTROS_VACIOS)).toEqual([b, c, a]);
+describe("cambiarPagina", () => {
+  it("conserva los filtros y no baja de la primera página", () => {
+    const base = { ...FILTROS_VACIOS, etapa: "recibida" as const, pagina: 2 };
+    expect(cambiarPagina(base, 5)).toEqual({ ...base, pagina: 5 });
+    expect(cambiarPagina(base, 0)).toEqual({ ...base, pagina: 1 });
+  });
+});
+
+describe("totalPaginas", () => {
+  it("al menos una, aunque no haya denuncias", () => {
+    expect(totalPaginas(0, 50)).toBe(1);
+    expect(totalPaginas(50, 50)).toBe(1);
+    expect(totalPaginas(51, 50)).toBe(2);
+    expect(totalPaginas(1234, 50)).toBe(25);
+  });
+});
+
+describe("describirPagina", () => {
+  it("con una sola página solo da el conteo", () => {
+    expect(describirPagina({ enPagina: 2, pagina: 1, porPagina: 50, total: 2 })).toBe(
+      "2 de 2 denuncias",
+    );
   });
 
-  it("combina los filtros con Y", () => {
-    expect(filtrarDenuncias([a, b, c], { ...FILTROS_VACIOS, etapa: "recibida" })).toEqual([c, a]);
-    expect(filtrarDenuncias([a, b, c], { ...FILTROS_VACIOS, estado: "09" })).toEqual([b, c]);
-    expect(
-      filtrarDenuncias([a, b, c], { etapa: "recibida", estado: "09", tipoFalta: "peculado" }),
-    ).toEqual([c]);
-    expect(filtrarDenuncias([a, b, c], { ...FILTROS_VACIOS, tipoFalta: "otra" })).toEqual([]);
+  it("sin resultados lo dice sin repetir el texto de la tabla", () => {
+    expect(describirPagina({ enPagina: 0, pagina: 1, porPagina: 50, total: 0 })).toBe(
+      "Sin denuncias para estos filtros",
+    );
   });
 
-  it("no altera la lista recibida", () => {
-    const lista = [a, b, c];
-    filtrarDenuncias(lista, FILTROS_VACIOS);
-    expect(lista).toEqual([a, b, c]);
+  it("con varias páginas dice el tramo visible, el total y la página", () => {
+    expect(describirPagina({ enPagina: 50, pagina: 1, porPagina: 50, total: 1234 })).toBe(
+      "Denuncias 1 a 50 de 1,234. Página 1 de 25.",
+    );
+    expect(describirPagina({ enPagina: 34, pagina: 25, porPagina: 50, total: 1234 })).toBe(
+      "Denuncias 1,201 a 1,234 de 1,234. Página 25 de 25.",
+    );
+  });
+
+  it("una página más allá del final no inventa un tramo", () => {
+    expect(describirPagina({ enPagina: 0, pagina: 30, porPagina: 50, total: 1234 })).toBe(
+      "Esta página ya no existe. Hay 25 páginas.",
+    );
   });
 });
 
@@ -109,23 +133,5 @@ describe("OPCIONES_ESTADO", () => {
 
   it("cada opción conserva la clave de su estado", () => {
     expect(OPCIONES_ESTADO.find((o) => o.texto === "Morelos")?.valor).toBe("17");
-  });
-});
-
-describe("describirListado", () => {
-  it("con la lista completa solo da el conteo", () => {
-    expect(describirListado({ visibles: 2, cargadas: 2, total: 2 })).toBe("2 de 2 denuncias");
-  });
-
-  it("si el servidor recortó la lista, avisa cuántas se muestran y que los filtros no ven el resto", () => {
-    expect(describirListado({ visibles: 500, cargadas: 500, total: 1234 })).toBe(
-      "Se muestran las 500 denuncias más recientes de 1,234. Los filtros solo buscan entre esas 500.",
-    );
-  });
-
-  it("con filtros sobre una lista recortada dice cuántas coinciden", () => {
-    expect(describirListado({ visibles: 12, cargadas: 500, total: 1234 })).toBe(
-      "12 coinciden entre las 500 denuncias más recientes de 1,234. Los filtros solo buscan entre esas 500.",
-    );
   });
 });

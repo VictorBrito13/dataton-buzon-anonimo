@@ -31,6 +31,8 @@ const DETALLE = {
   mensajes: [],
 };
 
+const LISTADO = { denuncias: [RESUMEN], total: 1, pagina: 1, porPagina: 50 };
+
 const responderCon = (cuerpo: unknown, estado = 200) =>
   new Response(JSON.stringify(cuerpo), { status: estado });
 
@@ -49,7 +51,7 @@ afterEach(() => vi.unstubAllGlobals());
 describe("todas las llamadas del panel", () => {
   it("envían la cookie de mismo origen", async () => {
     const llamadas: Array<[unknown, () => Promise<unknown>]> = [
-      [{ denuncias: [RESUMEN], total: 1 }, () => listarDenuncias()],
+      [LISTADO, () => listarDenuncias({ pagina: 1 })],
       [DETALLE, () => obtenerDenuncia(ID)],
       [{}, () => iniciarSesion({ usuario: "a", contrasena: "b" })],
       [{}, () => cerrarSesion()],
@@ -68,26 +70,41 @@ describe("todas las llamadas del panel", () => {
 });
 
 describe("listarDenuncias y obtenerDenuncia", () => {
-  it("el listado conserva el total para poder avisar si está recortado", async () => {
-    peticion.mockResolvedValueOnce(responderCon({ denuncias: [RESUMEN], total: 7 }));
-    expect((await listarDenuncias()).total).toBe(7);
+  it("pide la página y los filtros en la URL, solo los que aplican", async () => {
+    peticion.mockResolvedValueOnce(responderCon({ ...LISTADO, pagina: 3 }));
+    await listarDenuncias({ pagina: 3, etapa: "recibida", tipoFalta: "cohecho" });
+    const url = new URL(ultima().url, "http://localhost");
+    expect(url.pathname).toBe("/api/v1/autoridad/denuncias");
+    expect([...url.searchParams.entries()]).toEqual([
+      ["pagina", "3"],
+      ["etapa", "recibida"],
+      ["tipoFalta", "cohecho"],
+    ]);
+  });
+
+  it("el listado conserva el total y la página para poder paginar", async () => {
+    peticion.mockResolvedValueOnce(responderCon({ ...LISTADO, total: 70, pagina: 2 }));
+    const listado = await listarDenuncias({ pagina: 2 });
+    expect(listado.total).toBe(70);
+    expect(listado.pagina).toBe(2);
+    expect(listado.porPagina).toBe(50);
   });
 
   it("descartan cualquier campo fuera del contrato, como datos de quien denuncia", async () => {
     peticion.mockResolvedValueOnce(
-      responderCon({ denuncias: [{ ...RESUMEN, ip: "203.0.113.9" }], total: 1 }),
+      responderCon({ ...LISTADO, denuncias: [{ ...RESUMEN, ip: "203.0.113.9" }] }),
     );
-    expect((await listarDenuncias()).denuncias[0]).not.toHaveProperty("ip");
+    expect((await listarDenuncias({ pagina: 1 })).denuncias[0]).not.toHaveProperty("ip");
 
     peticion.mockResolvedValueOnce(responderCon({ ...DETALLE, correo: "x@y.mx" }));
     expect(await obtenerDenuncia(ID)).not.toHaveProperty("correo");
   });
 
   it("rechazan una respuesta que no cumple el contrato", async () => {
-    peticion.mockResolvedValueOnce(responderCon({ denuncias: [{ id: "no-uuid" }], total: 1 }));
-    await expect(listarDenuncias()).rejects.toThrow();
-    peticion.mockResolvedValueOnce(responderCon({ denuncias: [RESUMEN] }));
-    await expect(listarDenuncias()).rejects.toThrow();
+    peticion.mockResolvedValueOnce(responderCon({ ...LISTADO, denuncias: [{ id: "no-uuid" }] }));
+    await expect(listarDenuncias({ pagina: 1 })).rejects.toThrow();
+    peticion.mockResolvedValueOnce(responderCon({ denuncias: [RESUMEN], total: 1 }));
+    await expect(listarDenuncias({ pagina: 1 })).rejects.toThrow();
   });
 });
 

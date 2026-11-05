@@ -4,16 +4,18 @@ import "@dataton/shared";
 import { CLAVES_ETAPA, CLAVES_TIPO_FALTA, ESTADOS, ETAPAS, TIPOS_FALTA } from "@dataton/shared";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { listarDenuncias } from "@/lib/autoridad/api";
 import {
   FILTROS_VACIOS,
   OPCIONES_ESTADO,
   cambiarFiltro,
-  describirListado,
-  filtrarDenuncias,
+  cambiarPagina,
+  consultaDeFiltros,
+  describirPagina,
   filtrosAConsulta,
   leerFiltros,
+  totalPaginas,
   type Filtros,
 } from "@/lib/autoridad/filtros";
 import { ALERTA, BOTON_SECUNDARIO, CAMPO, CELDA, CELDA_TITULO, ETIQUETA, SECCION } from "./estilos";
@@ -60,24 +62,66 @@ function Selector(props: {
   );
 }
 
+/** Anterior y siguiente, con la posición a la vista; con una sola página no aparece. */
+function Paginacion(props: { pagina: number; paginas: number; irA: (pagina: number) => void }) {
+  const { pagina, paginas, irA } = props;
+  if (paginas <= 1) return null;
+  return (
+    <nav aria-label="Páginas del listado" className="flex flex-wrap items-center gap-3">
+      <button
+        type="button"
+        className={BOTON_SECUNDARIO}
+        disabled={pagina <= 1}
+        onClick={() => irA(pagina - 1)}
+      >
+        Página anterior
+      </button>
+      <span className="text-sm text-tinta-suave" aria-current="page">
+        Página {pagina} de {paginas}
+      </span>
+      <button
+        type="button"
+        className={BOTON_SECUNDARIO}
+        disabled={pagina >= paginas}
+        onClick={() => irA(pagina + 1)}
+      >
+        Página siguiente
+      </button>
+    </nav>
+  );
+}
+
 export function ListaDenuncias() {
-  const { datos, error, cargando, recargar } = useCarga(listarDenuncias);
   const ruta = usePathname();
   const consulta = useSearchParams();
   const filtros = useMemo(() => leerFiltros(consulta), [consulta]);
-  const visibles = useMemo(
-    () => filtrarDenuncias(datos?.denuncias ?? [], filtros),
-    [datos, filtros],
+  // Filtrar y paginar ocurre en el servidor: cada cambio en la URL vuelve a pedir el listado.
+  const cargar = useCallback(
+    (signal: AbortSignal) => listarDenuncias(consultaDeFiltros(filtros), signal),
+    [filtros],
   );
+  const { datos, error, cargando, recargar } = useCarga(cargar);
   const nombres = useNombres();
 
-  /** En la URL, sin petición al servidor: volver desde un detalle conserva los filtros. */
-  const aplicar = (nuevos: Filtros) => {
-    const siguiente = filtrosAConsulta(nuevos);
-    window.history.replaceState(null, "", siguiente ? `${ruta}?${siguiente}` : ruta);
-  };
+  /** En la URL, sin recargar la página: volver desde un detalle conserva filtros y página. */
+  const aplicar = useCallback(
+    (nuevos: Filtros) => {
+      const siguiente = filtrosAConsulta(nuevos);
+      window.history.replaceState(null, "", siguiente ? `${ruta}?${siguiente}` : ruta);
+    },
+    [ruta],
+  );
 
-  const hayFiltros = filtrosAConsulta(filtros) !== "";
+  const paginas = datos ? totalPaginas(datos.total, datos.porPagina) : 1;
+
+  // Si al filtrar la página pedida quedó más allá del final, se va a la última que existe.
+  useEffect(() => {
+    if (datos && datos.total > 0 && datos.denuncias.length === 0 && filtros.pagina > paginas) {
+      aplicar(cambiarPagina(filtros, paginas));
+    }
+  }, [datos, filtros, paginas, aplicar]);
+
+  const hayFiltros = filtrosAConsulta({ ...filtros, pagina: 1 }) !== "";
 
   return (
     <div className="space-y-4">
@@ -130,9 +174,10 @@ export function ListaDenuncias() {
 
       <p role="status" className="text-sm text-tinta-suave">
         {datos
-          ? describirListado({
-              visibles: visibles.length,
-              cargadas: datos.denuncias.length,
+          ? describirPagina({
+              enPagina: datos.denuncias.length,
+              pagina: datos.pagina,
+              porPagina: datos.porPagina,
               total: datos.total,
             })
           : cargando
@@ -178,7 +223,7 @@ export function ListaDenuncias() {
               </tr>
             </thead>
             <tbody>
-              {visibles.map((denuncia) => (
+              {datos.denuncias.map((denuncia) => (
                 <tr key={denuncia.id}>
                   <td className={CELDA}>
                     <Link
@@ -198,7 +243,7 @@ export function ListaDenuncias() {
                   <td className={CELDA}>{nombres.ente(denuncia.enteId)}</td>
                 </tr>
               ))}
-              {visibles.length === 0 && (
+              {datos.denuncias.length === 0 && (
                 <tr>
                   <td colSpan={7} className={`${CELDA} text-tinta-suave`}>
                     Ninguna denuncia coincide con estos filtros.
@@ -208,6 +253,14 @@ export function ListaDenuncias() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {datos && (
+        <Paginacion
+          pagina={datos.pagina}
+          paginas={paginas}
+          irA={(pagina) => aplicar(cambiarPagina(filtros, pagina))}
+        />
       )}
     </div>
   );

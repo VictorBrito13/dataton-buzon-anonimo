@@ -516,33 +516,101 @@ describe("panel de autoridad", () => {
     await request(app).get("/api/v1/autoridad/sesion").set("Cookie", cookie).expect(401);
   });
 
-  it("el listado corta en 500 filas, pero dice cuántas denuncias hay en total", async () => {
-    const { rows } = await pool.query<{ total: number }>(
-      "SELECT count(*)::int AS total FROM denuncias",
-    );
-    const previas = rows[0]?.total as number;
-    const agregadas = 501;
-    // Día del pasado lejano: el listado las deja al final y las pruebas no las confunden con otras.
-    const { rows: creadas } = await pool.query<{ id: string }>(
-      `INSERT INTO denuncias (folio_hmac, acceso_hmac, estado, tipo_falta, recibida_dia, relato_sellado)
-       SELECT gen_random_uuid()::text::bytea, gen_random_uuid()::text::bytea, '17', 'cohecho', '2001-01-01', '\\x01'
-       FROM generate_series(1, $1) RETURNING id`,
-      [agregadas],
-    );
-    try {
-      const cookie = await iniciarSesion(app);
-      const res = await request(app)
-        .get("/api/v1/autoridad/denuncias")
-        .set("Cookie", cookie)
-        .expect(200);
-      const listado = respuestaListadoAutoridad.parse(res.body);
-      expect(listado.denuncias).toHaveLength(500);
-      expect(listado.total).toBe(previas + agregadas);
-    } finally {
-      await pool.query("DELETE FROM denuncias WHERE id = ANY($1::uuid[])", [
-        creadas.map((c) => c.id),
-      ]);
-    }
+  describe("paginación del listado", () => {
+    // Una sola sesión para todo el bloque: el inicio de sesión tiene límite de intentos.
+    let cookie = "";
+    beforeAll(async () => {
+      cookie = await iniciarSesion(app);
+    });
+    const listar = (cookie: string, consulta: Record<string, string>) =>
+      request(app).get("/api/v1/autoridad/denuncias").set("Cookie", cookie).query(consulta);
+
+    it("recorre todas las denuncias por páginas, en orden estable por día e identificador, con el total", async () => {
+      const { rows } = await pool.query<{ total: number }>(
+        "SELECT count(*)::int AS total FROM denuncias",
+      );
+      const previas = rows[0]?.total as number;
+      const agregadas = 120;
+      // Días del pasado lejano: quedan al final y no se confunden con las de otras pruebas.
+      const { rows: creadas } = await pool.query<{ id: string }>(
+        `INSERT INTO denuncias (folio_hmac, acceso_hmac, estado, tipo_falta, etapa, recibida_dia, relato_sellado)
+         SELECT gen_random_uuid()::text::bytea, gen_random_uuid()::text::bytea, '17',
+                CASE WHEN n % 2 = 0 THEN 'cohecho' ELSE 'peculado' END, 'recibida',
+                DATE '2001-01-01' + (n % 7), '\\x01'
+         FROM generate_series(1, $1) AS n RETURNING id`,
+        [agregadas],
+      );
+      try {
+        const total = previas + agregadas;
+        const paginas = Math.ceil(total / 50);
+        const vistas: { id: string; recibidaDia: string }[] = [];
+        for (let pagina = 1; pagina <= paginas; pagina += 1) {
+          const res = await listar(cookie, { pagina: String(pagina) }).expect(200);
+          const listado = respuestaListadoAutoridad.parse(res.body);
+          expect(listado.total).toBe(total);
+          expect(listado.pagina).toBe(pagina);
+          expect(listado.porPagina).toBe(50);
+          expect(listado.denuncias.length).toBe(pagina < paginas ? 50 : total - 50 * (paginas - 1));
+          vistas.push(...listado.denuncias);
+        }
+        expect(new Set(vistas.map((v) => v.id)).size).toBe(total);
+        // Orden estable: día descendente y, dentro del día, identificador aleatorio ascendente.
+        const clave = (v: { id: string; recibidaDia: string }) => `${v.recibidaDia}|${v.id}`;
+        const ordenadas = [...vistas].sort((a, b) =>
+          a.recibidaDia === b.recibidaDia
+            ? a.id.localeCompare(b.id)
+            : b.recibidaDia.localeCompare(a.recibidaDia),
+        );
+        expect(vistas.map(clave)).toEqual(ordenadas.map(clave));
+
+        // Tamaño de página propio y una página más allá del final.
+        const corta = respuestaListadoAutoridad.parse(
+          (await listar(cookie, { pagina: "2", porPagina: "7" }).expect(200)).body,
+        );
+        expect(corta.denuncias).toHaveLength(7);
+        expect(corta.denuncias.map((d) => d.id)).toEqual(vistas.slice(7, 14).map((v) => v.id));
+        const vacia = respuestaListadoAutoridad.parse(
+          (await listar(cookie, { pagina: String(paginas + 5) }).expect(200)).body,
+        );
+        expect(vacia.denuncias).toEqual([]);
+        expect(vacia.total).toBe(total);
+      } finally {
+        await pool.query("DELETE FROM denuncias WHERE id = ANY($1::uuid[])", [
+          creadas.map((c) => c.id),
+        ]);
+      }
+    });
+
+    it("filtra en el servidor por etapa, estado y tipo de falta, y el total es el de la selección", async () => {
+      await crearDenuncia(app, { estado: "09", municipio: undefined, tipoFalta: "peculado" });
+      await crearDenuncia(app, { estado: "09", municipio: undefined, tipoFalta: "cohecho" });
+      const peculado = respuestaListadoAutoridad.parse(
+        (await listar(cookie, { estado: "09", tipoFalta: "peculado" }).expect(200)).body,
+      );
+      expect(peculado.total).toBe(1);
+      expect(peculado.denuncias.map((d) => [d.estado, d.tipoFalta])).toEqual([["09", "peculado"]]);
+      const recibidas09 = respuestaListadoAutoridad.parse(
+        (await listar(cookie, { estado: "09", etapa: "recibida" }).expect(200)).body,
+      );
+      expect(recibidas09.total).toBe(2);
+      const resueltas = respuestaListadoAutoridad.parse(
+        (await listar(cookie, { estado: "09", etapa: "resuelta" }).expect(200)).body,
+      );
+      expect(resueltas).toMatchObject({ denuncias: [], total: 0 });
+    });
+
+    const invalidas: Record<string, string>[] = [
+      { pagina: "0" },
+      { pagina: "x" },
+      { porPagina: "201" },
+      { porPagina: "0" },
+      { etapa: "inventada" },
+      { estado: "99" },
+    ];
+    it.each(invalidas)("rechaza con 400 la consulta %j sin revelar el valor", async (consulta) => {
+      const res = await listar(cookie, consulta).expect(400);
+      expect(res.text).not.toContain(Object.values(consulta)[0] as string);
+    });
   });
 
   it("recorre el flujo completo y deja rastro en la bitácora", async () => {

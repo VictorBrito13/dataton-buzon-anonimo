@@ -103,10 +103,35 @@ export const resumenDenunciaAutoridad = z.object({
   etapa: esquemaEtapa,
   recibidaDia: dia,
 });
-/** `total` cuenta todas las denuncias: `denuncias` puede venir recortado. */
+export const LISTADO_AUTORIDAD = {
+  porPaginaPorDefecto: 50,
+  porPaginaMaximo: 200,
+  paginaMaxima: 100_000,
+} as const;
+
+/**
+ * GET /api/v1/autoridad/denuncias?pagina=2&porPagina=50&etapa=…&estado=…&tipoFalta=…
+ * Los parámetros llegan como texto en la URL; los filtros son claves de catálogo. El orden es
+ * estable, por día de recepción e identificador aleatorio: no revela el orden de llegada.
+ */
+export const consultaListadoAutoridad = z.object({
+  pagina: z.coerce.number().int().min(1).max(LISTADO_AUTORIDAD.paginaMaxima).default(1),
+  porPagina: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(LISTADO_AUTORIDAD.porPaginaMaximo)
+    .default(LISTADO_AUTORIDAD.porPaginaPorDefecto),
+  etapa: esquemaEtapa.optional(),
+  estado: esquemaEstado.optional(),
+  tipoFalta: esquemaTipoFalta.optional(),
+});
+/** `total` cuenta las denuncias que cumplen los filtros; `denuncias` es solo la página pedida. */
 export const respuestaListadoAutoridad = z.object({
   denuncias: z.array(resumenDenunciaAutoridad),
   total: z.number().int().nonnegative(),
+  pagina: z.number().int().positive(),
+  porPagina: z.number().int().positive(),
 });
 export const detalleDenunciaAutoridad = resumenDenunciaAutoridad.extend({
   relatoSellado: base64url,
@@ -153,6 +178,7 @@ export type RespuestaConsulta = z.infer<typeof respuestaConsulta>;
 export type RespuestaConfiguracion = z.infer<typeof respuestaConfiguracion>;
 export type RespuestaEvidencia = z.infer<typeof respuestaEvidencia>;
 export type ResumenDenunciaAutoridad = z.infer<typeof resumenDenunciaAutoridad>;
+export type ConsultaListadoAutoridad = z.infer<typeof consultaListadoAutoridad>;
 export type RespuestaListadoAutoridad = z.infer<typeof respuestaListadoAutoridad>;
 export type DetalleDenunciaAutoridad = z.infer<typeof detalleDenunciaAutoridad>;
 export type Dimension = z.infer<typeof esquemaDimension>;

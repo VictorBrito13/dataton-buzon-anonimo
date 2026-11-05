@@ -1,4 +1,5 @@
 import {
+  consultaListadoAutoridad,
   solicitudCambioEtapa,
   solicitudMensajeAutoridad,
   solicitudSesionAutoridad,
@@ -74,8 +75,10 @@ export const crearRutasAutoridad = (config: {
     res.status(204).end();
   });
 
-  rutas.get("/denuncias", async (_req, res) => {
-    res.json(await denuncias.listar(sesionDe(res)));
+  rutas.get("/denuncias", async (req, res) => {
+    // La consulta se valida como cualquier cuerpo: un valor fuera de rango o de catálogo es 400.
+    const consulta = validar(consultaListadoAutoridad, req.query);
+    res.json(await denuncias.listar(sesionDe(res), consulta));
   });
 
   rutas.get("/denuncias/:id", async (req, res) => {

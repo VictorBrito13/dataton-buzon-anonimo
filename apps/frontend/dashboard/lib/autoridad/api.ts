@@ -4,6 +4,7 @@ import {
   solicitudCambioEtapa,
   solicitudMensajeAutoridad,
   solicitudSesionAutoridad,
+  type ConsultaListadoAutoridad,
   type DetalleDenunciaAutoridad,
   type Etapa,
   type RespuestaListadoAutoridad,
@@ -34,10 +35,22 @@ export const cerrarSesion = async () => {
   await llamarApi<unknown>(RUTA_SESION, { ...CON_SESION, method: "DELETE" });
 };
 
-export const listarDenuncias = async (signal?: AbortSignal): Promise<RespuestaListadoAutoridad> =>
-  respuestaListadoAutoridad.parse(
-    await llamarApi<unknown>(RUTA_DENUNCIAS, { ...CON_SESION, signal }),
+/** Página y filtros van en la URL de la API; solo los que aplican. El tamaño lo decide el servidor. */
+export const listarDenuncias = async (
+  consulta: Omit<ConsultaListadoAutoridad, "porPagina">,
+  signal?: AbortSignal,
+): Promise<RespuestaListadoAutoridad> => {
+  const parametros = new URLSearchParams();
+  for (const [clave, valor] of Object.entries(consulta)) {
+    if (valor !== undefined) parametros.set(clave, String(valor));
+  }
+  return respuestaListadoAutoridad.parse(
+    await llamarApi<unknown>(`${RUTA_DENUNCIAS}?${parametros.toString()}`, {
+      ...CON_SESION,
+      signal,
+    }),
   );
+};
 
 export const obtenerDenuncia = async (
   id: string,

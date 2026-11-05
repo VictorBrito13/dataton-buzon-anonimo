@@ -1,4 +1,9 @@
-import type { DetalleDenunciaAutoridad, Etapa, RespuestaListadoAutoridad } from "@dataton/shared";
+import type {
+  ConsultaListadoAutoridad,
+  DetalleDenunciaAutoridad,
+  Etapa,
+  RespuestaListadoAutoridad,
+} from "@dataton/shared";
 import type { CifradorMensajes, Reloj } from "../../../compartido/aplicacion/puertos.js";
 import { diaDe } from "../../../compartido/dominio/dia.js";
 import { ErrorDominio } from "../../../compartido/dominio/errores.js";
@@ -25,11 +30,18 @@ export class CasosDenunciasAutoridad {
     },
   ) {}
 
-  async listar(sesion: Sesion): Promise<RespuestaListadoAutoridad> {
+  async listar(
+    sesion: Sesion,
+    consulta: ConsultaListadoAutoridad,
+  ): Promise<RespuestaListadoAutoridad> {
     const { repositorio } = this.puertos;
-    const listado = await repositorio.listar();
+    const listado = await repositorio.listar(consulta);
     await repositorio.registrar(sesion.usuarioId, accionBitacora.denunciasListadas, null);
-    return listado as RespuestaListadoAutoridad;
+    return {
+      ...listado,
+      pagina: consulta.pagina,
+      porPagina: consulta.porPagina,
+    } as RespuestaListadoAutoridad;
   }
 
   async ver(sesion: Sesion, id: string): Promise<DetalleDenunciaAutoridad> {
