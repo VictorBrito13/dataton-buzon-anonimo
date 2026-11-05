@@ -1,4 +1,3 @@
-import { respuestaConfiguracion, respuestaDenuncia, respuestaEvidencia } from "@dataton/shared";
 import { llamarApi } from "@/lib/api";
 import type { PuertoBuzon } from "@/lib/denuncia/puertos";
 
@@ -11,30 +10,42 @@ const conTiempo = (ms: number = TIEMPO_PETICION_MS) => ({ signal: AbortSignal.ti
 const enviarJson = (ruta: string, cuerpo: unknown) =>
   llamarApi<unknown>(ruta, { method: "POST", body: JSON.stringify(cuerpo), ...conTiempo() });
 
+/**
+ * Los esquemas se bajan ANTES de cada petición, nunca después de recibir la respuesta: si la señal
+ * se cae justo tras crear la denuncia, el folio ya no se podría validar ni mostrar.
+ */
+const esquemas = () => import("./esquemas-buzon");
+
 let configuracion: ReturnType<PuertoBuzon["obtenerConfiguracion"]> | null = null;
 
 /** Adaptador HTTP del puerto del buzón. La credencial siempre va en el cuerpo, nunca en la URL. */
 export const buzonHttp: PuertoBuzon = {
   obtenerConfiguracion: () => {
-    configuracion ??= llamarApi<unknown>("/configuracion", conTiempo())
-      .then((c) => respuestaConfiguracion.parse(c))
+    configuracion ??= esquemas()
+      .then(async ({ respuestaConfiguracion }) =>
+        respuestaConfiguracion.parse(await llamarApi<unknown>("/configuracion", conTiempo())),
+      )
       .catch((error: unknown) => {
         configuracion = null;
         throw error;
       });
     return configuracion;
   },
-  subirEvidencia: async (archivo, pow) =>
-    respuestaEvidencia.parse(
+  subirEvidencia: async (archivo, pow) => {
+    const { respuestaEvidencia } = await esquemas();
+    return respuestaEvidencia.parse(
       await llamarApi<unknown>(`/evidencias?pow=${encodeURIComponent(pow)}`, {
         method: "POST",
         body: archivo,
         headers: { "Content-Type": archivo.type },
         ...conTiempo(TIEMPO_SUBIDA_MS),
       }),
-    ),
-  crearDenuncia: async (solicitud) =>
-    respuestaDenuncia.parse(await enviarJson("/denuncias", solicitud)),
+    );
+  },
+  crearDenuncia: async (solicitud) => {
+    const { respuestaDenuncia } = await esquemas();
+    return respuestaDenuncia.parse(await enviarJson("/denuncias", solicitud));
+  },
   consultar: (solicitud) => enviarJson("/acceso/consulta", solicitud),
   enviarMensaje: (solicitud) => enviarJson("/acceso/mensajes", solicitud),
 };

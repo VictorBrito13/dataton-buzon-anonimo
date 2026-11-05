@@ -1,7 +1,8 @@
 "use client";
 
-import { sellar, type Credencial, type RespuestaConsulta } from "@dataton/shared";
+import type { Credencial, RespuestaConsulta } from "@dataton/shared";
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useSegundosEspera } from "@/components/denuncia/use-segundos-espera";
 import {
   Aviso,
   BOTON_PRIMARIO,
@@ -10,11 +11,11 @@ import {
   Campo,
   ariaCampo,
 } from "@/components/ui";
-import { mensajeDeError } from "@/lib/denuncia/errores";
+import { MENSAJE_SIN_CONEXION, mensajeDeError } from "@/lib/denuncia/errores";
+import { mensajeEsperaConsulta } from "@/lib/denuncia/espera-envio";
 import { buzonHttp } from "@/lib/infraestructura/buzon-http";
-import { trabajoEnWorker } from "@/lib/infraestructura/trabajo";
-import { consultarConCredencial, consultarDenuncia } from "@/lib/seguimiento/consultar-denuncia";
-import { MAX_MENSAJE, enviarMensaje } from "@/lib/seguimiento/enviar-mensaje";
+import { prepararTrabajador, trabajoEnWorker } from "@/lib/infraestructura/trabajo";
+import { MAX_MENSAJE } from "@/lib/seguimiento/limites";
 import { construirLineaTiempo, describirMensajes } from "@/lib/seguimiento/linea-tiempo";
 import { pestanaPorTecla } from "@/lib/seguimiento/pestanas";
 
@@ -23,6 +24,12 @@ type Pestana = (typeof PESTANAS)[number];
 const ETIQUETA: Record<Pestana, string> = { folio: "Con mi folio", frase: "Con mi frase" };
 
 const dependencias = { buzon: buzonHttp, trabajo: trabajoEnWorker };
+
+/** Los esquemas y la lista de palabras solo hacen falta al entrar. El fallo de red se dice en claro. */
+const cargarConsulta = () =>
+  import("@/lib/infraestructura/seguimiento-diferido").catch(() => {
+    throw new Error(MENSAJE_SIN_CONEXION);
+  });
 
 const mensajeConsulta = (error: unknown): string =>
   error instanceof Error && error.message ? error.message : mensajeDeError(error);
@@ -38,6 +45,18 @@ function Entrada({
   const [error, setError] = useState<string | null>(null);
   const botones = useRef<Partial<Record<Pestana, HTMLButtonElement | null>>>({});
   const avisoError = useRef<HTMLDivElement>(null);
+  const segundos = useSegundosEspera(cargando);
+  const preparado = useRef(false);
+
+  /** Al primer foco se baja lo que falta: esa espera no debe caer después de pulsar el botón. */
+  const preparar = () => {
+    if (preparado.current) return;
+    preparado.current = true;
+    prepararTrabajador();
+    cargarConsulta().catch(() => {
+      preparado.current = false;
+    });
+  };
 
   const alPulsarTecla = (evento: KeyboardEvent) => {
     const destino = pestanaPorTecla(PESTANAS, pestana, evento.key);
@@ -53,6 +72,7 @@ function Entrada({
     setCargando(true);
     setError(null);
     try {
+      const { consultarDenuncia } = await cargarConsulta();
       const { credencial, consulta } = await consultarDenuncia(
         { tipo: pestana, valor: valores[pestana] },
         dependencias,
@@ -109,6 +129,7 @@ function Entrada({
 
       <form
         id="panel-acceso"
+        onFocus={preparar}
         role="tabpanel"
         aria-labelledby={`pestana-${pestana}`}
         noValidate
@@ -159,7 +180,7 @@ function Entrada({
           )}
         </div>
         <p role="status" className="font-medium">
-          {cargando && "Comprobando. Puede tardar unos segundos…"}
+          {cargando && mensajeEsperaConsulta(segundos)}
         </p>
         <button type="submit" className={BOTON_PRIMARIO} disabled={cargando}>
           Ver mi denuncia
@@ -198,6 +219,7 @@ function Detalle({
     setError(null);
     setAviso("");
     try {
+      const { consultarConCredencial, enviarMensaje, sellar } = await cargarConsulta();
       await enviarMensaje({ credencial, texto }, { ...dependencias, sellar });
       setTexto("");
       setAviso("Tu mensaje se envió sellado para la autoridad.");

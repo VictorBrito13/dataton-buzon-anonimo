@@ -1,19 +1,26 @@
 "use client";
 
-import { sellar } from "@dataton/shared";
 import Link from "next/link";
 import { useState } from "react";
 import { BOTON_PRIMARIO, BOTON_SECUNDARIO } from "@/components/ui";
 import type { EstadoAsistente } from "@/lib/denuncia/asistente";
-import {
-  DESCRIPCION_ETAPA_ENVIO,
-  enviarDenuncia,
-  type EtapaEnvio,
-} from "@/lib/denuncia/enviar-denuncia";
 import { MENSAJE_QUIZA_YA_LLEGO, mensajeDeErrorEnvio } from "@/lib/denuncia/errores";
-import { buzonHttp } from "@/lib/infraestructura/buzon-http";
-import { trabajoEnWorker } from "@/lib/infraestructura/trabajo";
+import { mensajeEsperaEnvio, progresoEnvio, type EtapaEnvio } from "@/lib/denuncia/espera-envio";
 import type { Despachar } from "./asistente";
+import { useSegundosEspera } from "./use-segundos-espera";
+
+const cargarEnvio = () => import("@/lib/infraestructura/envio-denuncia");
+
+/**
+ * Baja por adelantado lo que falta para enviar. Se llama en el paso de la frase, que siempre toma más
+ * que esos segundos. Si falla no pasa nada: enviar lo vuelve a intentar y explica el error.
+ */
+export const adelantarEnvio = (): void => {
+  cargarEnvio().then(
+    ({ prepararEnvio }) => prepararEnvio(),
+    () => {},
+  );
+};
 
 export function PasoEnvio({
   estado,
@@ -25,6 +32,7 @@ export function PasoEnvio({
   const [etapa, setEtapa] = useState<EtapaEnvio | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [intentos, setIntentos] = useState(0);
+  const segundos = useSegundosEspera(etapa !== null);
 
   const enviar = async () => {
     if (!estado.frase) return;
@@ -33,15 +41,16 @@ export function PasoEnvio({
     // significa que la denuncia sí llegó. El servidor no cambia; solo cambia cómo se explica.
     const reintento = intentos > 0;
     setIntentos(intentos + 1);
+    setEtapa("sellando");
     try {
-      const folio = await enviarDenuncia(
+      const { enviarDenunciaReal } = await cargarEnvio();
+      const folio = await enviarDenunciaReal(
         {
           hechos: estado.hechos,
           personas: estado.personas,
           frase: estado.frase,
           evidenciaIds: estado.evidencias.map((e) => e.evidenciaId),
         },
-        { buzon: buzonHttp, trabajo: trabajoEnWorker, sellar },
         setEtapa,
       );
       despachar({ tipo: "denunciaEnviada", folio });
@@ -53,6 +62,7 @@ export function PasoEnvio({
 
   const enviando = etapa !== null;
   const quizaYaLlego = error === MENSAJE_QUIZA_YA_LLEGO;
+  const progreso = etapa && progresoEnvio(etapa);
 
   return (
     <div className="space-y-5">
@@ -63,8 +73,21 @@ export function PasoEnvio({
         <li>Recibirás un folio. Guárdalo junto con tu frase.</li>
       </ul>
 
+      {progreso && (
+        <div>
+          <p aria-hidden="true" className="text-sm text-tinta-suave">
+            {`Paso ${progreso.actual} de ${progreso.total}`}
+          </p>
+          <progress
+            aria-label="Avance del envío"
+            className="mt-1 block w-full accent-marca"
+            value={progreso.actual}
+            max={progreso.total}
+          />
+        </div>
+      )}
       <p role="status" className="font-medium">
-        {etapa && DESCRIPCION_ETAPA_ENVIO[etapa]}
+        {etapa && mensajeEsperaEnvio(etapa, segundos)}
       </p>
       <div role="alert">
         {error && (

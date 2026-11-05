@@ -228,9 +228,9 @@ test("buscar un ente nunca llega a la red", async ({ page }, info) => {
   await page.getByLabel("¿En qué estado pasó?").selectOption("17");
   const buscador = page.getByLabel(/Institución involucrada/);
   await buscador.focus();
-  await expect(page.getByText("Cargando la lista de instituciones")).toHaveCount(0, {
-    timeout: 15_000,
-  });
+  // Entrar al campo no baja el catálogo: pesa más de 100 KB y quien no busca no debe pagarlos.
+  await page.waitForTimeout(500);
+  expect(vigilancia.cuerpos.some((c) => c.includes("/catalogos/entes.json"))).toBe(false);
   await buscador.fill("xochitepecbusqueda");
   await expect(page.getByText(/No encontramos esa institución/).first()).toBeVisible();
   await buscador.fill("cuernavaca");

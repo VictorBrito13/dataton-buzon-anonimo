@@ -32,7 +32,11 @@
 {$SITIO_HOST:localhost} {
 	tls internal
 
-	encode zstd gzip
+	# Con el nivel por omisión, zstd queda más grande que gzip; "better" ahorra con mala señal.
+	encode {
+		zstd best
+		gzip 6
+	}
 
 	header {
 		defer
@@ -42,6 +46,14 @@
 		-Server
 		-Via
 		-X-Powered-By
+	}
+
+	# Archivos públicos e iguales para todas las personas, sin hash en el nombre: un día, y luego ETag.
+	# El HTML y /api no pasan por aquí: conservan el no-store de proxy.ts y de la API.
+	@publicos_estables path /catalogos/* /iconos/*
+	header @publicos_estables {
+		defer
+		Cache-Control "public, max-age=86400"
 	}
 
 	handle /api/* {

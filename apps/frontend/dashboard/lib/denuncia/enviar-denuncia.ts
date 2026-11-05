@@ -1,16 +1,8 @@
 import { aBase64Url, solicitudDenuncia } from "@dataton/shared";
+import type { EtapaEnvio } from "./espera-envio";
 import type { PuertoBuzon, PuertoTrabajo, Sellar } from "./puertos";
 import { armarRelato } from "./relato";
 import type { Hechos, Persona } from "./validaciones";
-
-export type EtapaEnvio = "sellando" | "derivando" | "verificando" | "enviando";
-
-export const DESCRIPCION_ETAPA_ENVIO: Record<EtapaEnvio, string> = {
-  sellando: "Sellando tu relato en este dispositivo…",
-  derivando: "Preparando tu acceso a partir de tu frase…",
-  verificando: "Haciendo una verificación automática. Puede tardar unos segundos…",
-  enviando: "Enviando tu denuncia…",
-};
 
 export interface EntradaDenuncia {
   hechos: Hechos;

@@ -2,7 +2,7 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import { Anuncio, BOTON_SECUNDARIO, CONTROL, Campo, idCampo } from "@/components/ui";
-import { buscarEntes, nombreEnte } from "@/lib/denuncia/catalogos-locales";
+import { buscarEntes, debeCargarEntes, nombreEnte } from "@/lib/denuncia/catalogos-locales";
 import { useEntes } from "./catalogos";
 
 /** Búsqueda local sobre el catálogo del S5: lo que se escribe aquí nunca llega a la red. */
@@ -16,8 +16,7 @@ export function BuscadorEnte({
   alCambiar: (enteId: string) => void;
 }) {
   const [consulta, setConsulta] = useState("");
-  const [enfocado, setEnfocado] = useState(false);
-  const { datos: entes, fallo } = useEntes(enfocado || Boolean(enteId));
+  const { datos: entes, fallo } = useEntes(debeCargarEntes(consulta, enteId));
   const diferida = useDeferredValue(consulta);
   const resultados = useMemo(
     () => (entes ? buscarEntes(entes, diferida, estado) : []),
@@ -47,7 +46,7 @@ export function BuscadorEnte({
   const buscando = consulta.trim().length >= 3;
   let estadoBusqueda = "";
   if (fallo) estadoBusqueda = "No pudimos cargar la lista. Puedes seguir sin elegir institución.";
-  else if (enfocado && !entes) estadoBusqueda = "Cargando la lista de instituciones…";
+  else if (consulta.trim() && !entes) estadoBusqueda = "Cargando la lista de instituciones…";
   else if (buscando && entes) {
     estadoBusqueda =
       resultados.length === 0
@@ -71,7 +70,6 @@ export function BuscadorEnte({
         className={CONTROL}
         value={consulta}
         placeholder="Escribe al menos 3 letras"
-        onFocus={() => setEnfocado(true)}
         onChange={(evento) => setConsulta(evento.target.value)}
         onKeyDown={(evento) => {
           // Enter dentro de la búsqueda no debe avanzar de paso.

@@ -77,6 +77,42 @@ test.describe("Cabeceras de seguridad", () => {
     cabecerasComunes(respuesta);
   });
 
+  test("el HTML no se guarda en caché, sigue con no-store y va comprimido", async ({ request }) => {
+    for (const ruta of ["/", "/denunciar", "/seguimiento", "/tablero", "/como-te-protegemos"]) {
+      const respuesta = await request.get(ruta, {
+        headers: { "Accept-Encoding": "gzip, zstd" },
+      });
+      expect(respuesta.headers()["cache-control"], ruta).toBe("no-store");
+      expect(respuesta.headers()["content-encoding"], ruta).toMatch(/^(gzip|zstd)$/);
+    }
+  });
+
+  test("la API con datos de una persona nunca se guarda en caché", async ({ request }) => {
+    const respuesta = await request.get("/api/v1/configuracion");
+    expect(respuesta.headers()["cache-control"]).toBe("no-store");
+  });
+
+  test("_next/static tiene caché larga e inmutable y va comprimido", async ({ request }) => {
+    const html = await (await request.get("/")).text();
+    const estatico = html.match(/\/_next\/static\/[^"']+\.js/)?.[0] as string;
+    const respuesta = await request.get(estatico, {
+      headers: { "Accept-Encoding": "gzip, zstd" },
+    });
+    expect(respuesta.headers()["cache-control"]).toBe("public, max-age=31536000, immutable");
+    expect(respuesta.headers()["content-encoding"]).toMatch(/^(gzip|zstd)$/);
+  });
+
+  test("los catálogos públicos se guardan un día y se comprimen", async ({ request }) => {
+    for (const ruta of ["/catalogos/entes.json", "/catalogos/municipios.json"]) {
+      const respuesta = await request.get(ruta, {
+        headers: { "Accept-Encoding": "gzip, zstd" },
+      });
+      expect(respuesta.status(), ruta).toBe(200);
+      expect(respuesta.headers()["cache-control"], ruta).toBe("public, max-age=86400");
+      expect(respuesta.headers()["content-encoding"], ruta).toMatch(/^(gzip|zstd)$/);
+    }
+  });
+
   test("HTTP redirige a HTTPS", async ({ request }) => {
     const respuesta = await request.get(`${URL_HTTP}/ruta?x=1`, { maxRedirects: 0 });
     expect(respuesta.status()).toBe(308);
