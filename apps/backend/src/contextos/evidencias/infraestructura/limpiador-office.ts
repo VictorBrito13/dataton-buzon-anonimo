@@ -2,10 +2,14 @@ import JSZip from "jszip";
 import { ErrorDominio } from "../../../compartido/dominio/errores.js";
 import type { ResultadoLimpieza } from "../aplicacion/puertos.js";
 import {
-  anonimizarAutoresOffice,
+  clasificarParteOffice,
   esParteDeMetadatosOffice,
   esParteProhibidaOffice,
+  ETIQUETAS_OFFICE,
+  limpiarXmlOffice,
+  neutralizarRelacionesExternas,
   quitarReferenciasMetadatos,
+  rastrosEnXmlOffice,
 } from "../dominio/office.js";
 import { limpiarImagen } from "./limpiador-imagen.js";
 
@@ -13,15 +17,6 @@ const FECHA_NEUTRA = new Date(Date.UTC(1980, 0, 1));
 const MAX_PARTES = 5_000;
 const MAX_BYTES_DESCOMPRIMIDOS = 500 * 1024 * 1024;
 const MAX_PROFUNDIDAD = 2;
-
-const TIPOS_IMAGEN: Record<string, string> = {
-  jpg: "image/jpeg",
-  jpeg: "image/jpeg",
-  png: "image/png",
-  webp: "image/webp",
-};
-
-const extension = (parte: string): string => parte.split(".").pop()?.toLowerCase() ?? "";
 
 /** JSZip no expone el tamaño declarado; se lee de su campo interno para frenar bombas ZIP. */
 const tamanoDeclarado = (entrada: JSZip.JSZipObject): number =>
@@ -70,23 +65,28 @@ const procesar = async (bytes: Uint8Array, profundidad: number): Promise<Resulta
   for (const entrada of Object.values(zip.files)) {
     if (entrada.dir) continue;
     const { name } = entrada;
-    const ext = extension(name);
-    if (name === "[Content_Types].xml" || ext === "rels") {
-      const xml = await entrada.async("string");
-      const limpio = quitarReferenciasMetadatos(xml);
-      if (limpio !== xml) zip.file(name, limpio);
-    } else if (ext === "xml") {
-      const { xml, cambio } = anonimizarAutoresOffice(name, await entrada.async("string"));
-      if (cambio) {
-        zip.file(name, xml);
-        eliminados.add("Autores y fechas de comentarios y control de cambios");
+    const clase = clasificarParteOffice(name);
+    if (clase.clase === "xml") {
+      let xml = await entrada.async("string");
+      if (name === "[Content_Types].xml" || name.endsWith(".rels")) {
+        xml = quitarReferenciasMetadatos(xml);
       }
-    } else if (/\/media\//i.test(name) && TIPOS_IMAGEN[ext]) {
-      const limpia = await limpiarImagen(TIPOS_IMAGEN[ext], await entrada.async("uint8array"));
+      if (name.endsWith(".rels")) {
+        const relaciones = neutralizarRelacionesExternas(xml);
+        if (relaciones.cambio) eliminados.add(ETIQUETAS_OFFICE.rutas);
+        xml = relaciones.xml;
+      }
+      const limpio = limpiarXmlOffice(name, xml);
+      limpio.eliminados.forEach((e) => eliminados.add(e));
+      zip.file(name, limpio.xml);
+      // Lo que sobreviva en el texto final no se da por limpio: se reporta y provoca el rechazo.
+      rastrosEnXmlOffice(limpio.xml).forEach((r) => residuales.add(r));
+    } else if (clase.clase === "imagen") {
+      const limpia = await limpiarImagen(clase.tipo, await entrada.async("uint8array"));
       zip.file(name, limpia.bytes);
       limpia.residuales.forEach((r) => residuales.add(r));
       if (limpia.eliminados.length > 0) eliminados.add("Metadatos de imágenes incrustadas");
-    } else if (/\/embeddings\//i.test(name) && ["docx", "xlsx", "pptx"].includes(ext)) {
+    } else if (clase.clase === "incrustado") {
       if (profundidad >= MAX_PROFUNDIDAD) {
         residuales.add("Documentos incrustados en demasiados niveles");
         continue;
@@ -95,6 +95,8 @@ const procesar = async (bytes: Uint8Array, profundidad: number): Promise<Resulta
       zip.file(name, interno.bytes);
       interno.residuales.forEach((r) => residuales.add(r));
       if (interno.eliminados.length > 0) eliminados.add("Metadatos de documentos incrustados");
+    } else if (clase.clase === "residual") {
+      residuales.add(clase.motivo);
     }
   }
 
@@ -110,7 +112,9 @@ const procesar = async (bytes: Uint8Array, profundidad: number): Promise<Resulta
     comment: "",
   });
 
-  if (Object.keys(zip.files).some(esParteDeMetadatosOffice)) residuales.add("Propiedades");
+  if (Object.keys(zip.files).some(esParteDeMetadatosOffice)) {
+    residuales.add(ETIQUETAS_OFFICE.propiedades);
+  }
   return { bytes: salida, eliminados: [...eliminados], residuales: [...residuales] };
 };
 

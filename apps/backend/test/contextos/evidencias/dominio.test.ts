@@ -3,9 +3,13 @@ import { ErrorDominio } from "../../../src/compartido/dominio/errores.js";
 import { quitarMetadatosJpeg } from "../../../src/contextos/evidencias/dominio/jpeg.js";
 import {
   anonimizarAutoresOffice,
+  clasificarParteOffice,
   esParteDeMetadatosOffice,
   esParteProhibidaOffice,
+  limpiarXmlOffice,
+  neutralizarRelacionesExternas,
   quitarReferenciasMetadatos,
+  rastrosEnXmlOffice,
 } from "../../../src/contextos/evidencias/dominio/office.js";
 import {
   categoriaDe,
@@ -181,5 +185,168 @@ describe("reglas de Office", () => {
       xml: entrada,
       cambio: false,
     });
+  });
+});
+
+describe("rutas locales y rastros de edición en Office", () => {
+  const RELS =
+    '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+    '<Relationship Id="rId1" Type="attachedTemplate" Target="file:///C:\\Users\\juana.testigo\\Normal.dotm" TargetMode="External"/>' +
+    '<Relationship Id="rId2" Type="hyperlink" Target="https://ejemplo.org/pagina" TargetMode="External"/>' +
+    '<Relationship Id="rId3" Type="hyperlink" Target="mailto:juana@ejemplo.org" TargetMode="External"/>' +
+    '<Relationship Id="rId4" Type="oleObject" Target="\\\\servidor\\compartida\\datos.xlsx" TargetMode="External"/>' +
+    '<Relationship Id="rId5" Type="image" Target="media/image1.png"/>' +
+    '<Relationship Id="rId6" Type="hyperlink" Target="D:\\Denuncias\\anexo.pdf" TargetMode="External"/>' +
+    "</Relationships>";
+
+  it("vacía toda relación con file:, ruta de disco, UNC o externa que no sea http(s)", () => {
+    const { xml, cambio } = neutralizarRelacionesExternas(RELS);
+    expect(cambio).toBe(true);
+    expect(xml).not.toMatch(/juana|Normal\.dotm|servidor|Denuncias|mailto|file:/);
+    expect(xml).toContain('Id="rId1"');
+    expect(xml).toContain('Id="rId4"');
+    expect(xml).toContain('Target="https://ejemplo.org/pagina"');
+    expect(xml).toContain('Target="media/image1.png"');
+    expect(xml.match(/about:blank/g)).toHaveLength(4);
+  });
+
+  it("deja intacto un .rels sin rutas externas", () => {
+    const rels = '<Relationships><Relationship Id="r" Target="word/document.xml"/></Relationships>';
+    expect(neutralizarRelacionesExternas(rels)).toEqual({ xml: rels, cambio: false });
+  });
+
+  it("quita absPath de Excel, con su envoltorio AlternateContent, y fileSharing", () => {
+    const entrada =
+      '<workbook xmlns:x15ac="http://schemas.microsoft.com/office/spreadsheetml/2010/11/ac">' +
+      '<fileSharing userName="Juana Testigo" reservationPassword="ABCD"/>' +
+      '<mc:AlternateContent xmlns:mc="m"><mc:Choice Requires="x15">' +
+      '<x15ac:absPath url="C:\\Users\\juana.testigo\\Documents\\"/>' +
+      "</mc:Choice></mc:AlternateContent>" +
+      '<sheets><sheet name="Hoja1" sheetId="1" r:id="rId1"/></sheets></workbook>';
+    const { xml, eliminados } = limpiarXmlOffice("xl/workbook.xml", entrada);
+    expect(xml).not.toMatch(/absPath|juana|AlternateContent|fileSharing|Juana/);
+    expect(xml).toContain('<sheet name="Hoja1"');
+    expect(eliminados).toContain("Rutas de archivos del equipo");
+  });
+
+  it("quita absPath aunque venga suelto y con otro prefijo", () => {
+    const { xml } = limpiarXmlOffice(
+      "xl/workbook.xml",
+      '<workbook><x15ac:absPath url="C:\\Users\\j\\"/><sheets/></workbook>',
+    );
+    expect(xml).toBe("<workbook><sheets/></workbook>");
+  });
+
+  it("quita los rsids de Word: el bloque de settings y los atributos de párrafos", () => {
+    const settings = limpiarXmlOffice(
+      "word/settings.xml",
+      '<w:settings><w:rsids><w:rsidRoot w:val="00A1B2C3"/><w:rsid w:val="00D4E5F6"/></w:rsids><w:zoom/></w:settings>',
+    );
+    expect(settings.xml).toBe("<w:settings><w:zoom/></w:settings>");
+    expect(settings.eliminados).toContain("Identificadores de sesión de edición");
+    const documento = limpiarXmlOffice(
+      "word/document.xml",
+      '<w:p w:rsidR="00A1B2C3" w:rsidRDefault="00D4E5F6"><w:r w:rsidRPr="0011"><w:t>Hola</w:t></w:r></w:p>',
+    );
+    expect(documento.xml).toBe("<w:p><w:r><w:t>Hola</w:t></w:r></w:p>");
+  });
+
+  it("anonimiza el nombre de usuario del historial de revisiones de Excel", () => {
+    const { xml } = limpiarXmlOffice(
+      "xl/revisions/revisionHeaders.xml",
+      '<headers><header guid="{1}" dateTime="2026-01-01T10:00:00" userName="Juana Testigo"/></headers>',
+    );
+    expect(xml).not.toMatch(/Juana|2026-01-01/);
+  });
+
+  it("sigue anonimizando autores desde la misma función", () => {
+    const { xml, eliminados } = limpiarXmlOffice(
+      "word/comments.xml",
+      '<w:comment w:author="Juana Pérez" w:initials="JP" w:date="2026-01-01T10:00:00Z"/>',
+    );
+    expect(xml).not.toMatch(/Juana|JP|2026-01-01/);
+    expect(eliminados).toContain("Autores y fechas de comentarios y control de cambios");
+  });
+
+  it("detecta rastros que sobreviven en cualquier parte de texto", () => {
+    expect(rastrosEnXmlOffice('<a Target="file:///C:/x"/>')).toEqual([
+      "Rutas de archivos del equipo",
+    ]);
+    expect(rastrosEnXmlOffice('<a url="C:\\Users\\j"/>')).toEqual(["Rutas de archivos del equipo"]);
+    expect(rastrosEnXmlOffice('<a url="\\\\servidor\\x"/>')).toEqual([
+      "Rutas de archivos del equipo",
+    ]);
+    expect(rastrosEnXmlOffice('<x15ac:absPath url="x"/>')).toEqual([
+      "Rutas de archivos del equipo",
+    ]);
+    expect(rastrosEnXmlOffice('<w:p w:rsidR="1"/>')).toEqual([
+      "Identificadores de sesión de edición",
+    ]);
+    expect(rastrosEnXmlOffice('<Relationship Target="docProps/core.xml"/>')).toEqual([
+      "Propiedades",
+    ]);
+    expect(
+      rastrosEnXmlOffice('<a Target="https://x/y" b="about:blank"/><w:t>C: 10 pesos</w:t>'),
+    ).toEqual([]);
+  });
+
+  it.each([
+    ["word/media/image1.jpeg", { clase: "imagen", tipo: "image/jpeg" }],
+    ["ppt/media/image2.PNG", { clase: "imagen", tipo: "image/png" }],
+    ["xl/media/foto.webp", { clase: "imagen", tipo: "image/webp" }],
+    [
+      "word/media/image1.tiff",
+      { clase: "residual", motivo: "Imágenes en formatos que no se limpian" },
+    ],
+    [
+      "word/media/image3.gif",
+      { clase: "residual", motivo: "Imágenes en formatos que no se limpian" },
+    ],
+    [
+      "word/media/image4.emf",
+      { clase: "residual", motivo: "Imágenes en formatos que no se limpian" },
+    ],
+    [
+      "word/media/image5.wmf",
+      { clase: "residual", motivo: "Imágenes en formatos que no se limpian" },
+    ],
+    [
+      "word/media/image6.bmp",
+      { clase: "residual", motivo: "Imágenes en formatos que no se limpian" },
+    ],
+    ["word/embeddings/hoja.xlsx", { clase: "incrustado" }],
+    ["ppt/embeddings/Documento.docx", { clase: "incrustado" }],
+    [
+      "word/embeddings/Microsoft_Word_Macro-Enabled_Document.docm",
+      { clase: "residual", motivo: "Documentos incrustados que no se limpian" },
+    ],
+    [
+      "word/embeddings/libro.xlsm",
+      { clase: "residual", motivo: "Documentos incrustados que no se limpian" },
+    ],
+    [
+      "word/embeddings/pres.pptm",
+      { clase: "residual", motivo: "Documentos incrustados que no se limpian" },
+    ],
+    [
+      "word/embeddings/plantilla.dotm",
+      { clase: "residual", motivo: "Documentos incrustados que no se limpian" },
+    ],
+    [
+      "word/embeddings/anexo.pdf",
+      { clase: "residual", motivo: "Documentos incrustados que no se limpian" },
+    ],
+    [
+      "word/embeddings/objeto.bin",
+      { clase: "residual", motivo: "Documentos incrustados que no se limpian" },
+    ],
+    ["word/document.xml", { clase: "xml" }],
+    ["word/_rels/document.xml.rels", { clase: "xml" }],
+    ["[Content_Types].xml", { clase: "xml" }],
+    ["word/fontTable.xml", { clase: "xml" }],
+    ["word/theme/theme1.xml", { clase: "xml" }],
+    ["word/fonts/fuente.odttf", { clase: "otro" }],
+  ] as const)("clasifica %s", (parte, esperado) => {
+    expect(clasificarParteOffice(parte)).toEqual(esperado);
   });
 });

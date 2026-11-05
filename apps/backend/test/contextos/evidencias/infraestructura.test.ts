@@ -187,6 +187,88 @@ describe("limpiarOffice", () => {
     expect(Object.keys(interno.files).filter((n) => n.startsWith("docProps"))).toEqual([]);
   });
 
+  it("quita la ruta absoluta que Excel guarda en workbook.xml", async () => {
+    const salida = await limpiarOffice(
+      await officeConMetadatos({
+        tipo: "xlsx",
+        partes: {
+          "xl/workbook.xml":
+            '<workbook xmlns:x15ac="http://schemas.microsoft.com/office/spreadsheetml/2010/11/ac">' +
+            '<x15ac:absPath url="C:\\Users\\juana.testigo\\Documents\\Denuncias\\"/>' +
+            '<sheets><sheet name="Hoja1" sheetId="1" r:id="rId1"/></sheets></workbook>',
+        },
+      }),
+    );
+    const zip = await JSZip.loadAsync(salida.bytes);
+    const workbook = await zip.file("xl/workbook.xml")?.async("string");
+    expect(workbook).not.toMatch(/juana|absPath/);
+    expect(workbook).toContain('<sheet name="Hoja1"');
+    expect(salida.residuales).toEqual([]);
+    expect(salida.eliminados).toContain("Rutas de archivos del equipo");
+  });
+
+  it("vacía las rutas locales de plantillas y vínculos en cualquier .rels, y quita rsids", async () => {
+    const salida = await limpiarOffice(
+      await officeConMetadatos({
+        partes: {
+          "word/_rels/settings.xml.rels":
+            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/attachedTemplate" ' +
+            'Target="file:///C:\\Users\\juana.testigo\\AppData\\Roaming\\Microsoft\\Templates\\Normal.dotm" TargetMode="External"/>' +
+            "</Relationships>",
+          "word/_rels/document.xml.rels":
+            '<Relationships><Relationship Id="rId9" Type="hyperlink" Target="\\\\servidor\\denuncias\\anexo.pdf" TargetMode="External"/></Relationships>',
+          "word/settings.xml":
+            '<w:settings><w:attachedTemplate r:id="rId1"/><w:rsids><w:rsidRoot w:val="00A1B2C3"/><w:rsid w:val="00D4E5F6"/></w:rsids></w:settings>',
+        },
+      }),
+    );
+    const zip = await JSZip.loadAsync(salida.bytes);
+    const partes: Record<string, string> = {};
+    for (const [nombre, entrada] of Object.entries(zip.files)) {
+      if (!entrada.dir) partes[nombre] = await entrada.async("string");
+    }
+    const todo = Object.values(partes).join("\n");
+    expect(todo).not.toMatch(/juana|Normal\.dotm|servidor|rsid|file:/);
+    expect(partes["word/_rels/settings.xml.rels"]).toContain('Id="rId1"');
+    expect(partes["word/settings.xml"]).toContain("<w:attachedTemplate");
+    expect(salida.residuales).toEqual([]);
+    expect(salida.eliminados).toContain("Rutas de archivos del equipo");
+    expect(salida.eliminados).toContain("Identificadores de sesión de edición");
+  });
+
+  it.each(["image1.tiff", "image2.gif", "image3.bmp", "image4.emf", "image5.wmf"])(
+    "marca como residual una imagen %s que no sabe limpiar",
+    async (nombre) => {
+      const salida = await limpiarOffice(
+        await officeConMetadatos({
+          partes: { [`word/media/${nombre}`]: "II*\0 EXIF GPSLatitude Artist=Juana Testigo" },
+        }),
+      );
+      expect(salida.residuales).toEqual(["Imágenes en formatos que no se limpian"]);
+    },
+  );
+
+  it.each(["Documento.docm", "Libro.xlsm", "Pres.pptm", "Plantilla.dotm", "anexo.pdf", "cosa.bin"])(
+    "marca como residual un incrustado %s que no reprocesa",
+    async (nombre) => {
+      const salida = await limpiarOffice(
+        await officeConMetadatos({
+          partes: { [`word/embeddings/${nombre}`]: new Uint8Array([0x50, 0x4b, 3, 4, 1, 2, 3]) },
+        }),
+      );
+      expect(salida.residuales).toEqual(["Documentos incrustados que no se limpian"]);
+    },
+  );
+
+  it("mantiene las referencias entre partes al dejar el documento abrible", async () => {
+    const salida = await limpiarOffice(await officeConMetadatos());
+    const zip = await JSZip.loadAsync(salida.bytes);
+    const tipos = await zip.file("[Content_Types].xml")?.async("string");
+    expect(tipos).toContain("<Types");
+    expect(tipos).toContain("</Types>");
+  });
+
   it.each(["word/vbaProject.bin", "word/embeddings/oleObject1.bin", "word/media/virus.exe"])(
     "rechaza un archivo con %s",
     async (parte) => {
