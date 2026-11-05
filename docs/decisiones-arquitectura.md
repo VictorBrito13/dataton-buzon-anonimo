@@ -84,8 +84,10 @@ Indicadores por ente que combinan denuncias agregadas (con k aplicado) con conte
 otros sistemas de la PDN. Son **señales para priorizar revisión, nunca acusaciones**: solo conteos
 por institución, sin nombres de personas, y con la metodología publicada.
 
-Pendiente de confirmar qué fuentes son accesibles. Mientras tanto, todo pasa por `AdaptadorS5` y
-adaptadores equivalentes con implementación simulada.
+Fuentes confirmadas en [`investigacion-s5-pdn.md`](./investigacion-s5-pdn.md): S3 (sanciones), S6
+(contrataciones hasta 2021) y Cobertura (entes). Se versionan instantáneas agregadas: el sitio no llama a
+la PDN en tiempo de ejecución. El acceso al S5 pasa por `AdaptadorS5`; sus lecturas públicas están
+comprobadas y **no se envían denuncias al entorno de pruebas** sin autorización de SESNA.
 
 ## D9. Prototipo responsable
 
