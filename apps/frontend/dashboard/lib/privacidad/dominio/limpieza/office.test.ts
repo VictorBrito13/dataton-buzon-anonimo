@@ -103,6 +103,147 @@ const pptx = () => {
 
 const empacar = (zip: JSZip) => zip.generateAsync({ type: "uint8array" });
 
+const IMPRESORA = "HP LaserJet de Maria";
+const FUENTE = "Licensee: Empresa Secreta";
+const R = 'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
+const RELS = 'xmlns="http://schemas.openxmlformats.org/package/2006/relationships"';
+
+/** DOCX como lo guarda Word con "Incrustar fuentes" y una impresora configurada. */
+const docxConImpresoraYFuentes = () => {
+  const zip = base("word/document.xml", MIME.docx);
+  zip.file(
+    "[Content_Types].xml",
+    `<?xml version="1.0"?><Types><Default Extension="xml" ContentType="application/xml"/><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="odttf" ContentType="application/vnd.openxmlformats-officedocument.obfuscatedFont"/><Override PartName="/word/document.xml" ContentType="${MIME.docx}"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/><Override PartName="/word/printerSettings/printerSettings1.bin" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.printerSettings"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/><Override PartName="/docProps/custom.xml" ContentType="application/vnd.openxmlformats-officedocument.custom-properties+xml"/></Types>`,
+  );
+  zip.file(
+    "word/document.xml",
+    `<w:document ${R}><w:body><w:p><w:r><w:t>Texto de la denuncia</w:t></w:r></w:p><w:sectPr><w:printerSettings r:id="rId3"/><w:pgSz w:w="12240"/></w:sectPr></w:body></w:document>`,
+  );
+  zip.file(
+    "word/_rels/document.xml.rels",
+    `<Relationships ${RELS}><Relationship Id="rId1" Type="settings" Target="settings.xml"/><Relationship Id="rId2" Type="fontTable" Target="fontTable.xml"/><Relationship Id="rId3" Type="printerSettings" Target="printerSettings/printerSettings1.bin"/></Relationships>`,
+  );
+  zip.file("word/printerSettings/printerSettings1.bin", `\0\0${IMPRESORA}\0\0`);
+  zip.file(
+    "word/settings.xml",
+    `<w:settings><w:embedTrueTypeFonts/><w:saveSubsetFonts/><w:zoom w:percent="100"/></w:settings>`,
+  );
+  zip.file(
+    "word/fontTable.xml",
+    `<w:fonts ${R}><w:font w:name="Corporativa Sans"><w:embedRegular r:id="rId1" w:fontKey="{1}"/><w:embedBold r:id="rId2" w:fontKey="{2}"/></w:font><w:font w:name="Calibri"><w:panose1 w:val="020F0502020204030204"/></w:font></w:fonts>`,
+  );
+  zip.file(
+    "word/_rels/fontTable.xml.rels",
+    `<Relationships ${RELS}><Relationship Id="rId1" Type="font" Target="fonts/font1.odttf"/><Relationship Id="rId2" Type="font" Target="fonts/font2.odttf"/></Relationships>`,
+  );
+  zip.file("word/fonts/font1.odttf", `OTTO ${FUENTE}`);
+  zip.file("word/fonts/font2.odttf", `OTTO ${FUENTE} Bold`);
+  return zip;
+};
+
+const xlsxConImpresora = () => {
+  const zip = base("xl/workbook.xml", MIME.xlsx);
+  zip.file(
+    "[Content_Types].xml",
+    `<?xml version="1.0"?><Types><Default Extension="xml" ContentType="application/xml"/><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="jpeg" ContentType="image/jpeg"/><Override PartName="/xl/workbook.xml" ContentType="${MIME.xlsx}"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/printerSettings/printerSettings1.bin" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.printerSettings"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/><Override PartName="/docProps/custom.xml" ContentType="application/vnd.openxmlformats-officedocument.custom-properties+xml"/></Types>`,
+  );
+  zip.file(
+    "xl/workbook.xml",
+    `<workbook ${R}><sheets><sheet name="Hoja1" sheetId="1" r:id="rId1"/></sheets></workbook>`,
+  );
+  zip.file(
+    "xl/_rels/workbook.xml.rels",
+    `<Relationships ${RELS}><Relationship Id="rId1" Type="worksheet" Target="worksheets/sheet1.xml"/></Relationships>`,
+  );
+  zip.file(
+    "xl/worksheets/sheet1.xml",
+    `<worksheet ${R}><sheetData><row r="1"><c r="A1"><v>1</v></c></row></sheetData><pageSetup orientation="portrait" r:id="rId1"/></worksheet>`,
+  );
+  zip.file(
+    "xl/worksheets/_rels/sheet1.xml.rels",
+    `<Relationships ${RELS}><Relationship Id="rId1" Type="printerSettings" Target="../printerSettings/printerSettings1.bin"/></Relationships>`,
+  );
+  zip.file("xl/printerSettings/printerSettings1.bin", `\0\0${IMPRESORA}\0\0`);
+  return zip;
+};
+
+const pptxConFuentes = () => {
+  const zip = base("ppt/presentation.xml", MIME.pptx);
+  zip.file(
+    "[Content_Types].xml",
+    `<?xml version="1.0"?><Types><Default Extension="xml" ContentType="application/xml"/><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="fntdata" ContentType="application/x-fontdata"/><Override PartName="/ppt/presentation.xml" ContentType="${MIME.pptx}"/><Override PartName="/ppt/slides/slide1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/><Override PartName="/ppt/printerSettings/printerSettings1.bin" ContentType="application/vnd.openxmlformats-officedocument.presentationml.printerSettings"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/><Override PartName="/docProps/custom.xml" ContentType="application/vnd.openxmlformats-officedocument.custom-properties+xml"/></Types>`,
+  );
+  zip.file(
+    "ppt/presentation.xml",
+    `<p:presentation ${R} embedTrueTypeFonts="1" saveSubsetFonts="1"><p:sldIdLst><p:sldId id="256" r:id="rId1"/></p:sldIdLst><p:embeddedFontLst><p:embeddedFont><p:font typeface="Corporativa Sans"/><p:regular r:id="rId2"/></p:embeddedFont></p:embeddedFontLst></p:presentation>`,
+  );
+  zip.file(
+    "ppt/_rels/presentation.xml.rels",
+    `<Relationships ${RELS}><Relationship Id="rId1" Type="slide" Target="slides/slide1.xml"/><Relationship Id="rId2" Type="font" Target="fonts/font1.fntdata"/><Relationship Id="rId3" Type="printerSettings" Target="printerSettings/printerSettings1.bin"/></Relationships>`,
+  );
+  zip.file("ppt/slides/slide1.xml", "<p:sld><p:cSld/></p:sld>");
+  zip.file("ppt/fonts/font1.fntdata", `FNT ${FUENTE}`);
+  zip.file("ppt/printerSettings/printerSettings1.bin", `\0\0${IMPRESORA}\0\0`);
+  return zip;
+};
+
+const resolverDestino = (rutaRels: string, destino: string) => {
+  if (destino.startsWith("/")) return destino.slice(1);
+  const piezas: string[] = [];
+  for (const pieza of `${rutaRels.replace(/_rels\/[^/]*$/, "")}${destino}`.split("/")) {
+    if (pieza === "..") piezas.pop();
+    else if (pieza !== "." && pieza !== "") piezas.push(pieza);
+  }
+  return piezas.join("/");
+};
+
+/**
+ * Validación de estructura sin Office: cada Override y relación interna apunta a una parte que existe,
+ * cada parte tiene tipo de contenido y cada `r:id` usado está declarado en su `.rels`.
+ */
+const problemasDeEstructura = async (bytes: Uint8Array): Promise<string[]> => {
+  const zip = await JSZip.loadAsync(bytes);
+  const partes = Object.values(zip.files)
+    .filter((f) => !f.dir)
+    .map((f) => f.name);
+  const texto = (nombre: string) => zip.file(nombre)?.async("string");
+  const problemas: string[] = [];
+  const tipos = (await texto("[Content_Types].xml")) ?? "";
+  const porExtension = new Set(
+    [...tipos.matchAll(/<Default\b[^>]*\bExtension="([^"]+)"/g)].map((m) => m[1]!.toLowerCase()),
+  );
+  const overrides = [...tipos.matchAll(/<Override\b[^>]*\bPartName="\/([^"]+)"/g)].map(
+    (m) => m[1]!,
+  );
+  for (const parte of overrides)
+    if (!partes.includes(parte)) problemas.push(`Override sin parte: ${parte}`);
+  for (const parte of partes) {
+    if (parte === "[Content_Types].xml") continue;
+    const extension = parte.split(".").pop()!.toLowerCase();
+    if (!overrides.includes(parte) && !porExtension.has(extension))
+      problemas.push(`Parte sin tipo: ${parte}`);
+  }
+  for (const rels of partes.filter((p) => p.endsWith(".rels"))) {
+    const xml = (await texto(rels)) ?? "";
+    const ids = new Set<string>();
+    for (const [relacion] of xml.matchAll(/<Relationship\b[^>]*\/>/g)) {
+      const id = /\bId="([^"]*)"/.exec(relacion)?.[1] ?? "";
+      const destino = /\bTarget="([^"]*)"/.exec(relacion)?.[1];
+      ids.add(id);
+      if (/TargetMode="External"/i.test(relacion) || destino === undefined) continue;
+      if (!partes.includes(resolverDestino(rels, destino)))
+        problemas.push(`${rels}: ${id} apunta a ${destino}, que no existe`);
+    }
+    if (rels === "_rels/.rels") continue;
+    const dueno = rels.replace(/_rels\/([^/]*)\.rels$/, "$1");
+    const xmlDueno = (await texto(dueno)) ?? "";
+    for (const m of xmlDueno.matchAll(/\br:(?:id|embed|link|pict|href)="([^"]+)"/g)) {
+      if (!ids.has(m[1]!)) problemas.push(`${dueno} usa ${m[1]}, que no está en ${rels}`);
+    }
+  }
+  return problemas;
+};
+
 const xmlDe = async (bytes: Uint8Array) => {
   const zip = await JSZip.loadAsync(bytes);
   const partes: Record<string, string> = {};
@@ -262,6 +403,70 @@ describe("limpiarOffice: PPTX", () => {
     expect(partes["ppt/commentAuthors.xml"]).not.toContain('initials="AS"');
     expect(partes["ppt/comments/comment1.xml"]).not.toContain("2026");
     expect(eliminados).toContain("Autores de comentarios o cambios");
+  });
+});
+
+describe("limpiarOffice: configuración de impresora y fuentes incrustadas", () => {
+  const sinRastros = (todo: string) => {
+    expect(todo).not.toMatch(/printerSettings\/|fonts\//);
+    expect(todo).not.toMatch(
+      /embedRegular|embedBold|embedTrueTypeFonts|saveSubsetFonts|embeddedFont/,
+    );
+    expect(todo).not.toContain(IMPRESORA);
+  };
+
+  it("los ejemplos son paquetes coherentes antes de limpiar", async () => {
+    for (const ejemplo of [docxConImpresoraYFuentes, xlsxConImpresora, pptxConFuentes]) {
+      expect(await problemasDeEstructura(await empacar(ejemplo()))).toEqual([]);
+    }
+  });
+
+  it("DOCX: quita el binario de la impresora y las fuentes con sus referencias; el paquete queda coherente", async () => {
+    const { bytes, eliminados } = await limpiarOffice(await empacar(docxConImpresoraYFuentes()));
+    const { zip, partes, todo } = await xmlDe(bytes);
+    expect(Object.keys(zip.files).filter((n) => /printerSettings\/|fonts\//.test(n))).toEqual([]);
+    sinRastros(todo);
+    expect(partes["word/document.xml"]).toContain("Texto de la denuncia");
+    expect(partes["word/document.xml"]).toContain("<w:pgSz");
+    expect(partes["word/fontTable.xml"]).toContain('w:name="Corporativa Sans"');
+    expect(partes["word/fontTable.xml"]).toContain("<w:panose1");
+    expect(partes["word/settings.xml"]).toContain("<w:zoom");
+    expect(await problemasDeEstructura(bytes)).toEqual([]);
+    expect(eliminados).toEqual(
+      expect.arrayContaining(["Configuración de impresora", "Fuentes incrustadas"]),
+    );
+  });
+
+  it("XLSX: pageSetup se conserva sin su r:id a la impresora", async () => {
+    const { bytes, eliminados } = await limpiarOffice(await empacar(xlsxConImpresora()));
+    const { partes, todo } = await xmlDe(bytes);
+    sinRastros(todo);
+    expect(partes["xl/worksheets/sheet1.xml"]).toContain('<pageSetup orientation="portrait"/>');
+    expect(partes["xl/worksheets/sheet1.xml"]).toContain("<sheetData>");
+    expect(await problemasDeEstructura(bytes)).toEqual([]);
+    expect(eliminados).toContain("Configuración de impresora");
+    expect(eliminados).not.toContain("Fuentes incrustadas");
+  });
+
+  it("PPTX: quita la lista de fuentes incrustadas y las banderas de la presentación", async () => {
+    const { bytes, eliminados } = await limpiarOffice(await empacar(pptxConFuentes()));
+    const { partes, todo } = await xmlDe(bytes);
+    sinRastros(todo);
+    expect(partes["ppt/presentation.xml"]).toContain('<p:sldId id="256" r:id="rId1"/>');
+    expect(partes["ppt/presentation.xml"]).toMatch(/^<p:presentation xmlns:r="[^"]+"><p:sldIdLst>/);
+    expect(await problemasDeEstructura(bytes)).toEqual([]);
+    expect(eliminados).toEqual(
+      expect.arrayContaining(["Configuración de impresora", "Fuentes incrustadas"]),
+    );
+  });
+
+  it("la validación de estructura sí detecta referencias colgadas", async () => {
+    const zip = docxConImpresoraYFuentes();
+    zip.remove("word/printerSettings/printerSettings1.bin");
+    zip.file("word/_rels/fontTable.xml.rels", `<Relationships ${RELS}/>`);
+    const problemas = await problemasDeEstructura(await empacar(zip));
+    expect(problemas.some((p) => p.includes("printerSettings1.bin"))).toBe(true);
+    expect(problemas.some((p) => p.includes("fontTable.xml usa rId1"))).toBe(true);
   });
 });
 

@@ -1,5 +1,12 @@
 const METADATOS = /^(docProps|customXml)\//i;
-const REFERENCIA_A_METADATOS = /(docProps|customXml)\//i;
+/**
+ * Partes incidentales que delatan el equipo: `printerSettings/` guarda binarios con el nombre de la
+ * impresora y, a veces, de la red; `fonts/` lleva fuentes incrustadas, con licenciatario y
+ * organización en sus tablas. El documento sigue abriendo sin ellas: Word y PowerPoint sustituyen la
+ * fuente y Excel imprime con la impresora predeterminada.
+ */
+const INCIDENTALES = /(^|\/)(printerSettings|fonts)\//i;
+const REFERENCIA_A_METADATOS = /(^|[/"])(docProps|customXml|printerSettings|fonts)\//i;
 
 const PROHIBIDAS = [
   /vbaProject\.bin$/i,
@@ -11,11 +18,20 @@ const PROHIBIDAS = [
 
 export const esParteDeMetadatosOffice = (parte: string): boolean => METADATOS.test(parte);
 
+export const esParteIncidentalOffice = (parte: string): boolean => INCIDENTALES.test(parte);
+
+/** Todo lo que se retira del paquete antes de reescribirlo: metadatos e incidentales. */
+export const esParteAQuitarOffice = (parte: string): boolean =>
+  esParteDeMetadatosOffice(parte) || esParteIncidentalOffice(parte);
+
 /** Macros y objetos activos: un archivo que los lleve no se acepta, aunque su tipo lo sea. */
 export const esParteProhibidaOffice = (parte: string): boolean =>
   PROHIBIDAS.some((patron) => patron.test(parte));
 
-/** Evita que Office declare el archivo como dañado al faltarle partes referenciadas. */
+/**
+ * Evita que Office declare el archivo como dañado al faltarle partes referenciadas. Los `Default`
+ * por extensión se conservan: no apuntan a ninguna parte.
+ */
 export const quitarReferenciasMetadatos = (xml: string): string =>
   xml.replace(/<(Relationship|Override)\b[^>]*\/>/g, (elemento) =>
     REFERENCIA_A_METADATOS.test(elemento) ? "" : elemento,
@@ -26,6 +42,8 @@ export const ETIQUETAS_OFFICE = {
   rsids: "Identificadores de sesión de edición",
   autores: "Autores y fechas de comentarios y control de cambios",
   propiedades: "Propiedades",
+  impresora: "Configuración de impresora",
+  fuentes: "Fuentes incrustadas",
   imagenesNoLimpiables: "Imágenes en formatos que no se limpian",
   incrustadosNoLimpiables: "Documentos incrustados que no se limpian",
 } as const;
@@ -125,6 +143,39 @@ const REGLAS: readonly Regla[] = [
         .replace(/<[\w.-]+:absPath\b[^>]*\/>/g, "")
         .replace(/<fileSharing\b[^>]*\/>/g, ""),
   },
+  {
+    // Word: la sección referencia el binario de la impresora; sin la parte, la referencia sobra.
+    parte: /^word\/.*\.xml$/i,
+    etiqueta: ETIQUETAS_OFFICE.impresora,
+    aplicar: (xml) => xml.replace(/<w:printerSettings\b[^>]*\/>/g, ""),
+  },
+  {
+    // Excel: `pageSetup` solo usa `r:id` para la impresora; el resto de sus atributos se queda.
+    parte: /^xl\/(worksheets|chartsheets)\/.*\.xml$/i,
+    etiqueta: ETIQUETAS_OFFICE.impresora,
+    aplicar: (xml) => xml.replace(/(<pageSetup\b[^>]*?)\s+r:id="[^"]*"/g, "$1"),
+  },
+  {
+    // Word: la tabla de fuentes deja el nombre y pierde lo incrustado; settings deja de pedirlo.
+    parte: /^word\/(fontTable|settings)\.xml$/i,
+    etiqueta: ETIQUETAS_OFFICE.fuentes,
+    aplicar: (xml) =>
+      xml
+        .replace(/<w:embed(?:Regular|Bold|Italic|BoldItalic)\b[^>]*\/>/g, "")
+        .replace(/<w:(?:embedTrueTypeFonts|embedSystemFonts|saveSubsetFonts)\b[^>]*\/>/g, ""),
+  },
+  {
+    // PowerPoint: la lista de fuentes incrustadas y las banderas que la activan.
+    parte: /^ppt\/presentation\.xml$/i,
+    etiqueta: ETIQUETAS_OFFICE.fuentes,
+    aplicar: (xml) =>
+      xml
+        .replace(
+          /<p:embeddedFontLst\b[^>]*>[\s\S]*?<\/p:embeddedFontLst>|<p:embeddedFontLst\b[^>]*\/>/g,
+          "",
+        )
+        .replace(/\s(?:embedTrueTypeFonts|saveSubsetFonts)="[^"]*"/g, ""),
+  },
 ];
 
 /** Compatibilidad: solo la regla de autores. Prefiere `limpiarXmlOffice`. */
@@ -154,11 +205,23 @@ export const limpiarXmlOffice = (
   return { xml: salida, eliminados: [...eliminados] };
 };
 
+/** Rutas dentro del paquete en `Target` o `PartName`; un vínculo http(s) a `/fonts/` no cuenta. */
+const RUTA_DEL_PAQUETE = (carpeta: string): RegExp =>
+  new RegExp(`\\b(?:Target|PartName)="(?!https?:)[^"]*(?:^|/|")?\\b${carpeta}/`, "i");
+
 const RASTROS: readonly { patron: RegExp; etiqueta: string }[] = [
   { patron: /="(?:file:|[a-z]:\\|\\\\)/i, etiqueta: ETIQUETAS_OFFICE.rutas },
   { patron: /:absPath\b/, etiqueta: ETIQUETAS_OFFICE.rutas },
   { patron: /\brsid/i, etiqueta: ETIQUETAS_OFFICE.rsids },
   { patron: /(docProps|customXml)\//i, etiqueta: ETIQUETAS_OFFICE.propiedades },
+  { patron: RUTA_DEL_PAQUETE("printerSettings"), etiqueta: ETIQUETAS_OFFICE.impresora },
+  { patron: /<w:printerSettings\b/, etiqueta: ETIQUETAS_OFFICE.impresora },
+  { patron: RUTA_DEL_PAQUETE("fonts"), etiqueta: ETIQUETAS_OFFICE.fuentes },
+  {
+    patron:
+      /<w:embed(?:Regular|Bold|Italic|BoldItalic|TrueTypeFonts|SystemFonts)\b|<p:embeddedFont/,
+    etiqueta: ETIQUETAS_OFFICE.fuentes,
+  },
 ];
 
 /**

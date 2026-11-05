@@ -84,12 +84,12 @@ Quien revise el equipo puede ver que este sitio guardó un modelo. No se borra a
 
 ## Qué limpia en los archivos
 
-| Formato          | Se elimina si existe                                                                                                                                                                                                                                                                       |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| JPEG, PNG, WebP  | EXIF (GPS, cámara, serie, fechas, autor), XMP, IPTC, comentarios, miniaturas, perfil de color y datos tras el final de la imagen                                                                                                                                                           |
-| PDF              | Propiedades, XMP, revisiones anteriores y objetos huérfanos, identificador del archivo, datos privados de la aplicación, autor y fecha de comentarios, adjuntos, firmas digitales y metadatos de fotos JPEG incrustadas                                                                    |
-| DOCX, XLSX, PPTX | `docProps` (core, app, custom, miniatura), autores y fechas de comentarios y control de cambios, personas, `customXml`, identificadores de edición (rsid), rutas locales, revisiones de libros compartidos, fechas y comentario del ZIP, y metadatos de fotos JPEG, PNG y WebP incrustadas |
-| Todos            | Nombre del archivo (queda `evidencia.<ext>`) y fecha de modificación                                                                                                                                                                                                                       |
+| Formato          | Se elimina si existe                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| JPEG, PNG, WebP  | EXIF (GPS, cámara, serie, fechas, autor), XMP, IPTC, comentarios, miniaturas, perfil de color y datos tras el final de la imagen                                                                                                                                                                                                                                                                                               |
+| PDF              | Propiedades, XMP, revisiones anteriores y objetos huérfanos, identificador del archivo, datos privados de la aplicación, autor y fecha de comentarios, adjuntos, firmas digitales y metadatos de fotos JPEG incrustadas                                                                                                                                                                                                        |
+| DOCX, XLSX, PPTX | `docProps` (core, app, custom, miniatura), autores y fechas de comentarios y control de cambios, personas, `customXml`, identificadores de edición (rsid), rutas locales, revisiones de libros compartidos, configuración de impresora (`printerSettings/`), fuentes incrustadas (`fonts/`, con sus referencias; queda el nombre de la fuente), fechas y comentario del ZIP, y metadatos de fotos JPEG, PNG y WebP incrustadas |
+| Todos            | Nombre del archivo (queda `evidencia.<ext>`) y fecha de modificación                                                                                                                                                                                                                                                                                                                                                           |
 
 Las imágenes siguen una lista de lo permitido: lo que no se reconoce, se quita. En el navegador se
 re-codifican con canvas, ya rotadas. Si el canvas no existe, entrega un formato distinto o tiene la
@@ -129,6 +129,9 @@ la firma. Las firmas y la huella original no se pueden conservar si se quiere qu
   completa, porque su instrumentación lee los cuerpos: no sirve para medir el peso.
 - **Sin comprobar:** Firefox, Safari, Tor Browser real y celulares (memoria y tiempo con un modelo de
   135 MB). Tampoco abrir los resultados en Word, Excel, PowerPoint o Acrobat. El XLSX se reabrió con
-  `openpyxl`, y el PDF solo con `pdf-lib`. La prueba del canvas bloqueado usa un navegador simulado.
+  `openpyxl`, y el PDF solo con `pdf-lib`. Al quitar `printerSettings/` y fuentes incrustadas, la
+  coherencia del paquete (cada `Override`, relación y `r:id` resuelve) la comprueba una validación
+  de estructura en `office.test.ts`, no Office real. La prueba del canvas bloqueado usa un navegador
+  simulado.
 - Chromium ignora la orientación EXIF en WebP, tanto en el original como en el limpio: se ven igual. En
   ese caso el canvas no rota la imagen y el resultado ya no lleva la etiqueta.

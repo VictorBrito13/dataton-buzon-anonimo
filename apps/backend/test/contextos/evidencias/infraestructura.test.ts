@@ -9,13 +9,30 @@ import { limpiarOffice } from "../../../src/contextos/evidencias/infraestructura
 import { limpiarPdf } from "../../../src/contextos/evidencias/infraestructura/limpiador-pdf.js";
 import {
   AUTOR,
+  docxConImpresoraYFuentes,
+  FUENTE_LICENCIADA,
+  IMPRESORA,
   jpegConMetadatos,
   officeConMetadatos,
   pdfCifradoDeclarado,
   pdfConMetadatos,
   pngConMetadatos,
+  pptxConFuentesEImpresora,
   webpConMetadatos,
+  xlsxConImpresora,
 } from "../../ayudas/fixtures.js";
+import { problemasDeEstructuraOffice } from "../../ayudas/opc.js";
+
+/** Todas las partes de texto de un paquete, para buscar rastros en cualquiera. */
+const partesDeTexto = async (bytes: Uint8Array) => {
+  const zip = await JSZip.loadAsync(bytes);
+  const partes: Record<string, string> = {};
+  for (const [nombre, entrada] of Object.entries(zip.files)) {
+    if (!entrada.dir && /\.(xml|rels)$/i.test(nombre))
+      partes[nombre] = await entrada.async("string");
+  }
+  return { nombres: Object.keys(zip.files), partes, todo: Object.values(partes).join("\n") };
+};
 
 const latin1 = (bytes: Uint8Array) => Buffer.from(bytes).toString("latin1");
 const codigo = async (promesa: Promise<unknown>) =>
@@ -304,6 +321,85 @@ describe("limpiarOffice", () => {
     expect(await codigo(limpiarOffice(new TextEncoder().encode("PK no es zip")))).toBe(
       "evidencia_danada",
     );
+  });
+
+  describe("configuración de impresora y fuentes incrustadas", () => {
+    const sinRastros = (todo: string) => {
+      expect(todo).not.toMatch(/printerSettings\/|fonts\//);
+      expect(todo).not.toMatch(/embedRegular|embedBold|embedTrueTypeFonts|saveSubsetFonts/);
+      expect(todo).not.toContain(IMPRESORA);
+      expect(todo).not.toContain(FUENTE_LICENCIADA);
+    };
+
+    it("los fixtures son paquetes coherentes antes de limpiar", async () => {
+      for (const fixture of [
+        docxConImpresoraYFuentes,
+        xlsxConImpresora,
+        pptxConFuentesEImpresora,
+      ]) {
+        expect(await problemasDeEstructuraOffice(await fixture())).toEqual([]);
+      }
+    });
+
+    it("quita printerSettings y fuentes de un DOCX, con sus referencias, y deja el paquete coherente", async () => {
+      const salida = await limpiarOffice(await docxConImpresoraYFuentes());
+      const { nombres, partes, todo } = await partesDeTexto(salida.bytes);
+      expect(nombres.filter((n) => /printerSettings\/|fonts\//.test(n))).toEqual([]);
+      sinRastros(todo);
+      expect(partes["word/document.xml"]).not.toContain("<w:printerSettings");
+      expect(partes["word/document.xml"]).toContain("<w:pgSz");
+      expect(partes["word/fontTable.xml"]).toContain('w:name="Corporativa Sans"');
+      expect(partes["word/fontTable.xml"]).toContain("<w:panose1");
+      expect(partes["word/settings.xml"]).toContain("<w:zoom");
+      expect(partes["[Content_Types].xml"]).toContain('Extension="odttf"');
+      expect(await problemasDeEstructuraOffice(salida.bytes)).toEqual([]);
+      expect(salida.eliminados).toContain("Configuración de impresora");
+      expect(salida.eliminados).toContain("Fuentes incrustadas");
+      expect(salida.residuales).toEqual([]);
+    });
+
+    it("en un XLSX conserva pageSetup sin su r:id a la impresora", async () => {
+      const salida = await limpiarOffice(await xlsxConImpresora());
+      const { nombres, partes, todo } = await partesDeTexto(salida.bytes);
+      expect(nombres.filter((n) => /printerSettings\//.test(n))).toEqual([]);
+      sinRastros(todo);
+      expect(partes["xl/worksheets/sheet1.xml"]).toContain('<pageSetup orientation="portrait"/>');
+      expect(partes["xl/worksheets/sheet1.xml"]).toContain("<sheetData>");
+      expect(await problemasDeEstructuraOffice(salida.bytes)).toEqual([]);
+      expect(salida.eliminados).toContain("Configuración de impresora");
+      expect(salida.eliminados).not.toContain("Fuentes incrustadas");
+      expect(salida.residuales).toEqual([]);
+    });
+
+    it("en un PPTX quita la lista de fuentes incrustadas y las banderas de la presentación", async () => {
+      const salida = await limpiarOffice(await pptxConFuentesEImpresora());
+      const { nombres, partes, todo } = await partesDeTexto(salida.bytes);
+      expect(nombres.filter((n) => /printerSettings\/|fonts\//.test(n))).toEqual([]);
+      sinRastros(todo);
+      expect(partes["ppt/presentation.xml"]).not.toMatch(
+        /embeddedFont|embedTrueTypeFonts|saveSubsetFonts/,
+      );
+      expect(partes["ppt/presentation.xml"]).toContain('<p:sldId id="256" r:id="rId1"/>');
+      expect(await problemasDeEstructuraOffice(salida.bytes)).toEqual([]);
+      expect(salida.eliminados).toEqual(
+        expect.arrayContaining(["Configuración de impresora", "Fuentes incrustadas"]),
+      );
+      expect(salida.residuales).toEqual([]);
+    });
+
+    it("la validación de estructura sí detecta referencias colgadas", async () => {
+      const roto = await officeConMetadatos({
+        partes: {
+          "word/document.xml":
+            '<w:document><w:sectPr><w:printerSettings r:id="rId9"/></w:sectPr></w:document>',
+          "word/_rels/document.xml.rels":
+            '<Relationships><Relationship Id="rId1" Type="x" Target="printerSettings/no-existe.bin"/></Relationships>',
+        },
+      });
+      const problemas = await problemasDeEstructuraOffice(roto);
+      expect(problemas.some((p) => p.includes("rId9"))).toBe(true);
+      expect(problemas.some((p) => p.includes("no-existe.bin"))).toBe(true);
+    });
   });
 
   describe("bombas ZIP", () => {

@@ -4,6 +4,7 @@ import { quitarMetadatosJpeg } from "../../../src/contextos/evidencias/dominio/j
 import {
   anonimizarAutoresOffice,
   clasificarParteOffice,
+  esParteAQuitarOffice,
   esParteDeMetadatosOffice,
   esParteProhibidaOffice,
   limpiarXmlOffice,
@@ -149,6 +150,104 @@ describe("reglas de Office", () => {
 
   it("el documento no es metadato", () => {
     expect(esParteDeMetadatosOffice("word/document.xml")).toBe(false);
+  });
+
+  it.each([
+    "word/printerSettings/printerSettings1.bin",
+    "xl/printerSettings/printerSettings2.bin",
+    "ppt/printerSettings/printerSettings1.bin",
+    "word/fonts/font1.odttf",
+    "ppt/fonts/font1.fntdata",
+    "docProps/core.xml",
+  ])("%s se quita del paquete", (parte) => {
+    expect(esParteAQuitarOffice(parte)).toBe(true);
+  });
+
+  it.each([
+    "word/document.xml",
+    "word/media/image1.png",
+    "word/fontTable.xml",
+    "xl/worksheets/sheet1.xml",
+  ])("%s se conserva", (parte) => {
+    expect(esParteAQuitarOffice(parte)).toBe(false);
+  });
+
+  it("retira relaciones y tipos de impresora y fuentes, y conserva el Default por extensión", () => {
+    const rels =
+      '<Relationships><Relationship Id="rId3" Type="printerSettings" Target="printerSettings/printerSettings1.bin"/>' +
+      '<Relationship Id="rId1" Type="font" Target="fonts/font1.odttf"/>' +
+      '<Relationship Id="rId2" Type="styles" Target="styles.xml"/></Relationships>';
+    expect(quitarReferenciasMetadatos(rels)).toBe(
+      '<Relationships><Relationship Id="rId2" Type="styles" Target="styles.xml"/></Relationships>',
+    );
+    const tipos =
+      '<Types><Default Extension="odttf" ContentType="application/vnd.openxmlformats-officedocument.obfuscatedFont"/>' +
+      '<Override PartName="/word/printerSettings/printerSettings1.bin" ContentType="x"/>' +
+      '<Override PartName="/word/fontTable.xml" ContentType="y"/></Types>';
+    expect(quitarReferenciasMetadatos(tipos)).toBe(
+      '<Types><Default Extension="odttf" ContentType="application/vnd.openxmlformats-officedocument.obfuscatedFont"/>' +
+        '<Override PartName="/word/fontTable.xml" ContentType="y"/></Types>',
+    );
+  });
+
+  it("quita en Word la referencia a la impresora y lo que incrusta fuentes, sin tocar el resto", () => {
+    const documento = limpiarXmlOffice(
+      "word/document.xml",
+      '<w:sectPr><w:printerSettings r:id="rId3"/><w:pgSz w:w="12240"/></w:sectPr>',
+    );
+    expect(documento.xml).toBe('<w:sectPr><w:pgSz w:w="12240"/></w:sectPr>');
+    expect(documento.eliminados).toEqual(["Configuración de impresora"]);
+
+    const fuentes = limpiarXmlOffice(
+      "word/fontTable.xml",
+      '<w:fonts><w:font w:name="Corporativa"><w:embedRegular r:id="rId1" w:fontKey="{1}"/><w:embedBoldItalic r:id="rId2"/></w:font></w:fonts>',
+    );
+    expect(fuentes.xml).toBe('<w:fonts><w:font w:name="Corporativa"></w:font></w:fonts>');
+    expect(fuentes.eliminados).toEqual(["Fuentes incrustadas"]);
+
+    const settings = limpiarXmlOffice(
+      "word/settings.xml",
+      "<w:settings><w:embedTrueTypeFonts/><w:embedSystemFonts/><w:saveSubsetFonts/><w:zoom/></w:settings>",
+    );
+    expect(settings.xml).toBe("<w:settings><w:zoom/></w:settings>");
+    expect(settings.eliminados).toEqual(["Fuentes incrustadas"]);
+  });
+
+  it("quita en Excel solo el r:id de pageSetup y en PowerPoint la lista de fuentes y sus banderas", () => {
+    const hoja = limpiarXmlOffice(
+      "xl/worksheets/sheet1.xml",
+      '<worksheet><pageSetup orientation="portrait" r:id="rId1" paperSize="9"/></worksheet>',
+    );
+    expect(hoja.xml).toBe(
+      '<worksheet><pageSetup orientation="portrait" paperSize="9"/></worksheet>',
+    );
+    expect(hoja.eliminados).toEqual(["Configuración de impresora"]);
+
+    const presentacion = limpiarXmlOffice(
+      "ppt/presentation.xml",
+      '<p:presentation embedTrueTypeFonts="1" saveSubsetFonts="1"><p:sldIdLst/>' +
+        '<p:embeddedFontLst><p:embeddedFont><p:font typeface="X"/><p:regular r:id="rId2"/></p:embeddedFont></p:embeddedFontLst></p:presentation>',
+    );
+    expect(presentacion.xml).toBe("<p:presentation><p:sldIdLst/></p:presentation>");
+    expect(presentacion.eliminados).toEqual(["Fuentes incrustadas"]);
+  });
+
+  it("detecta rastros de impresora y fuentes solo en rutas del paquete, no en vínculos http", () => {
+    expect(
+      rastrosEnXmlOffice('<Relationship Target="printerSettings/printerSettings1.bin"/>'),
+    ).toEqual(["Configuración de impresora"]);
+    expect(rastrosEnXmlOffice('<Override PartName="/word/fonts/font1.odttf"/>')).toEqual([
+      "Fuentes incrustadas",
+    ]);
+    expect(rastrosEnXmlOffice('<w:printerSettings r:id="rId3"/>')).toEqual([
+      "Configuración de impresora",
+    ]);
+    expect(rastrosEnXmlOffice("<w:embedTrueTypeFonts/>")).toEqual(["Fuentes incrustadas"]);
+    expect(
+      rastrosEnXmlOffice(
+        '<Relationship Target="https://ejemplo.org/fonts/x.woff" TargetMode="External"/><w:t>fonts/</w:t>',
+      ),
+    ).toEqual([]);
   });
 
   it.each([

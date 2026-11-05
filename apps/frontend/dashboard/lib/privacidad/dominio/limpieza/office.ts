@@ -20,6 +20,8 @@ const AUTOR_GENERICO = "Autor";
 const ETIQUETA_AUTORES = "Autores de comentarios o cambios";
 const ETIQUETA_RUTAS = "Rutas de archivos en tu equipo";
 const ETIQUETA_FECHAS = "Fechas de comentarios o cambios";
+const ETIQUETA_IMPRESORA = "Configuración de impresora";
+const ETIQUETA_FUENTES = "Fuentes incrustadas";
 
 /** Las fechas de un ZIP delatan cuándo se editó. 1980 es la mínima del formato. */
 const FECHA_FIJA = new Date(Date.UTC(1980, 0, 1));
@@ -49,12 +51,19 @@ const CAMPOS_APP: Record<string, string> = {
   HyperlinkBase: "Rutas de archivos en tu equipo",
 };
 
+/**
+ * `printerSettings/` son binarios con el nombre de la impresora (y a veces de la red); `fonts/`
+ * son fuentes incrustadas, cuyas tablas pueden nombrar al licenciatario. El documento abre sin
+ * ellas: Word y PowerPoint sustituyen la fuente y Excel imprime con la impresora predeterminada.
+ */
 const PARTES_A_QUITAR = [
   /^docProps\/(core|app|custom)\.xml$/,
   /^docProps\/thumbnail\.[^/]+$/,
   /^word\/people\.xml$/,
   /^customXml\//,
   /^xl\/revisions\//,
+  /(^|\/)printerSettings\//i,
+  /(^|\/)fonts\//i,
 ];
 
 const leerCampos = (xml: string, campos: Record<string, string>, eliminados: Set<string>) => {
@@ -93,7 +102,19 @@ const destinoRevelador = (relacion: string) => {
  * Comprobación posterior sobre cada XML de salida: si algo sobrevive, se rechaza el archivo.
  * Nunca se afirma que está limpio lo que no se comprobó.
  */
-const RASTROS = [/="(?:file:|[a-z]:\\|\\\\)/i, /:absPath\b/, /\brsid/i, /(docProps|customXml)\//i];
+/** Rutas dentro del paquete en `Target` o `PartName`; un vínculo http(s) a `/fonts/` no cuenta. */
+const rutaDelPaquete = (carpeta: string) =>
+  new RegExp(`\\b(?:Target|PartName)="(?!https?:)[^"]*\\b${carpeta}/`, "i");
+const RASTROS = [
+  /="(?:file:|[a-z]:\\|\\\\)/i,
+  /:absPath\b/,
+  /\brsid/i,
+  /(docProps|customXml)\//i,
+  rutaDelPaquete("printerSettings"),
+  rutaDelPaquete("fonts"),
+  /<w:printerSettings\b/,
+  /<w:embed(?:Regular|Bold|Italic|BoldItalic|TrueTypeFonts|SystemFonts)\b|<p:embeddedFont/,
+];
 const sobrevivenRastros = (xml: string) => RASTROS.some((patron) => patron.test(xml));
 
 const IMAGEN_NO_LIMPIABLE =
@@ -205,6 +226,35 @@ const limpiarXml = (ruta: string, original: string, eliminados: Set<string>) => 
     );
     xml = sustituir(xml, /<[\w.-]+:absPath\b[^>]*\/>/g, "", rutas);
   }
+
+  // Referencias a las partes de impresora y fuentes que ya no están: sin ellas Office no reclama.
+  const impresora = () => eliminados.add(ETIQUETA_IMPRESORA);
+  const fuentes = () => eliminados.add(ETIQUETA_FUENTES);
+  if (/^word\//.test(ruta)) {
+    xml = sustituir(xml, /<w:printerSettings\b[^>]*\/>/g, "", impresora);
+  }
+  if (/^word\/(?:fontTable|settings)\.xml$/.test(ruta)) {
+    xml = sustituir(xml, /<w:embed(?:Regular|Bold|Italic|BoldItalic)\b[^>]*\/>/g, "", fuentes);
+    xml = sustituir(
+      xml,
+      /<w:(?:embedTrueTypeFonts|embedSystemFonts|saveSubsetFonts)\b[^>]*\/>/g,
+      "",
+      fuentes,
+    );
+  }
+  if (/^xl\/(?:worksheets|chartsheets)\//.test(ruta)) {
+    // `pageSetup` solo usa `r:id` para la impresora; sus demás atributos se conservan.
+    xml = sustituir(xml, /(<pageSetup\b[^>]*?)\s+r:id="[^"]*"/g, "$1", impresora);
+  }
+  if (ruta === "ppt/presentation.xml") {
+    xml = sustituir(
+      xml,
+      /<p:embeddedFontLst\b[^>]*>[\s\S]*?<\/p:embeddedFontLst>|<p:embeddedFontLst\b[^>]*\/>/g,
+      "",
+      fuentes,
+    );
+    xml = sustituir(xml, /\s(?:embedTrueTypeFonts|saveSubsetFonts)="[^"]*"/g, "", fuentes);
+  }
   return xml;
 };
 
@@ -275,6 +325,8 @@ const limpiarPaquete = async (
     if (ruta.startsWith("customXml/")) eliminados.add("Datos personalizados");
     if (ruta === "word/people.xml") eliminados.add(ETIQUETA_AUTORES);
     if (ruta.startsWith("xl/revisions/")) eliminados.add("Revisiones anteriores del documento");
+    if (/(^|\/)printerSettings\//i.test(ruta)) eliminados.add(ETIQUETA_IMPRESORA);
+    if (/(^|\/)fonts\//i.test(ruta)) eliminados.add(ETIQUETA_FUENTES);
   }
   for (const ruta of quitadas) partes.delete(ruta);
   quitarReferencias(partes, quitadas);

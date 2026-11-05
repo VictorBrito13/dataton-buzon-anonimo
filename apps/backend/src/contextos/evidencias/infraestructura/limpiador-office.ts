@@ -3,7 +3,7 @@ import { ErrorDominio } from "../../../compartido/dominio/errores.js";
 import type { ResultadoLimpieza } from "../aplicacion/puertos.js";
 import {
   clasificarParteOffice,
-  esParteDeMetadatosOffice,
+  esParteAQuitarOffice,
   esParteProhibidaOffice,
   ETIQUETAS_OFFICE,
   limpiarXmlOffice,
@@ -63,6 +63,14 @@ const medirInflado = (entradas: JSZip.JSZipObject[], maximo: number): Promise<nu
 const danada = (): ErrorDominio =>
   new ErrorDominio("evidencia_danada", "No pudimos leer este documento.");
 
+const describirParteQuitada = (nombre: string): string => {
+  if (/(^|\/)printerSettings\//i.test(nombre)) return ETIQUETAS_OFFICE.impresora;
+  if (/(^|\/)fonts\//i.test(nombre)) return ETIQUETAS_OFFICE.fuentes;
+  if (nombre.includes("thumbnail")) return "Miniatura del documento";
+  if (nombre.startsWith("customXml")) return "Datos XML personalizados";
+  return "Propiedades del documento (autor, empresa, fechas)";
+};
+
 const cargar = async (bytes: Uint8Array): Promise<JSZip> => {
   try {
     return await JSZip.loadAsync(bytes);
@@ -92,17 +100,11 @@ const procesar = async (bytes: Uint8Array, profundidad: number): Promise<Resulta
   const residuales = new Set<string>();
 
   for (const entrada of entradas) {
-    if (entrada.dir || !esParteDeMetadatosOffice(entrada.name)) continue;
-    eliminados.add(
-      entrada.name.includes("thumbnail")
-        ? "Miniatura del documento"
-        : entrada.name.startsWith("customXml")
-          ? "Datos XML personalizados"
-          : "Propiedades del documento (autor, empresa, fechas)",
-    );
+    if (entrada.dir || !esParteAQuitarOffice(entrada.name)) continue;
+    eliminados.add(describirParteQuitada(entrada.name));
   }
   for (const entrada of entradas) {
-    if (esParteDeMetadatosOffice(entrada.name)) zip.remove(entrada.name);
+    if (esParteAQuitarOffice(entrada.name)) zip.remove(entrada.name);
   }
 
   for (const entrada of Object.values(zip.files)) {
@@ -155,8 +157,8 @@ const procesar = async (bytes: Uint8Array, profundidad: number): Promise<Resulta
     comment: "",
   });
 
-  if (Object.keys(zip.files).some(esParteDeMetadatosOffice)) {
-    residuales.add(ETIQUETAS_OFFICE.propiedades);
+  for (const nombre of Object.keys(zip.files).filter(esParteAQuitarOffice)) {
+    residuales.add(describirParteQuitada(nombre));
   }
   return { bytes: salida, eliminados: [...eliminados], residuales: [...residuales] };
 };
