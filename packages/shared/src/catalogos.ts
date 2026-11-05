@@ -81,6 +81,8 @@ export const TRANSICIONES: Record<Etapa, readonly Etapa[]> = {
 /**
  * Basado en la Ley General de Responsabilidades Administrativas.
  * "abuso_funciones" es el nombre legal de lo que la propuesta llama "abuso de autoridad".
+ * "hecho_corrupcion" cubre la tercera categoría del S5 y del reto de la convocatoria,
+ * que distinguen faltas graves, faltas no graves y hechos de corrupción.
  * Se ajustará al catálogo de la PDN cuando se confirme.
  */
 export const TIPOS_FALTA = {
@@ -100,6 +102,10 @@ export const TIPOS_FALTA = {
   falta_particulares: {
     etiqueta: "Falta cometida por particulares o empresas",
     gravedad: "particulares",
+  },
+  hecho_corrupcion: {
+    etiqueta: "Posible hecho de corrupción (podría ser un delito)",
+    gravedad: "hecho_corrupcion",
   },
   otra: { etiqueta: "Otra o no estoy seguro", gravedad: "sin_clasificar" },
 } as const;
