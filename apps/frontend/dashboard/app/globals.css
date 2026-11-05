@@ -64,13 +64,43 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  color-scheme: light dark;
+  /* El encabezado fijo no debe tapar el elemento enfocado. */
+  scroll-padding-top: 5rem;
 }
 
 body {
   background: var(--papel);
   color: var(--tinta);
   font-family: var(--font-sans);
+  font-size: 1.0625rem;
   line-height: 1.55;
+}
+
+/* Impresión de la frase o el folio: solo el recuadro y siempre en tinta oscura. */
+@media print {
+  :root {
+    color-scheme: light;
+    --papel: #ffffff;
+    --superficie: #ffffff;
+    --tinta: #000000;
+    --tinta-suave: #000000;
+    --borde: #000000;
+  }
+
+  body:has(.area-impresion) * {
+    visibility: hidden;
+  }
+
+  body:has(.area-impresion) .area-impresion,
+  body:has(.area-impresion) .area-impresion * {
+    visibility: visible;
+  }
+
+  .area-impresion {
+    position: absolute;
+    inset: 0 0 auto 0;
+  }
 }
 
 :focus-visible {

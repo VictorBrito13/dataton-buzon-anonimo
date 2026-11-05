@@ -6,3 +6,6 @@ out
 coverage
 package-lock.json
 docs
+apps/frontend/dashboard/public/modelos
+apps/frontend/dashboard/public/catalogos
+apps/frontend/dashboard/test-results

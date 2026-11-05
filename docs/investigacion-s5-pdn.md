@@ -37,6 +37,22 @@ SESNA presentó el prototipo como una base y pidió partir de un problema concre
 | Lectura por la institución | Al aceptar ve todo el contenido | Relatos sellados que el servidor no puede abrir |
 | Clasificación | Reglas y catálogo, orientativa | Orientador en lenguaje común, también orientativo |
 
+## Correspondencia con los campos del S5
+
+Los campos del S5 se leyeron en su JS, sin diccionario de datos oficial, por lo que pueden cambiar. Esta tabla
+indica cómo se conectaría este proyecto al S5 y qué falta resolver con SESNA.
+
+| Este proyecto | Campo del S5 | Situación |
+|---|---|---|
+| Sin datos de contacto | `denunciante.anonimo` = verdadero | Compatible. No se ofrece la denuncia identificada del S5 |
+| `estado`, `municipio` | `ubicacionHecho.estado`, `ciudad` | Compatible, con catálogos del S5 |
+| Periodo aproximado, dentro del relato sellado | `ubicacionHecho.fechaHecho` (obligatoria) | **Diferencia:** la fecha exacta puede identificar a quien denuncia |
+| `enteId` | `personaDenunciada.entePublico` | Compatible, con catálogo de Cobertura |
+| `tipoFalta` | `faltaCometida.{faltaGrave,faltaNoGrave,hechosCorrupcion}` | Compatible por categoría; el S5 detalla por ley y artículo |
+| `relatoSellado` | `narracionHechos` | **Diferencia:** el S5 espera texto claro; integrarlo requiere abrir el sello en el lado institucional |
+| Evidencias selladas | `archivosEvidencia` | **Diferencia:** igual que el relato |
+| Frase y folio | Folio y `trackingSecret` | Convivirían: la frase protege el acceso en el dispositivo |
+
 ## Qué valora SESNA (taller, subtítulos automáticos, marcas aproximadas)
 
 Video: [Taller para la explotación de datos de la PDN](https://www.youtube.com/live/k9o__B38Kg4).

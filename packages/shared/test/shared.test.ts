@@ -1,5 +1,6 @@
 import { wordlist } from "@scure/bip39/wordlists/spanish.js";
 import { describe, expect, it } from "vitest";
+import { z } from "zod";
 import {
   abrir,
   aBase64Url,
@@ -13,8 +14,15 @@ import {
   normalizarFrase,
   normalizarPalabra,
   sellar,
+  TIPOS_FALTA,
   TRANSICIONES,
 } from "../src/index.js";
+
+describe("zod", () => {
+  it("no usa eval: la CSP estricta lo bloquearía en el navegador", () => {
+    expect(z.config().jitless).toBe(true);
+  });
+});
 
 describe("frase de recuperación", () => {
   it("las 2048 palabras siguen siendo únicas sin acentos", () => {
@@ -86,6 +94,13 @@ describe("catálogos y folio", () => {
   it("toda transición apunta a una etapa existente", () => {
     for (const destinos of Object.values(TRANSICIONES)) {
       for (const d of destinos) expect(CLAVES_ETAPA).toContain(d);
+    }
+  });
+
+  it("cubre las tres categorías que distingue el S5", () => {
+    const gravedades = Object.values(TIPOS_FALTA).map((t) => t.gravedad as string);
+    for (const categoria of ["grave", "no_grave", "hecho_corrupcion"]) {
+      expect(gravedades).toContain(categoria);
     }
   });
 

@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Modelo y WASM de terceros que baja scripts/descargar-modelo.mjs.
+    "public/modelos/**",
   ]),
 ]);
 

@@ -1,6 +1,12 @@
 import { z } from "zod";
 import { CLAVES_ESTADO, CLAVES_ETAPA, CLAVES_TIPO_FALTA } from "./catalogos.js";
 
+/**
+ * Zod prueba `new Function("")` al construir el primer esquema de objeto, y la CSP estricta
+ * lo reporta como violación aunque Zod atrape el error. Debe ejecutarse antes que cualquier esquema.
+ */
+z.config({ jitless: true });
+
 /** Contrato de la API v1. Backend y frontend importan estos esquemas; no los dupliquen. */
 
 const hex64 = z.string().regex(/^[0-9a-f]{64}$/);
