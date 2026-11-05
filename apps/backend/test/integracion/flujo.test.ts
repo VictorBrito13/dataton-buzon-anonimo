@@ -580,6 +580,21 @@ describe("panel de autoridad", () => {
     );
   });
 
+  it("la bitácora guarda la hora truncada: no permite acotar la llegada de denuncias a segundos", async () => {
+    await iniciarSesion(app);
+    const { rows } = await pool.query<{ fuera_de_hora: number; total: number }>(
+      `SELECT count(*) FILTER (WHERE creado_en <> date_trunc('hour', creado_en))::int AS fuera_de_hora,
+              count(*)::int AS total
+       FROM bitacora_autoridad`,
+    );
+    expect(rows[0]?.total).toBeGreaterThan(0);
+    expect(rows[0]?.fuera_de_hora).toBe(0);
+    const columna = await pool.query<{ column_default: string }>(
+      "SELECT column_default FROM information_schema.columns WHERE table_name = 'bitacora_autoridad' AND column_name = 'creado_en'",
+    );
+    expect(columna.rows[0]?.column_default).toMatch(/date_trunc\('hour'/);
+  });
+
   it("devuelve 404, no 500, ante un identificador mal formado", async () => {
     const cookie = await iniciarSesion(app);
     await request(app)
