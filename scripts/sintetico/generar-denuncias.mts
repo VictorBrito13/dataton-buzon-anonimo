@@ -74,7 +74,7 @@ const denuncias = generarDenunciasSinteticas(
     desde: opcion("desde", "2025-T3"),
     hasta: opcion("hasta", "2026-T3"),
     denunciasPorTrimestre: Number(opcion("por-trimestre", "6000")),
-    hoy: opcion("hoy", diaDe(new Date(), process.env.ZONA_HORARIA ?? ZONA_HORARIA_POR_DEFECTO)),
+    hoy: opcion("hoy", diaDe(new Date(), process.env.ZONA_HORARIA || ZONA_HORARIA_POR_DEFECTO)),
   },
 );
 
