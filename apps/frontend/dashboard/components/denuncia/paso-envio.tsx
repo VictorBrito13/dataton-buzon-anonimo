@@ -1,6 +1,7 @@
 "use client";
 
 import { sellar } from "@dataton/shared";
+import Link from "next/link";
 import { useState } from "react";
 import { BOTON_PRIMARIO, BOTON_SECUNDARIO } from "@/components/ui";
 import type { EstadoAsistente } from "@/lib/denuncia/asistente";
@@ -9,7 +10,7 @@ import {
   enviarDenuncia,
   type EtapaEnvio,
 } from "@/lib/denuncia/enviar-denuncia";
-import { mensajeDeError } from "@/lib/denuncia/errores";
+import { MENSAJE_QUIZA_YA_LLEGO, mensajeDeErrorEnvio } from "@/lib/denuncia/errores";
 import { buzonHttp } from "@/lib/infraestructura/buzon-http";
 import { trabajoEnWorker } from "@/lib/infraestructura/trabajo";
 import type { Despachar } from "./asistente";
@@ -23,10 +24,15 @@ export function PasoEnvio({
 }) {
   const [etapa, setEtapa] = useState<EtapaEnvio | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [intentos, setIntentos] = useState(0);
 
   const enviar = async () => {
     if (!estado.frase) return;
     setError(null);
+    // Un reintento tras perder la respuesta repite la misma frase: un 409 ahí casi siempre
+    // significa que la denuncia sí llegó. El servidor no cambia; solo cambia cómo se explica.
+    const reintento = intentos > 0;
+    setIntentos(intentos + 1);
     try {
       const folio = await enviarDenuncia(
         {
@@ -41,11 +47,12 @@ export function PasoEnvio({
       despachar({ tipo: "denunciaEnviada", folio });
     } catch (causa) {
       setEtapa(null);
-      setError(mensajeDeError(causa));
+      setError(mensajeDeErrorEnvio(causa, { reintento }));
     }
   };
 
   const enviando = etapa !== null;
+  const quizaYaLlego = error === MENSAJE_QUIZA_YA_LLEGO;
 
   return (
     <div className="space-y-5">
@@ -63,6 +70,13 @@ export function PasoEnvio({
         {error && (
           <div className="border-l-4 border-peligro bg-peligro-suave p-4">
             <p>{error}</p>
+            {quizaYaLlego && (
+              <p className="mt-2">
+                <Link prefetch={false} href="/seguimiento" className="underline">
+                  Ir a Seguimiento y consultar con mi frase
+                </Link>
+              </p>
+            )}
           </div>
         )}
       </div>
