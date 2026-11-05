@@ -33,3 +33,6 @@ next-env.d.ts
 # misc
 .DS_Store
 *.pem
+
+# worktrees y estado local de herramientas
+.claude/
