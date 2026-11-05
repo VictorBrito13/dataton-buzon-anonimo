@@ -43,3 +43,6 @@ test-results/
 
 # playwright
 test-results/
+# pruebas
+test-results/
+playwright-report/
