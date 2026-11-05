@@ -3,6 +3,7 @@ import { defineConfig } from "vitest/config";
 /**
  * Las pruebas de integración vacían tablas: por eso no usan DATABASE_URL de una
  * máquina de desarrollo. Fuera de CI apuntan al Postgres de pruebas (puerto 5551).
+ * `TEST_DATABASE_URL` también la leen las pruebas del rol de solo lectura (transparencia).
  */
 const baseDePruebas =
   process.env.TEST_DATABASE_URL ??
@@ -11,13 +12,17 @@ const baseDePruebas =
 
 export default defineConfig({
   test: {
-    include: ["test/**/*.test.ts"],
+    include: ["test/**/*.test.ts", "src/**/*.test.ts"],
+    exclude: ["node_modules", "dist"],
     fileParallelism: false,
     testTimeout: 30_000,
     hookTimeout: 30_000,
+    // Aplica las migraciones una vez, antes de cualquier archivo: así ninguna prueba depende del orden.
+    globalSetup: ["test/ayudas/migrar-global.ts"],
     env: {
       NODE_ENV: "test",
       DATABASE_URL: baseDePruebas,
+      TEST_DATABASE_URL: baseDePruebas,
       POW_COSTO: "1",
       POW_CONTADOR_MAX: "5",
       ACCESO_TIEMPO_MINIMO_MS: "60",

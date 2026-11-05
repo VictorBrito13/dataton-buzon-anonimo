@@ -13,7 +13,10 @@
     "migrate": "tsx src/db/migrate.ts",
     "semilla:autoridad": "tsx src/scripts/semilla-autoridad.ts",
     "claves:autoridad": "tsx src/scripts/generar-claves.ts",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "test:ataques": "vitest run --reporter=verbose ataques-k-anonimato publicacion agregar-periodos",
+    "agregar": "tsx src/contextos/transparencia/infraestructura/cli-agregar.ts",
+    "sintetico": "tsx ../../scripts/sintetico/generar-denuncias.mts"
   },
   "dependencies": {
     "argon2": "^0.45.1",

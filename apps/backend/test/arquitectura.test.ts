@@ -8,7 +8,8 @@ const SRC = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../src")
 
 const archivosDe = (capa: string): string[] =>
   (readdirSync(SRC, { recursive: true }) as string[])
-    .filter((f) => f.endsWith(".ts") && f.split(path.sep).includes(capa))
+    // Las pruebas junto al código (transparencia) importan vitest: la regla es para el código.
+    .filter((f) => f.endsWith(".ts") && !f.endsWith(".test.ts") && f.split(path.sep).includes(capa))
     .map((f) => path.join(SRC, f));
 
 const importsDe = (archivo: string): string[] =>

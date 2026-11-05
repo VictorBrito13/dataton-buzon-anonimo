@@ -128,8 +128,9 @@ describe("plataforma", () => {
     expect(res.text).not.toMatch(/stack|BZ-SECRETO|node_modules/);
   });
 
-  it("no acepta las rutas de otros frentes", async () => {
-    await request(app).get("/api/v1/publico/agregados").expect(404);
+  it("la API pública vive en /publico con su propia conexión y no expone rutas privadas", async () => {
+    await request(app).get("/api/v1/publico/metodologia").expect(200);
+    await request(app).get("/api/v1/publico/denuncias").expect(404);
   });
 });
 
