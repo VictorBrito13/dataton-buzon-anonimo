@@ -109,13 +109,14 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Pruebas de anonimato contra el despliegue real
         run: npm run test:anonimato
-      - name: Otras pruebas E2E, si existen
+      - name: Otras suites E2E del repositorio
         run: |
-          if [ -f playwright.config.ts ]; then
-            npx playwright test
-          else
-            echo "Sin playwright.config.ts en la raíz."
-          fi
+          find apps packages -name playwright.config.ts -not -path '*/node_modules/*' -print0 |
+            while IFS= read -r -d '' configuracion; do
+              echo "::group::$configuracion"
+              npx playwright test --config "$configuracion"
+              echo "::endgroup::"
+            done
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
