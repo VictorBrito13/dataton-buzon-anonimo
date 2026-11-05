@@ -1,6 +1,6 @@
 "use client";
 
-import "@/lib/autoridad/zod-sin-eval";
+import "@dataton/shared";
 import { ESTADOS, ETAPAS, TIPOS_FALTA, type Etapa } from "@dataton/shared";
 import Link from "next/link";
 import { useCallback, useRef, useState } from "react";

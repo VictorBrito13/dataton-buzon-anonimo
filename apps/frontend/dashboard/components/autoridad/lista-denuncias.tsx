@@ -1,6 +1,6 @@
 "use client";
 
-import "@/lib/autoridad/zod-sin-eval";
+import "@dataton/shared";
 import {
   CLAVES_ESTADO,
   CLAVES_ETAPA,

@@ -1,5 +1,6 @@
 import { wordlist } from "@scure/bip39/wordlists/spanish.js";
 import { describe, expect, it } from "vitest";
+import { z } from "zod";
 import {
   abrir,
   aBase64Url,
@@ -16,6 +17,12 @@ import {
   TIPOS_FALTA,
   TRANSICIONES,
 } from "../src/index.js";
+
+describe("zod", () => {
+  it("no usa eval: la CSP estricta lo bloquearía en el navegador", () => {
+    expect(z.config().jitless).toBe(true);
+  });
+});
 
 describe("frase de recuperación", () => {
   it("las 2048 palabras siguen siendo únicas sin acentos", () => {
