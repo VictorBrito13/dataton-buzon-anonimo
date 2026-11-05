@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CargadorAsistente } from "@/components/denuncia/cargador-asistente";
+import { modeloNerPublicado } from "@/lib/infraestructura/modelo-publicado";
 
 export const metadata: Metadata = { title: "Hacer una denuncia" };
 
@@ -12,7 +13,7 @@ export default function Denunciar() {
           Este formulario necesita JavaScript: con él se sella tu relato en tu propio dispositivo.
         </p>
       </noscript>
-      <CargadorAsistente />
+      <CargadorAsistente modeloDisponible={modeloNerPublicado()} />
     </div>
   );
 }

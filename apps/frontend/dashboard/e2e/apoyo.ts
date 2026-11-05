@@ -57,7 +57,8 @@ export const vigilarPagina = (page: Page) => {
   });
   page.on("pageerror", (error) => errores.push(error.message));
   page.on("request", (peticion) => {
-    const { hostname } = new URL(peticion.url());
+    // Un blob: se crea en la propia página, y su origen dice cuál: no es una petición de red.
+    const { hostname } = new URL(new URL(peticion.url()).origin);
     if (hostname !== "localhost" && !peticion.url().startsWith("data:")) {
       externas.push(peticion.url());
     }

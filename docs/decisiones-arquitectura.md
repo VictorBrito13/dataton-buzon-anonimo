@@ -49,7 +49,11 @@ Implementado en `packages/shared/src/sello.ts` (ECDH P-256, HKDF-SHA-256, AES-25
 
 **Límite honesto:** el servidor ve las evidencias durante su verificación, por lo que esa etapa
 depende de confiar en el código publicado. La clave privada se carga en el navegador de la
-autoridad y no se guarda en el servidor.
+autoridad y no se guarda en el servidor: en uso real se genera fuera, con `npm run claves:autoridad`,
+y al despliegue llega solo la pública (`CLAVE_PUBLICA_AUTORIDAD`). La demostración de
+`docker compose up` genera un par en la misma máquina para arrancar con un comando; la privada va
+a un volumen separado que ningún servicio en ejecución monta, y una prueba sobre la configuración
+de Compose (`docker/compose.test.mjs`) lo exige en cada PR.
 
 ## D6. k-anonimato
 

@@ -15,15 +15,22 @@
     "dev:frontend": "npm run dev -w @dataton/dashboard",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
-    "typecheck": "npm run typecheck --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present && tsc -p e2e/tsconfig.json",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "npm run test --workspaces --if-present",
-    "migrate": "npm run migrate -w @dataton/backend"
+    "test": "npm run test --workspaces --if-present && npm run test:verificadores && npm run test:compose",
+    "test:verificadores": "node --test scripts/verificar-arquitectura.test.mjs scripts/verificar-sin-terceros.test.mjs scripts/con-entorno.test.mjs docker/generar-secretos.test.mjs",
+    "test:cobertura-dominio": "vitest run --config vitest.dominio.config.mjs --coverage",
+    "test:anonimato": "playwright test --config e2e/anonimato/playwright.config.ts",
+    "verificar:arquitectura": "node scripts/verificar-arquitectura.mjs",
+    "verificar:terceros": "node scripts/verificar-sin-terceros.mjs",
+    "migrate": "npm run migrate -w @dataton/backend",
+    "test:compose": "node --test docker/compose.test.mjs"
   },
   "devDependencies": {
-    "prettier": "^3.9.10",
+    "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.64.1",
-    "@axe-core/playwright": "^4.14.0"
+    "@vitest/coverage-v8": "^5.1.0",
+    "prettier": "^3.9.10"
   }
 }

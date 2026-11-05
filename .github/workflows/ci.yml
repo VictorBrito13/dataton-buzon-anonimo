@@ -1,0 +1,237 @@
+# Barrera de calidad de TDD y DDD (D10 en docs/decisiones-arquitectura.md).
+# Usar `ci-ok` como único check requerido en la protección de ramas.
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+      - "feat/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "24.22.2"
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  calidad:
+    name: Build, tipos, lint, formato y reglas
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Sin terceros ni lectura de IP o user-agent
+        run: npm run verificar:terceros
+      - name: Dependencias entre capas (D10)
+        run: npm run verificar:arquitectura
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+
+  pruebas:
+    name: Pruebas con Postgres
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17.11-alpine3.24
+        env:
+          POSTGRES_USER: dataton
+          POSTGRES_PASSWORD: dataton
+          POSTGRES_DB: dataton
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dataton -d dataton"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      # Valores de prueba, iguales a apps/backend/.env.example. No son secretos.
+      DATABASE_URL: postgres://dataton:dataton@localhost:5432/dataton
+      PIMIENTA_ACCESO: "0000000000000000000000000000000000000000000000000000000000000000"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run migrate
+      - run: npm test
+      - name: Cobertura mínima del dominio
+        run: npm run test:cobertura-dominio
+
+  imagenes:
+    name: Construcción de imágenes Docker
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: docker compose config --quiet
+      - run: docker compose build
+
+  # Las compañeras del equipo trabajan en Windows: lo que corre sin Docker debe pasar también ahí.
+  # Docker Desktop con WSL2 (contenedores Linux) no existe en este ejecutor, así que el despliegue
+  # en Windows queda documentado en la guía de réplica pero no lo comprueba la CI.
+  windows:
+    name: Windows sin Docker (build, tipos, lint, reglas y unitarias)
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      # Sin conversión a CRLF: el repositorio guarda LF y .gitattributes lo exige en lo que entra a contenedores.
+      - run: git config --global core.autocrlf false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run verificar:terceros
+      - run: npm run verificar:arquitectura
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npm run lint
+      - name: Unitarias sin Postgres y verificadores
+        run: |
+          npm test -w @dataton/shared -w @dataton/dashboard
+          npm run test:verificadores
+      - name: Los scripts npm del backend arrancan en cmd.exe
+        run: npm run claves:autoridad -w @dataton/backend
+
+  playwright:
+    name: Playwright y pruebas de anonimato
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Pruebas de anonimato contra el despliegue real
+        run: npm run test:anonimato
+      - name: Otras suites E2E del repositorio
+        run: |
+          find apps packages -name playwright.config.ts -not -path '*/node_modules/*' -print0 |
+            while IFS= read -r -d '' configuracion; do
+              echo "::group::$configuracion"
+              npx playwright test --config "$configuracion"
+              echo "::endgroup::"
+            done
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: evidencia-anonimato
+          path: |
+            docs/evidencia/reporte-anonimato.md
+            test-results/
+          if-no-files-found: warn
+
+  tablero:
+    name: Tablero con datos sintéticos
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17.11-alpine3.24
+        env:
+          POSTGRES_USER: dataton
+          POSTGRES_PASSWORD: dataton
+          POSTGRES_DB: dataton
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dataton -d dataton"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgres://dataton:dataton@localhost:5432/dataton
+      API_INTERNA: http://localhost:4000
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm run migrate
+      - name: Datos sintéticos y agregación
+        run: |
+          npm run sintetico -w @dataton/backend -- --hoy 2026-11-05
+          npm run agregar -w @dataton/backend
+      - name: Levantar API y frontend
+        run: |
+          # Solo con NODE_ENV=development el backend acepta los valores de desarrollo de los secretos.
+          (cd apps/backend && NODE_ENV=development nohup node dist/server.js > /tmp/backend.log 2>&1 &)
+          (cd apps/frontend/dashboard && nohup npx next start -p 3102 > /tmp/frontend.log 2>&1 &)
+          for url in http://localhost:4000/api/health http://localhost:3102/; do
+            timeout 60 sh -c "until curl -sf -o /dev/null $url; do sleep 1; done"
+          done
+      - name: Bitácoras de la API y el frontend si no arrancaron
+        if: failure()
+        run: |
+          echo "::group::backend"; cat /tmp/backend.log || true; echo "::endgroup::"
+          echo "::group::frontend"; cat /tmp/frontend.log || true; echo "::endgroup::"
+      - name: Pruebas del tablero
+        env:
+          BASE_URL: http://localhost:3102
+        run: npx playwright test --config apps/frontend/dashboard/playwright.tablero.config.ts
+
+  auditoria:
+    name: npm audit (informativo)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Informa, no bloquea: un aviso nuevo en una dependencia no debe detener un PR ajeno a ella.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: npm audit --audit-level=high
+
+  ci-ok:
+    name: ci-ok
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs: [calidad, pruebas, imagenes, windows, playwright, tablero]
+    if: always()
+    steps:
+      - name: Todos los trabajos requeridos terminaron bien
+        env:
+          RESULTADOS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Resultados: $RESULTADOS"
+          for resultado in $RESULTADOS; do
+            [ "$resultado" = "success" ] || exit 1
+          done

@@ -6,6 +6,8 @@ const PUERTO_API = Number(process.env.PUERTO_SIMULADO ?? 4100);
 /** Corre contra `next build && next start`: la CSP de producción debe estar activa. */
 export default defineConfig({
   testDir: "./e2e",
+  // Requiere la API real con datos agregados: tiene su propia configuración y su trabajo en CI.
+  testIgnore: "tablero.spec.ts",
   timeout: 90_000,
   fullyParallel: false,
   workers: 1,

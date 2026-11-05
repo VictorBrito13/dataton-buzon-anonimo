@@ -30,7 +30,8 @@ const esquemaJwk = z.object({
 
 const leerJson = (texto: string): unknown => {
   try {
-    return JSON.parse(texto);
+    // Sin el BOM que agregan algunos editores y PowerShell al guardar como UTF-8.
+    return JSON.parse(texto.replace(/^﻿/, "").trim());
   } catch {
     throw new ErrorClave("formato");
   }

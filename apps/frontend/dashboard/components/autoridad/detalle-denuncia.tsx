@@ -53,7 +53,7 @@ export function DetalleDenuncia({ id }: { id: string }) {
 
       {denuncia && (
         <div className="grid items-start gap-4 lg:grid-cols-3">
-          <div className="space-y-4 lg:col-span-2">
+          <div className="min-w-0 space-y-4 lg:col-span-2">
             <section aria-labelledby="titulo-relato" className={SECCION}>
               <h2 id="titulo-relato" className={TITULO_SECCION}>
                 Relato
@@ -74,7 +74,7 @@ export function DetalleDenuncia({ id }: { id: string }) {
             </section>
           </div>
 
-          <div className="space-y-4">
+          <div className="min-w-0 space-y-4">
             <section aria-labelledby="titulo-datos" className={SECCION}>
               <h2 id="titulo-datos" className={TITULO_SECCION}>
                 Datos sin sellar

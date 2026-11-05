@@ -3,6 +3,7 @@ import { join } from "node:path";
 import JSZip from "jszip";
 import { PDFDocument } from "pdf-lib";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { MODELO_NER, ORT_MJS, ORT_WASM, RUTA_MODELOS } from "./dominio/archivos-modelo";
 import {
   LATITUD_DE_PRUEBA,
   contiene,
@@ -277,5 +278,13 @@ describe("arquitectura", () => {
     expect(worker).toMatch(/localModelPath\s*=\s*"\/modelos\/"/);
     expect(worker).toMatch(/wasmPaths\s*=/);
     expect(worker).toMatch(/\/modelos\/ort\//);
+  });
+
+  it("la lista de archivos que se comprueba coincide con lo que pide el Worker", () => {
+    const worker = readFileSync(join(raiz, "adaptadores/ner.worker.ts"), "utf8");
+    expect(worker).toContain(`"${RUTA_MODELOS}"`);
+    expect(worker).toContain(`"${MODELO_NER}"`);
+    expect(worker).toContain(`${RUTA_MODELOS}${ORT_MJS}`);
+    expect(worker).toContain(`${RUTA_MODELOS}${ORT_WASM}`);
   });
 });

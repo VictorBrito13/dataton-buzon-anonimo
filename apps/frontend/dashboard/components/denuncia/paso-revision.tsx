@@ -3,42 +3,83 @@
 import { useEffect, useRef, useState } from "react";
 import { Anuncio, Aviso, BOTON_SECUNDARIO } from "@/components/ui";
 import type { EstadoAsistente } from "@/lib/denuncia/asistente";
+import {
+  esSugerenciaDelModelo,
+  modeloActivoEnRevision,
+  resumenHallazgos,
+} from "@/lib/denuncia/busqueda-modelo";
 import { segmentarTexto, sugerenciaEnContexto } from "@/lib/denuncia/depuracion";
-import { escanearTexto, type Hallazgo } from "@/lib/privacidad";
+import {
+  cancelarModeloNer,
+  cargarModeloNer,
+  escanearTexto,
+  estadoModeloNer,
+  type Hallazgo,
+} from "@/lib/privacidad";
 import type { Despachar } from "./asistente";
+import { OpcionModelo } from "./opcion-modelo";
 import { ResumenDenuncia } from "./resumen-denuncia";
 
 export function PasoRevision({
   estado,
   despachar,
+  modeloDisponible,
 }: {
   estado: EstadoAsistente;
   despachar: Despachar;
+  modeloDisponible: boolean;
 }) {
-  const { hechos, hallazgos } = estado;
+  const { hechos, hallazgos, busquedaModelo } = estado;
   const relato = hechos.relato;
+  const conModelo = modeloActivoEnRevision(busquedaModelo);
   const [fallo, setFallo] = useState(false);
   const [anuncio, setAnuncio] = useState("");
   const tituloHallazgos = useRef<HTMLHeadingElement>(null);
 
-  // El análisis ocurre en el dispositivo; el texto no sale de aquí.
+  // El análisis ocurre en el dispositivo; el texto no sale de aquí. `conModelo` descarta una
+  // revisión en curso que empezó antes de que el modelo entrara o saliera.
   useEffect(() => {
     if (hallazgos !== null) return;
     let vigente = true;
     escanearTexto(relato).then(
       (encontrados) => {
-        if (vigente) despachar({ tipo: "hallazgosDetectados", hallazgos: encontrados });
+        if (!vigente) return;
+        despachar({ tipo: "hallazgosDetectados", hallazgos: encontrados });
+        // Si el modelo falla, escanearTexto sigue con reglas sin avisar.
+        despachar({
+          tipo: "busquedaModelo",
+          evento: { tipo: "revisionTerminada", modeloListo: estadoModeloNer() === "listo" },
+        });
       },
       () => {
         if (!vigente) return;
         setFallo(true);
         despachar({ tipo: "hallazgosDetectados", hallazgos: [] });
+        despachar({
+          tipo: "busquedaModelo",
+          evento: { tipo: "revisionTerminada", modeloListo: false },
+        });
       },
     );
     return () => {
       vigente = false;
     };
-  }, [hallazgos, relato, despachar]);
+  }, [hallazgos, relato, conModelo, despachar]);
+
+  // La carga vive en el asistente: sigue si la persona va a otro paso, y nunca detiene el envío.
+  const activarBusqueda = () => {
+    despachar({ tipo: "busquedaModelo", evento: { tipo: "activar" } });
+    void cargarModeloNer(({ porcentaje }) =>
+      despachar({ tipo: "busquedaModelo", evento: { tipo: "progreso", porcentaje } }),
+    ).then((exito) =>
+      despachar({ tipo: "busquedaModelo", evento: { tipo: "cargaTerminada", exito } }),
+    );
+  };
+
+  const cancelarBusqueda = () => {
+    cancelarModeloNer();
+    despachar({ tipo: "busquedaModelo", evento: { tipo: "cancelar" } });
+  };
 
   const lista = hallazgos ?? [];
   const numeros = new Map(lista.map((h, i) => [h, i + 1]));
@@ -106,10 +147,14 @@ export function PasoRevision({
               lo encuentra todo.
             </p>
           )}
-          {lista.length > 0 && (
-            <p>{`Encontramos ${lista.length === 1 ? "1 dato" : `${lista.length} datos`}. Tú decides qué hacer con cada uno.`}</p>
-          )}
+          {lista.length > 0 && <p>{resumenHallazgos(lista)}</p>}
         </div>
+        <OpcionModelo
+          busqueda={busquedaModelo}
+          disponible={modeloDisponible}
+          alActivar={activarBusqueda}
+          alCancelar={cancelarBusqueda}
+        />
         {lista.length > 0 && (
           <ol className="mt-3 space-y-3">
             {lista.map((hallazgo) => (
@@ -120,6 +165,11 @@ export function PasoRevision({
                 <p className="font-medium break-words">
                   {`[${numeros.get(hallazgo)}] «${hallazgo.texto}»`}
                 </p>
+                {esSugerenciaDelModelo(hallazgo) && (
+                  <p className="mt-1 font-semibold">
+                    Sugerencia automática: puede equivocarse. Tú decides.
+                  </p>
+                )}
                 <p className="mt-1">{hallazgo.explicacion}</p>
                 <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                   <button

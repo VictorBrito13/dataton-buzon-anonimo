@@ -42,6 +42,9 @@ export const cargarModeloNer = (alProgreso?: (progreso: ProgresoNer) => void): P
 
 export const estadoModeloNer = (): EstadoModeloNer => clienteNer.estado();
 
+/** Detiene la descarga o el análisis y libera el modelo. Lo ya guardado en caché permanece. */
+export const cancelarModeloNer = (): void => clienteNer.cancelar();
+
 /** Reglas y contexto siempre; el modelo solo si ya se cargó. */
 export const escanearTexto = async (texto: string): Promise<Hallazgo[]> => {
   const siempre = [...detectarDatos(texto), ...detectarContexto(texto)];
