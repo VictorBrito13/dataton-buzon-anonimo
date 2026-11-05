@@ -1,8 +1,4 @@
-import type {
-  DetalleDenunciaAutoridad,
-  Etapa,
-  ResumenDenunciaAutoridad,
-} from "@dataton/shared";
+import type { DetalleDenunciaAutoridad, Etapa, ResumenDenunciaAutoridad } from "@dataton/shared";
 import type { CifradorMensajes, Reloj } from "../../../compartido/aplicacion/puertos.js";
 import { diaDe } from "../../../compartido/dominio/dia.js";
 import { ErrorDominio } from "../../../compartido/dominio/errores.js";
