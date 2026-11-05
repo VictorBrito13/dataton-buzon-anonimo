@@ -192,11 +192,17 @@ jobs:
           npm run agregar -w @dataton/backend
       - name: Levantar API y frontend
         run: |
-          (cd apps/backend && nohup node dist/server.js > /tmp/backend.log 2>&1 &)
+          # Solo con NODE_ENV=development el backend acepta los valores de desarrollo de los secretos.
+          (cd apps/backend && NODE_ENV=development nohup node dist/server.js > /tmp/backend.log 2>&1 &)
           (cd apps/frontend/dashboard && nohup npx next start -p 3102 > /tmp/frontend.log 2>&1 &)
           for url in http://localhost:4000/api/health http://localhost:3102/; do
             timeout 60 sh -c "until curl -sf -o /dev/null $url; do sleep 1; done"
           done
+      - name: Bitácoras de la API y el frontend si no arrancaron
+        if: failure()
+        run: |
+          echo "::group::backend"; cat /tmp/backend.log || true; echo "::endgroup::"
+          echo "::group::frontend"; cat /tmp/frontend.log || true; echo "::endgroup::"
       - name: Pruebas del tablero
         env:
           BASE_URL: http://localhost:3102
