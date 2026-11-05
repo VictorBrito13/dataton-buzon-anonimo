@@ -16,7 +16,7 @@
     "test": "vitest run --passWithNoTests",
     "test:ataques": "vitest run --reporter=verbose ataques-k-anonimato publicacion agregar-periodos",
     "agregar": "node ../../scripts/con-entorno.mjs tsx src/contextos/transparencia/infraestructura/cli-agregar.ts",
-    "sintetico": "node ../../scripts/con-entorno.mjs tsx ../../scripts/sintetico/generar-denuncias.mts"
+    "sintetico": "node ../../scripts/con-entorno.mjs tsx src/scripts/sintetico.ts"
   },
   "dependencies": {
     "argon2": "^0.45.1",

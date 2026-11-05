@@ -12,8 +12,12 @@ import { fileURLToPath } from "node:url";
 const RAIZ = path.resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const VOLUMEN_CLAVE = "clave-autoridad-demo";
 const VOLUMEN_SECRETOS = "secretos";
+const VOLUMEN_SEMILLA = "semilla-autoridad-demo";
 /** Solo estos pueden ver la clave privada de demostración; ninguno sirve tráfico ni queda encendido. */
 const PUEDEN_VER_LA_CLAVE = new Set(["secretos", "clave-autoridad"]);
+/** La contraseña demo del panel: la escribe `secretos` y solo la lee quien siembra el usuario. */
+const PUEDEN_VER_LA_SEMILLA = new Set(["secretos", "migraciones"]);
+const SERVICIOS_EN_EJECUCION = ["backend", "frontend", "db", "caddy"];
 
 let config;
 
@@ -76,5 +80,70 @@ describe("docker-compose.yml y la clave privada de la autoridad", () => {
     assert.ok((lector.profiles ?? []).length > 0, "sin perfil arrancaría con `docker compose up`");
     assert.deepEqual(montajesDe(lector), [VOLUMEN_CLAVE]);
     assert.ok(lector.volumes.every((v) => v.read_only === true));
+  });
+});
+
+describe("docker-compose.yml y la contraseña demo del panel", () => {
+  it("declara un volumen propio para la semilla del usuario demo", () => {
+    assert.ok(config.volumes[VOLUMEN_SEMILLA], `falta el volumen ${VOLUMEN_SEMILLA}`);
+  });
+
+  it("solo la escribe `secretos` y solo la lee `migraciones`, en modo lectura", () => {
+    const culpables = Object.entries(config.services)
+      .filter(([nombre]) => !PUEDEN_VER_LA_SEMILLA.has(nombre))
+      .filter(([, servicio]) => montajesDe(servicio).includes(VOLUMEN_SEMILLA))
+      .map(([nombre]) => nombre);
+    assert.deepEqual(culpables, []);
+    for (const nombre of PUEDEN_VER_LA_SEMILLA) {
+      assert.ok(montajesDe(config.services[nombre]).includes(VOLUMEN_SEMILLA), nombre);
+    }
+    const montaje = config.services.migraciones.volumes.find((v) => v.source === VOLUMEN_SEMILLA);
+    assert.equal(montaje.read_only, true);
+    // El generador recibe la ruta por entorno y no la deduce: así la prueba y el script coinciden.
+    const destino = config.services.secretos.volumes.find((v) => v.source === VOLUMEN_SEMILLA);
+    assert.equal(config.services.secretos.environment.SEMILLA_AUTORIDAD_DIR, destino.target);
+  });
+
+  for (const nombre of SERVICIOS_EN_EJECUCION) {
+    it(`${nombre} no monta la semilla ni recibe la contraseña por entorno`, () => {
+      const servicio = config.services[nombre];
+      assert.ok(!montajesDe(servicio).includes(VOLUMEN_SEMILLA));
+      for (const variable of Object.keys(servicio.environment ?? {})) {
+        assert.ok(!variable.startsWith("SEMILLA_AUTORIDAD"), variable);
+      }
+    });
+  }
+});
+
+describe("docker-compose.yml y los datos de demostración", () => {
+  it("el generador sintético solo arranca a mano, con la misma imagen del backend", () => {
+    const sintetico = config.services.sintetico;
+    assert.ok(sintetico, "falta el servicio sintetico");
+    assert.ok(
+      (sintetico.profiles ?? []).length > 0,
+      "sin perfil arrancaría con `docker compose up`",
+    );
+    assert.equal(sintetico.image, config.services.backend.image);
+    assert.equal(sintetico.restart, "no");
+    assert.equal(sintetico.ports, undefined);
+  });
+
+  it("declara la bandera de demostración: sin ella el generador se niega en producción", () => {
+    const { environment } = config.services.sintetico;
+    assert.equal(environment.NODE_ENV, "production");
+    assert.equal(environment.DATOS_SINTETICOS_DEMO, "1");
+  });
+
+  it("ningún servicio en ejecución lleva la bandera de demostración", () => {
+    for (const nombre of [...SERVICIOS_EN_EJECUCION, "migraciones"]) {
+      const { environment } = config.services[nombre];
+      assert.equal(environment?.DATOS_SINTETICOS_DEMO, undefined, nombre);
+    }
+  });
+
+  it("no monta la clave privada ni la semilla del panel", () => {
+    const montajes = montajesDe(config.services.sintetico);
+    assert.ok(!montajes.includes(VOLUMEN_CLAVE));
+    assert.ok(!montajes.includes(VOLUMEN_SEMILLA));
   });
 });
