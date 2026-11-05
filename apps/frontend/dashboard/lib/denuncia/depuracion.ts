@@ -24,6 +24,23 @@ export const segmentarTexto = (texto: string, hallazgos: readonly Hallazgo[]): S
   return segmentos;
 };
 
+/** Lo que puede ir entre el fin de una oración y su primera palabra. */
+const APERTURA_AL_FINAL = /[\p{Zs}\t¿¡«"“'(]+$/u;
+
+const iniciaOracion = (texto: string, posicion: number): boolean => {
+  const previo = texto.slice(0, posicion).replace(APERTURA_AL_FINAL, "");
+  return previo === "" || /[.!?…\n\r]$/.test(previo);
+};
+
+/** Las sugerencias vienen en minúscula: dependen de dónde caigan para leerse como oración. */
+export const sugerenciaEnContexto = (texto: string, hallazgo: Hallazgo): string => {
+  const { sugerencia } = hallazgo;
+  if (!/^\p{Lu}/u.test(hallazgo.texto) && !iniciaOracion(texto, hallazgo.inicio)) {
+    return sugerencia;
+  }
+  return sugerencia.charAt(0).toLocaleUpperCase("es-MX") + sugerencia.slice(1);
+};
+
 export const reemplazarHallazgo = (
   texto: string,
   hallazgos: readonly Hallazgo[],
@@ -33,9 +50,10 @@ export const reemplazarHallazgo = (
   if (texto.slice(objetivo.inicio, objetivo.fin) !== objetivo.texto) {
     return { texto, hallazgos: resto };
   }
-  const desplazamiento = objetivo.sugerencia.length - (objetivo.fin - objetivo.inicio);
+  const sugerencia = sugerenciaEnContexto(texto, objetivo);
+  const desplazamiento = sugerencia.length - (objetivo.fin - objetivo.inicio);
   return {
-    texto: texto.slice(0, objetivo.inicio) + objetivo.sugerencia + texto.slice(objetivo.fin),
+    texto: texto.slice(0, objetivo.inicio) + sugerencia + texto.slice(objetivo.fin),
     hallazgos: resto
       .filter((h) => h.fin <= objetivo.inicio || h.inicio >= objetivo.fin)
       .map((h) =>

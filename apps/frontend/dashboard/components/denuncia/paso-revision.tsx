@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Anuncio, Aviso, BOTON_SECUNDARIO } from "@/components/ui";
 import type { EstadoAsistente } from "@/lib/denuncia/asistente";
-import { segmentarTexto } from "@/lib/denuncia/depuracion";
+import { segmentarTexto, sugerenciaEnContexto } from "@/lib/denuncia/depuracion";
 import { escanearTexto, type Hallazgo } from "@/lib/privacidad";
 import type { Despachar } from "./asistente";
 import { ResumenDenuncia } from "./resumen-denuncia";
@@ -47,7 +47,7 @@ export function PasoRevision({
     despachar({ tipo: accion, hallazgo });
     setAnuncio(
       accion === "aplicarSugerencia"
-        ? `Reemplazado por ${hallazgo.sugerencia}.`
+        ? `Reemplazado por ${sugerenciaEnContexto(relato, hallazgo)}.`
         : "Lo dejamos como está.",
     );
     // El botón pulsado desaparece: el foco no debe perderse.
@@ -127,7 +127,7 @@ export function PasoRevision({
                     className={BOTON_SECUNDARIO}
                     onClick={() => decidir(hallazgo, "aplicarSugerencia")}
                   >
-                    {`Reemplazar por ${hallazgo.sugerencia}`}
+                    {`Reemplazar por ${sugerenciaEnContexto(relato, hallazgo)}`}
                   </button>
                   <button
                     type="button"
