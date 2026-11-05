@@ -20,7 +20,7 @@ cd dataton-buzon-anonimo
 docker compose up --build
 ```
 
-No hay nada que configurar: el servicio `secretos` genera la pimienta y la contraseña de la base en un volumen de Docker la primera vez. La primera construcción tarda varios minutos.
+No hay nada que configurar: el servicio `secretos` genera la pimienta y la contraseña de la base en un volumen de Docker la primera vez. La primera construcción tarda varios minutos. También descarga el modelo NER opcional, de unos 135 MB; para omitirlo, usa `DESCARGAR_MODELO_NER=0`, y el depurador funcionará solo con reglas.
 
 Abre <https://localhost>. El certificado lo emite Caddy para uso local, así que el navegador mostrará una advertencia que debes aceptar. Si los puertos están ocupados:
 

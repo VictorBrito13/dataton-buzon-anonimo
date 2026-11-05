@@ -16,6 +16,14 @@ COPY apps/frontend/dashboard/ apps/frontend/dashboard/
 ARG API_INTERNA=http://backend:4000
 ENV API_INTERNA=$API_INTERNA
 RUN npm run build -w @dataton/dashboard
+# Modelo NER opcional: se sirve desde este mismo sitio. Va después de `next build`, que no
+# terminó en más de 10 minutos con los 165 MB ya en public/. La descarga, con revisión y SHA-256 fijos,
+# ocurre solo aquí, nunca en el navegador. Si falla, el depurador sigue funcionando con reglas.
+ARG DESCARGAR_MODELO_NER=1
+RUN if [ "$DESCARGAR_MODELO_NER" = "1" ]; then \
+    node apps/frontend/dashboard/scripts/descargar-modelo.mjs \
+      || echo "AVISO: sin modelo NER; el depurador funcionará solo con reglas."; \
+  fi
 
 FROM node:24.22.2-bookworm-slim AS ejecucion
 ENV NODE_ENV=production

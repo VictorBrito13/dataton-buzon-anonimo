@@ -102,6 +102,8 @@ services:
     build:
       context: .
       dockerfile: apps/frontend/dashboard/Dockerfile
+      args:
+        DESCARGAR_MODELO_NER: ${DESCARGAR_MODELO_NER:-1}
     image: dataton/frontend:local
     depends_on:
       backend:

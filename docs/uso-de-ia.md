@@ -7,7 +7,7 @@ Esta declaración atiende la base Sexta de la convocatoria, que pide declarar el
 | Herramienta                        | Dónde se usa          | Finalidad                                       | ¿Forma parte del producto? | Estado                 |
 | ---------------------------------- | --------------------- | ----------------------------------------------- | -------------------------- | ---------------------- |
 | Claude Code (Anthropic)            | Desarrollo            | Asistencia en código, pruebas y documentación   | No                         | En uso                 |
-| Modelo NER local en el navegador   | Depurador de texto    | Sugerir nombres, cargos y lugares para redactar | Sí, opcional               | Pendiente de confirmar |
+| Modelo NER local en el navegador   | Depurador de texto    | Sugerir nombres, lugares y organizaciones para redactar | Sí, opcional               | Pendiente de confirmar |
 
 El **orientador de faltas no usa IA**: funciona con reglas locales y catálogos, y su resultado es solo una orientación.
 
@@ -30,16 +30,18 @@ El **orientador de faltas no usa IA**: funciona con reglas locales y catálogos,
 
 ## 2. En el producto: modelo NER local
 
-**Estado: Pendiente de confirmar** qué modelo se incorpora, su licencia y si llega a la entrega. Este apartado se actualizará al integrar el módulo de privacidad.
+**Estado: Pendiente de confirmar** que llegue a la entrega integrado en el flujo de denuncia. La librería ya lo incluye como capa opcional. El modelo, su revisión, su peso y su licencia están en el [README de la librería de privacidad](../apps/frontend/dashboard/lib/privacidad/README.md#capa-2-modelo).
 
-**Diseño previsto (HU-15).**
+**Finalidad.** Sugerir nombres de personas, lugares y organizaciones que convenga redactar del relato (HU-15).
 
-- Corre en el navegador de la persona, con Transformers.js u ONNX Runtime Web.
-- Es opcional, y solo sugiere: la persona decide qué redactar.
-- El texto no sale del dispositivo durante el análisis.
-- Los archivos del modelo se sirven desde el mismo sitio, sin recursos de terceros.
+**Alcance.**
 
-**Límite.** Un modelo de este tipo comete errores: puede pasar por alto un nombre o marcar algo que no lo es. Se ofrece como ayuda, no como garantía.
+- Corre en el navegador de la persona, y solo si la persona lo activa.
+- Solo sugiere: la persona decide qué redactar.
+- Sus archivos se sirven desde el mismo sitio. La descarga desde su origen ocurre al construir la imagen, no en el dispositivo.
+- **Pendiente de verificar** con el flujo integrado que el texto no salga del dispositivo durante el análisis.
+
+**Límites.** Su precisión no se ha medido con denuncias ni con nombres mexicanos, y puede omitir nombres o confundir otros. Se ofrece como ayuda, no como garantía. Al usarlo, queda en la caché del navegador.
 
 ## 3. Lo que no usa IA
 

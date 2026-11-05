@@ -103,6 +103,20 @@ const freq = { ip: 1 };`,
     });
     assert.deepEqual(revisarTerceros(raiz), []);
   });
+
+  it("no revisa scripts de construcción: no se entregan al navegador", () => {
+    const raiz = repoCon({
+      "apps/frontend/dashboard/scripts/descargar.mjs": `const u = "https://huggingface.co/m";`,
+    });
+    assert.deepEqual(revisarTerceros(raiz), []);
+  });
+
+  it("sí revisa código que descargue del mismo sitio en tiempo de ejecución", () => {
+    const raiz = repoCon({
+      "apps/frontend/dashboard/lib/ner.ts": `const u = "https://huggingface.co/m";`,
+    });
+    assert.equal(revisarTerceros(raiz).length, 1);
+  });
 });
 
 describe("línea de comandos", () => {

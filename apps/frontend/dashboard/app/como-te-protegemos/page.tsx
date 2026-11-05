@@ -124,7 +124,7 @@ export default function ComoTeProtegemos() {
             "De que tu proveedor de internet o la red de tu trabajo sepan que entraste a este sitio. Pueden ver el sitio, no lo que escribes. Si te preocupa, usa otra red, por ejemplo Tor Browser.",
             "De que el momento en que envías se relacione con otro hecho que ya se conozca, como un conflicto reciente.",
             "De quien tenga tu frase o tu folio: con ellos puede ver el avance de tu denuncia. Guárdalos como guardarías una llave.",
-            "De quien use tu mismo equipo. Si activas el borrador, queda en ese dispositivo. En un equipo compartido, mejor no lo actives.",
+            "De quien use tu mismo equipo. Si activas el borrador, queda en ese dispositivo. Si activas la detección de nombres, el navegador conserva el modelo, y eso muestra que usaste este sitio. En un equipo compartido, mejor no los actives.",
             "De un sitio alterado. Si alguien modifica el código que se te entrega, estas protecciones podrían dejar de funcionar. Por eso el código es público y se puede revisar.",
             "De la revisión de tus evidencias. Por un momento, el servidor las ve: las revisa, las sella y descarta el original. En esa etapa dependemos de que corra el código publicado.",
           ]}

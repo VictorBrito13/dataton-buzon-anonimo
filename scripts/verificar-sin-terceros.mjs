@@ -9,7 +9,16 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const RAICES = ["apps", "packages"];
-const OMITIR_CARPETAS = new Set(["node_modules", ".next", "dist", "out", "coverage", "public"]);
+// `scripts` corre al construir y nunca llega al navegador; la prueba de tráfico cubre lo que sí llega.
+const OMITIR_CARPETAS = new Set([
+  "node_modules",
+  ".next",
+  "dist",
+  "out",
+  "coverage",
+  "public",
+  "scripts",
+]);
 const EXTENSIONES = /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|css|html)$/;
 const PRUEBA = /\.(test|spec)\.[cm]?[jt]sx?$/;
 
