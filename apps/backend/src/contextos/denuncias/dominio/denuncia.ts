@@ -37,7 +37,7 @@ export interface Denuncia {
   evidenciaIds: string[];
 }
 
-export const nuevaDenuncia = (datos: DatosDenuncia, instante: Date): Denuncia => {
+export const nuevaDenuncia = (datos: DatosDenuncia, instante: Date, zona: string): Denuncia => {
   if (datos.municipio && !datos.municipio.startsWith(datos.estado)) {
     throw new ErrorDominio(
       "municipio_fuera_de_estado",
@@ -57,7 +57,7 @@ export const nuevaDenuncia = (datos: DatosDenuncia, instante: Date): Denuncia =>
     tipoFalta: datos.tipoFalta,
     enteId: datos.enteId ?? null,
     etapa: "recibida",
-    recibidaDia: diaDe(instante),
+    recibidaDia: diaDe(instante, zona),
     relatoSellado: datos.relatoSellado,
     evidenciaIds,
   };

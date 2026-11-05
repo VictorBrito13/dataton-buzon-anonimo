@@ -56,7 +56,7 @@ export class CasosDenunciasAutoridad {
         const actual = await tx.etapaBloqueada(id);
         if (!actual) throw noEncontrada();
         exigirTransicion(actual, nueva);
-        await tx.cambiarEtapa(id, nueva, diaDe(reloj.ahora()));
+        await tx.cambiarEtapa(id, nueva, diaDe(reloj.ahora(), reloj.zona));
         await tx.registrar(sesion.usuarioId, accionBitacora.etapaCambiada(nueva), id);
       });
     } catch (error) {
@@ -71,7 +71,7 @@ export class CasosDenunciasAutoridad {
     const { repositorio, cifrador, reloj } = this.puertos;
     await repositorio.transaccion(async (tx) => {
       if (!(await tx.etapaBloqueada(id))) throw noEncontrada();
-      await tx.agregarMensaje(id, cifrador.cifrar(cuerpo, id), diaDe(reloj.ahora()));
+      await tx.agregarMensaje(id, cifrador.cifrar(cuerpo, id), diaDe(reloj.ahora(), reloj.zona));
       await tx.registrar(sesion.usuarioId, accionBitacora.mensajeEnviado, id);
     });
   }

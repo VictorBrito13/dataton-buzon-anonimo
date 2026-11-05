@@ -8,6 +8,7 @@
 import { createHash } from "node:crypto";
 import { ENTES_SINTETICOS } from "@dataton/shared";
 import pg from "pg";
+import { ZONA_HORARIA_POR_DEFECTO, diaDe } from "../../apps/backend/src/compartido/dominio/dia.js";
 import { generarDenunciasSinteticas } from "../../apps/backend/src/contextos/transparencia/aplicacion/generador-sintetico.js";
 import { leerMunicipios } from "../../apps/backend/src/contextos/transparencia/infraestructura/fuente-pdn-instantaneas.js";
 
@@ -73,7 +74,7 @@ const denuncias = generarDenunciasSinteticas(
     desde: opcion("desde", "2025-T3"),
     hasta: opcion("hasta", "2026-T3"),
     denunciasPorTrimestre: Number(opcion("por-trimestre", "6000")),
-    hoy: opcion("hoy", new Date().toISOString().slice(0, 10)),
+    hoy: opcion("hoy", diaDe(new Date(), process.env.ZONA_HORARIA ?? ZONA_HORARIA_POR_DEFECTO)),
   },
 );
 

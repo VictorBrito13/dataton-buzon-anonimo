@@ -13,6 +13,8 @@ import type { Express } from "express";
 import sharp from "sharp";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { diaDe } from "../../src/compartido/dominio/dia.js";
+import { env } from "../../src/config/env.js";
 import { enTransaccion } from "../../src/compartido/infraestructura/transaccion.js";
 import { closeDatabase, pool } from "../../src/db/postgres.js";
 import { limpiarHuerfanas } from "../../src/composicion.js";
@@ -154,7 +156,8 @@ describe("POST /denuncias", () => {
       "SELECT to_char(e.dia, 'YYYY-MM-DD') AS dia, e.etapa, e.orden FROM denuncia_etapas e LIMIT 1",
     );
     expect(rows[0]?.etapa).toBe("recibida");
-    expect(rows[0]?.dia).toBe(new Date().toISOString().slice(0, 10));
+    // Se compara con la misma regla: la prueba no depende de la hora en que corra.
+    expect(rows[0]?.dia).toBe(diaDe(new Date(), env.zonaHoraria));
     expect(rows[0]?.orden).toBe(1);
     const columnas = await pool.query<{ data_type: string }>(
       "SELECT data_type FROM information_schema.columns WHERE table_name = 'denuncias' AND column_name = 'recibida_dia'",

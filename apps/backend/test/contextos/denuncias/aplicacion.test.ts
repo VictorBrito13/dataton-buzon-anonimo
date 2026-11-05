@@ -69,7 +69,11 @@ class RepositorioFalso implements RepositorioDenuncias {
 const huellas: Huellas = {
   huella: (valor) => new TextEncoder().encode(`h:${valor}`),
 };
-const reloj: Reloj = { ahora: () => new Date("2026-05-02T18:44:12Z") };
+const reloj: Reloj = { ahora: () => new Date("2026-05-02T18:44:12Z"), zona: "America/Mexico_City" };
+const relojDeNoche: Reloj = {
+  ahora: () => new Date("2026-11-05T03:30:00Z"),
+  zona: "America/Mexico_City",
+};
 const powValida = { consumir: (pow: string) => Promise.resolve(pow === "ok") };
 const azar = { bytes: (n: number) => new Uint8Array(n).fill(7) };
 const MAX_TOTAL = 1000;
@@ -81,7 +85,7 @@ const limitesDeCreacion = (maximo = 100) => ({
 
 const armarCrear = (
   repo = new RepositorioFalso(),
-  sobre: Partial<ReturnType<typeof limitesDeCreacion>> = {},
+  sobre: Partial<ReturnType<typeof limitesDeCreacion> & { reloj: Reloj }> = {},
 ) => ({
   repo,
   caso: new CrearDenuncia(
@@ -106,6 +110,12 @@ const codigo = async (promesa: Promise<unknown>) =>
   );
 
 describe("CrearDenuncia", () => {
+  it("una denuncia enviada de noche queda en el día de la zona, no en el de UTC", async () => {
+    const { repo, caso } = armarCrear(undefined, { reloj: relojDeNoche });
+    await caso.ejecutar(solicitud);
+    expect(repo.denuncias[0]?.denuncia.recibidaDia).toBe("2026-11-04");
+  });
+
   it("devuelve un folio y guarda solo las huellas, con la fecha al día", async () => {
     const { repo, caso } = armarCrear();
     const { folio } = await caso.ejecutar(solicitud);
@@ -278,6 +288,14 @@ describe("ConsultarDenuncia y EnviarMensajeDenunciante", () => {
     const caso = new EnviarMensajeDenunciante({ puerta: puerta("d0"), repositorio: repo, reloj });
     expect(await caso.ejecutar("ok", credencial, sello())).toBe(true);
     expect(repo.mensajes[0]).toMatchObject({ id: "d0", dia: "2026-05-02" });
+
+    const deNoche = new EnviarMensajeDenunciante({
+      puerta: puerta("d0"),
+      repositorio: repo,
+      reloj: relojDeNoche,
+    });
+    expect(await deNoche.ejecutar("ok", credencial, sello())).toBe(true);
+    expect(repo.mensajes[1]).toMatchObject({ id: "d0", dia: "2026-11-04" });
   });
 
   it("no guarda un mensaje sin sellar ni con credencial inválida", async () => {

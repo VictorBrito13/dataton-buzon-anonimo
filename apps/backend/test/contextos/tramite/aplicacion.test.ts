@@ -98,7 +98,9 @@ class RepositorioFalso implements RepositorioTramite {
   }
 }
 
-const reloj = { ahora: () => new Date("2026-05-02T18:44:12Z") };
+const MEXICO = "America/Mexico_City";
+const reloj = { ahora: () => new Date("2026-05-02T18:44:12Z"), zona: MEXICO };
+const relojDeNoche = { ahora: () => new Date("2026-11-05T03:30:00Z"), zona: MEXICO };
 const cifrador = {
   cifrar: (texto: string) => new TextEncoder().encode(texto),
   descifrar: (bytes: Uint8Array) => new TextDecoder().decode(bytes),
@@ -116,6 +118,18 @@ describe("CasosDenunciasAutoridad", () => {
   beforeEach(() => {
     repo = new RepositorioFalso();
     casos = new CasosDenunciasAutoridad({ repositorio: repo, cifrador, reloj });
+  });
+
+  it("el cambio de etapa y el mensaje de la noche quedan en el día de la zona, no en UTC", async () => {
+    const deNoche = new CasosDenunciasAutoridad({
+      repositorio: repo,
+      cifrador,
+      reloj: relojDeNoche,
+    });
+    await deNoche.cambiarEtapa(sesion, ID, "turnada_investigadora");
+    await deNoche.enviarMensaje(sesion, ID, "Hola");
+    expect(repo.cambios[0]?.dia).toBe("2026-11-04");
+    expect(repo.mensajes[0]?.dia).toBe("2026-11-04");
   });
 
   it("lista y lo registra en la bitácora", async () => {
@@ -221,7 +235,7 @@ describe("CasosSesion", () => {
         },
         almacen,
         bitacora: repo,
-        reloj: { ahora: () => new Date(ahoraMs) },
+        reloj: { ahora: () => new Date(ahoraMs), zona: MEXICO },
         limite: new LimiteIntentos({ maximo: maxIntentos, ventanaMs: 100_000, maxClaves: 10 }),
         limiteGlobal: new LimiteIntentos({ maximo: maxGlobal, ventanaMs: 60_000, maxClaves: 1 }),
       },

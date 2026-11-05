@@ -1,5 +1,6 @@
 import "dotenv/config";
 import type { webcrypto } from "node:crypto";
+import { ZONA_HORARIA_POR_DEFECTO, zonaHorariaValida } from "../compartido/dominio/dia.js";
 
 type Fuente = Record<string, string | undefined>;
 type JsonWebKey = webcrypto.JsonWebKey;
@@ -106,8 +107,14 @@ export const cargarEnv = (fuente: Fuente) => {
     throw new Error('S5_ADAPTADOR debe ser "mock" o "real"');
   }
 
+  const zonaHoraria = fuente.ZONA_HORARIA || ZONA_HORARIA_POR_DEFECTO;
+  if (!zonaHorariaValida(zonaHoraria)) {
+    throw new Error(`ZONA_HORARIA no es una zona IANA válida: "${zonaHoraria}"`);
+  }
+
   return {
     nodeEnv,
+    zonaHoraria,
     esDesarrollo,
     port: parsePort(fuente.PORT, 4000),
     corsOrigins: parseList(fuente.CORS_ORIGIN, ["http://localhost:3000"]),

@@ -80,6 +80,7 @@ fija `NODE_ENV=development`; `npm run migrate` y los scripts lo leen de `.env`.
 | `CLAVE_MENSAJES`                                            | Sí              | Desarrollo                       | Cifrado de mensajes de la autoridad (64 hex)                               |
 | `CLAVE_PUBLICA_AUTORIDAD`                                   | Sí              | Desarrollo                       | JWK público P-256; `npm run claves:autoridad -w @dataton/backend`          |
 | `PORT`, `CORS_ORIGIN`                                       | No              | `4000`, `http://localhost:3000`  | Servidor                                                                   |
+| `ZONA_HORARIA`                                              | No              | `America/Mexico_City`            | Zona IANA con la que se redondea al día; solo se guarda el día             |
 | `POW_COSTO`, `POW_CONTADOR_MAX`, `POW_EXPIRA_SEG`           | No              | `1000`, `2000`, `120`            | Dificultad y vigencia de los retos                                         |
 | `MAX_BYTES_EVIDENCIA`                                       | No              | 20 MiB                           | Por archivo                                                                |
 | `MAX_BYTES_EVIDENCIAS_TOTAL`                                | No              | 100 MiB                          | Por denuncia. El máximo de 5 archivos es regla de dominio                  |
