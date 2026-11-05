@@ -92,6 +92,35 @@ adaptadores equivalentes con implementación simulada.
 Aviso permanente de que no se envíen denuncias reales (`components/aviso-prototipo.tsx`): las bases
 prohíben datos reales y esta versión no llega a ninguna autoridad.
 
+## D10. TDD y DDD
+
+**TDD:** toda regla de negocio nace de una prueba que falla. Se corre en rojo, se implementa lo mínimo
+para pasar a verde y luego se refactoriza. Los commits muestran pruebas junto con su implementación.
+
+**DDD:** el lenguaje ubicuo es el de los catálogos (denuncia, folio, frase, etapa, sello, agregado, ente).
+Contextos delimitados:
+
+| Contexto | Responsabilidad | Ubicación |
+|---|---|---|
+| Recepción y acceso | Crear denuncias, credenciales, seguimiento | `apps/backend/src/contextos/denuncias` |
+| Evidencias | Verificar, limpiar y sellar archivos | `apps/backend/src/contextos/evidencias` |
+| Trámite | Etapas, mensajes, bitácora de la autoridad | `apps/backend/src/contextos/tramite` |
+| Transparencia | k-anonimato, agregados, datos abiertos | `apps/backend/src/contextos/transparencia` |
+| Privacidad en el cliente | Depurador y limpieza de archivos | `apps/frontend/dashboard/lib/privacidad` |
+
+Cada contexto del backend se divide en:
+
+- `dominio/`: entidades, objetos de valor y reglas. **Sin Express, `pg` ni variables de entorno**;
+  se prueba sin base de datos.
+- `aplicacion/`: casos de uso que orquestan el dominio y dependen de puertos (interfaces).
+- `infraestructura/`: repositorios con `pg`, rutas HTTP y adaptadores (S5 incluido).
+
+Las dependencias apuntan hacia adentro: `infraestructura` → `aplicacion` → `dominio`. Las reglas
+como `TRANSICIONES` o el umbral k viven en el dominio, no en rutas ni en SQL.
+
+**Definición de terminado de un PR:** `npm run build`, `npm run typecheck`, `npm run lint`,
+`npm run format:check` y `npm test` en verde, con la CI de GitHub en verde.
+
 ## Convenciones
 
 - **Contratos:** `@dataton/shared` es la única fuente de esquemas y catálogos.
