@@ -21,8 +21,10 @@
   --foco: #0b5563;
 }
 
+/* Sin marca en <html> manda el sistema: así también funciona sin JavaScript.
+   Los valores se repiten porque CSS no permite compartir un bloque entre @media y un selector. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-tema="claro"]) {
     --papel: #11181f;
     --superficie: #1a232c;
     --tinta: #eef1f3;
@@ -40,6 +42,25 @@
     --exito-suave: #16321f;
     --foco: #7fd0de;
   }
+}
+
+:root[data-tema="oscuro"] {
+  --papel: #11181f;
+  --superficie: #1a232c;
+  --tinta: #eef1f3;
+  --tinta-suave: #b3bec8;
+  --borde: #36424e;
+  --borde-fuerte: #84919d;
+  --marca: #7fd0de;
+  --marca-tinta: #0a2228;
+  --marca-suave: #143840;
+  --aviso: #f3c17b;
+  --aviso-suave: #3b2a12;
+  --peligro: #f5a29c;
+  --peligro-suave: #431b18;
+  --exito: #8fd8a8;
+  --exito-suave: #16321f;
+  --foco: #7fd0de;
 }
 
 @theme inline {
@@ -69,6 +90,90 @@ html {
   scroll-padding-top: 5rem;
 }
 
+:root[data-tema="claro"] {
+  color-scheme: light;
+}
+
+:root[data-tema="oscuro"] {
+  color-scheme: dark;
+}
+
+/* Con el texto al 200 % una sola palabra puede ser más ancha que la columna. Las celdas de tabla
+   quedan fuera: tienen su propio desplazamiento y partirlas las volvería ilegibles. */
+h1,
+h2,
+h3,
+h4,
+p,
+li,
+dt,
+dd,
+label,
+legend,
+summary {
+  overflow-wrap: anywhere;
+}
+
+/* Por omisión un fieldset no se encoge por debajo de su contenido. */
+fieldset {
+  min-width: 0;
+}
+
+/* Destinos de enlace y foco de teclado quedan por debajo del encabezado fijo. */
+:target,
+:focus {
+  scroll-margin-top: 1rem;
+}
+
+/* Texto al 200 % en un celular: el encabezado fijo taparía media pantalla. Deja de ser fijo y solo
+   la salida rápida sigue a la vista, en una esquina. Se mide en rem para que reaccione al texto,
+   no a la ventana: una pantalla de 320 px con texto normal mide 20rem. */
+body {
+  container-type: inline-size;
+}
+
+@container (max-width: 19rem) {
+  .encabezado-fijo {
+    position: static;
+  }
+
+  .salida-rapida {
+    position: fixed;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    z-index: 10;
+  }
+
+  main {
+    padding-bottom: 6rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .menu-tema {
+    position: fixed;
+    right: 0.5rem;
+    left: 0.5rem;
+    top: auto;
+    width: auto;
+  }
+}
+
+/* El icono del botón de tema lo decide la marca de <html>: no parpadea antes de hidratar. */
+.icono-tema-claro,
+.icono-tema-oscuro,
+.icono-tema-automatico {
+  display: none;
+}
+
+:root[data-tema="claro"] .icono-tema-claro,
+:root[data-tema="oscuro"] .icono-tema-oscuro,
+:root:not([data-tema]) .icono-tema-automatico {
+  display: block;
+}
+
 body {
   background: var(--papel);
   color: var(--tinta);
@@ -79,7 +184,8 @@ body {
 
 /* Impresión de la frase o el folio: solo el recuadro y siempre en tinta oscura. */
 @media print {
-  :root {
+  :root,
+  :root[data-tema] {
     color-scheme: light;
     --papel: #ffffff;
     --superficie: #ffffff;
