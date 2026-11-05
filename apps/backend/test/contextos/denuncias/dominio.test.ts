@@ -4,6 +4,8 @@ import { ErrorDominio } from "../../../src/compartido/dominio/errores.js";
 import { folioDesdeBytes, BYTES_FOLIO } from "../../../src/contextos/denuncias/dominio/folio.js";
 import { nuevaDenuncia } from "../../../src/contextos/denuncias/dominio/denuncia.js";
 
+const MEXICO = "America/Mexico_City";
+
 const selloValido = (): Uint8Array => {
   const bytes = new Uint8Array(100);
   bytes[0] = 1;
@@ -51,33 +53,38 @@ describe("folio", () => {
 
 describe("nuevaDenuncia", () => {
   it("nace en la etapa recibida y con el día redondeado", () => {
-    const denuncia = nuevaDenuncia(datos, new Date("2026-05-02T18:44:12Z"));
+    const denuncia = nuevaDenuncia(datos, new Date("2026-05-02T18:44:12Z"), MEXICO);
     expect(denuncia.etapa).toBe("recibida");
     expect(denuncia.recibidaDia).toBe("2026-05-02");
   });
 
+  it("guarda el día de la zona indicada, no el de UTC", () => {
+    const denuncia = nuevaDenuncia(datos, new Date("2026-11-05T03:30:00Z"), MEXICO);
+    expect(denuncia.recibidaDia).toBe("2026-11-04");
+  });
+
   it("rechaza un municipio de otro estado", () => {
-    expect(codigoDe(() => nuevaDenuncia({ ...datos, municipio: "09001" }, new Date()))).toBe(
-      "municipio_fuera_de_estado",
-    );
+    expect(
+      codigoDe(() => nuevaDenuncia({ ...datos, municipio: "09001" }, new Date(), MEXICO)),
+    ).toBe("municipio_fuera_de_estado");
   });
 
   it("permite omitir el municipio", () => {
     const { municipio: _omitido, ...sinMunicipio } = datos;
-    expect(nuevaDenuncia(sinMunicipio, new Date()).municipio).toBeNull();
+    expect(nuevaDenuncia(sinMunicipio, new Date(), MEXICO).municipio).toBeNull();
   });
 
   it("rechaza un relato que no está sellado", () => {
     const relatoSellado = new TextEncoder().encode("Un relato en texto claro ".repeat(10));
-    expect(codigoDe(() => nuevaDenuncia({ ...datos, relatoSellado }, new Date()))).toBe(
+    expect(codigoDe(() => nuevaDenuncia({ ...datos, relatoSellado }, new Date(), MEXICO))).toBe(
       "relato_sin_sellar",
     );
   });
 
   it("elimina evidencias repetidas", () => {
     const id = "6a0d3f0e-3c1c-4b7c-8a55-0a5a9a8a7a11";
-    expect(nuevaDenuncia({ ...datos, evidenciaIds: [id, id] }, new Date()).evidenciaIds).toEqual([
-      id,
-    ]);
+    expect(
+      nuevaDenuncia({ ...datos, evidenciaIds: [id, id] }, new Date(), MEXICO).evidenciaIds,
+    ).toEqual([id]);
   });
 });

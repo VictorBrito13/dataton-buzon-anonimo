@@ -25,6 +25,8 @@ Una prueba en `index.test.ts` falla si `dominio/` usa DOM, red o Transformers.js
 - `estadoModeloNer()`: `inactivo`, `cargando`, `listo` o `error`. Si el modelo falla, `escanearTexto`
   sigue con reglas sin avisar, así que la interfaz debe consultar este estado antes de decir que el
   modelo revisó el texto.
+- `cancelarModeloNer()`: detiene la descarga o el análisis, termina el Worker y vuelve a `inactivo`.
+  Lo que ya esté en la caché del navegador permanece.
 
 ## Qué detecta en el texto
 
@@ -121,6 +123,10 @@ la firma. Las firmas y la huella original no se pueden conservar si se quiere qu
 - Comprobado una vez a mano en Chromium con `next build` y la CSP real: carga del modelo sin peticiones
   externas, análisis, uso sin conexión tras la primera carga, caída a reglas sin modelo y limpieza con
   canvas y con bytes de archivos hechos con Pillow. **Esto no forma parte de las pruebas automáticas.**
+- `e2e/busqueda-modelo.spec.ts` cubre la capa 2 con el modelo real en la interfaz, si está instalado.
+- Transformers.js abre una petición extra del `.onnx` para leer sus metadatos y no la cierra. En
+  Chromium sin instrumentar se detuvo en 3 MB, sin descargarlo dos veces. Con Playwright sí se
+  completa, porque su instrumentación lee los cuerpos: no sirve para medir el peso.
 - **Sin comprobar:** Firefox, Safari, Tor Browser real y celulares (memoria y tiempo con un modelo de
   135 MB). Tampoco abrir los resultados en Word, Excel, PowerPoint o Acrobat. El XLSX se reabrió con
   `openpyxl`, y el PDF solo con `pdf-lib`. La prueba del canvas bloqueado usa un navegador simulado.

@@ -16,6 +16,6 @@ export class LimpiarEvidenciasHuerfanas {
    */
   ejecutar(): Promise<number> {
     const { repositorio, reloj } = this.puertos;
-    return repositorio.eliminarSinDenunciaAntesDe(diaAnterior(diaDe(reloj.ahora())));
+    return repositorio.eliminarSinDenunciaAntesDe(diaAnterior(diaDe(reloj.ahora(), reloj.zona)));
   }
 }

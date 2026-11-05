@@ -1,3 +1,5 @@
+import { diaDe } from "../../../compartido/dominio/dia.js";
+import { env } from "../../../config/env.js";
 import { closeDatabase, pool } from "../../../db/postgres.js";
 import { agregarPeriodos } from "../aplicacion/agregar-periodos.js";
 import { K_INICIAL, REZAGO_DIAS_INICIAL } from "../dominio/metodologia.js";
@@ -13,7 +15,7 @@ const principal = async (): Promise<void> => {
     {
       k: Number(process.env.TRANSPARENCIA_K ?? K_INICIAL),
       rezagoDias: Number(process.env.TRANSPARENCIA_REZAGO_DIAS ?? REZAGO_DIAS_INICIAL),
-      hoy: new Date().toISOString().slice(0, 10),
+      hoy: diaDe(new Date(), env.zonaHoraria),
       desde: process.env.TRANSPARENCIA_DESDE ?? "2025-T1",
       universo: {
         municipios: leerMunicipios(),

@@ -4,6 +4,7 @@ import type { DetalleDenunciaAutoridad } from "@dataton/shared";
 import { useState } from "react";
 import { descargarEvidencia, esSesionVencida, mensajeDeError } from "@/lib/autoridad/api";
 import { ErrorSello, abrirEvidencia, type EvidenciaAbierta } from "@/lib/autoridad/sellos";
+import { nombreTipoEvidencia } from "@/lib/denuncia/evidencias";
 import { usePanel } from "./contexto";
 import { BOTON_SECUNDARIO, CELDA, CELDA_TITULO } from "./estilos";
 
@@ -47,7 +48,7 @@ function FilaEvidencia(props: {
   return (
     <tr>
       <td className={`${CELDA} font-mono`}>{props.evidencia.id.slice(0, 8)}</td>
-      <td className={`${CELDA} break-words`}>{props.evidencia.tipo}</td>
+      <td className={`${CELDA} break-words`}>{nombreTipoEvidencia(props.evidencia.tipo)}</td>
       <td className={CELDA}>
         {clave ? (
           <button

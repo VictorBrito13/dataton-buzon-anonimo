@@ -2,6 +2,7 @@ import {
   CLAVES_ESTADO,
   CLAVES_ETAPA,
   CLAVES_TIPO_FALTA,
+  ESTADOS,
   type ClaveEstado,
   type Etapa,
   type ResumenDenunciaAutoridad,
@@ -13,6 +14,11 @@ export type Filtros = {
   estado: ClaveEstado | null;
   tipoFalta: TipoFalta | null;
 };
+
+/** Del catálogo, no de los resultados: siempre los 32 y en un orden que se puede recorrer a ojo. */
+export const OPCIONES_ESTADO: { valor: ClaveEstado; texto: string }[] = CLAVES_ESTADO.map(
+  (valor) => ({ valor, texto: ESTADOS[valor] }),
+).sort((a, b) => a.texto.localeCompare(b.texto, "es"));
 
 export const FILTROS_VACIOS: Filtros = { etapa: null, estado: null, tipoFalta: null };
 
@@ -54,3 +60,24 @@ export const filtrarDenuncias = (
         (!tipoFalta || denuncia.tipoFalta === tipoFalta),
     )
     .sort((a, b) => b.recibidaDia.localeCompare(a.recibidaDia));
+
+const FORMATO = new Intl.NumberFormat("es-MX");
+
+/** Filtrar ocurre en el navegador: si el servidor recortó la lista, hay que decir qué no se ve. */
+export const describirListado = ({
+  visibles,
+  cargadas,
+  total,
+}: {
+  visibles: number;
+  cargadas: number;
+  total: number;
+}): string => {
+  if (cargadas >= total) return `${visibles} de ${cargadas} denuncias`;
+  const recientes = `las ${FORMATO.format(cargadas)} denuncias más recientes de ${FORMATO.format(total)}`;
+  const inicio =
+    visibles === cargadas
+      ? `Se muestran ${recientes}`
+      : `${FORMATO.format(visibles)} coinciden entre ${recientes}`;
+  return `${inicio}. Los filtros solo buscan entre esas ${FORMATO.format(cargadas)}.`;
+};

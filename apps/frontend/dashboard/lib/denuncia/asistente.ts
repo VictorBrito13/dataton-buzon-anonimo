@@ -1,5 +1,12 @@
 import type { Hallazgo } from "@/lib/privacidad";
 import type { Borrador } from "./borrador";
+import {
+  BUSQUEDA_INICIAL,
+  reducirBusqueda,
+  requiereNuevaRevision,
+  type EstadoBusqueda,
+  type EventoBusqueda,
+} from "./busqueda-modelo";
 import { claveIgnorado, quitarIgnorados, reemplazarHallazgo } from "./depuracion";
 import type { EvidenciaSubida } from "./evidencias";
 import { confirmacionCorrecta, type Posiciones } from "./frase";
@@ -21,6 +28,8 @@ export interface EstadoAsistente {
   /** null: aún sin revisar. Solo existen en memoria. */
   hallazgos: Hallazgo[] | null;
   ignorados: string[];
+  /** Vive aquí para sobrevivir a ir y volver entre pasos; nunca se guarda en el borrador. */
+  busquedaModelo: EstadoBusqueda;
   frase: string | null;
   posiciones: Posiciones | null;
   fraseConfirmada: boolean;
@@ -42,6 +51,7 @@ export type AccionAsistente =
   | { tipo: "hallazgosDetectados"; hallazgos: Hallazgo[] }
   | { tipo: "aplicarSugerencia"; hallazgo: Hallazgo }
   | { tipo: "ignorarHallazgo"; hallazgo: Hallazgo }
+  | { tipo: "busquedaModelo"; evento: EventoBusqueda }
   | { tipo: "fraseGenerada"; frase: string; posiciones: Posiciones }
   | { tipo: "confirmarFrase"; respuestas: string[] }
   | { tipo: "cambiarGuardado"; activo: boolean }
@@ -64,6 +74,7 @@ export const estadoInicial = (): EstadoAsistente => ({
   evidencias: [],
   hallazgos: null,
   ignorados: [],
+  busquedaModelo: BUSQUEDA_INICIAL,
   frase: null,
   posiciones: null,
   fraseConfirmada: false,
@@ -162,6 +173,16 @@ export const reducirAsistente = (
         ...estado,
         ignorados,
         hallazgos: quitarIgnorados(estado.hallazgos ?? [], ignorados),
+      };
+    }
+    case "busquedaModelo": {
+      const busquedaModelo = reducirBusqueda(estado.busquedaModelo, accion.evento);
+      return {
+        ...estado,
+        busquedaModelo,
+        hallazgos: requiereNuevaRevision(estado.busquedaModelo, busquedaModelo)
+          ? null
+          : estado.hallazgos,
       };
     }
     case "fraseGenerada":

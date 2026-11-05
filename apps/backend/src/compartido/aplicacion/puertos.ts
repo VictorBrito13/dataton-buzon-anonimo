@@ -1,5 +1,7 @@
 export interface Reloj {
   ahora(): Date;
+  /** Zona IANA con la que un instante se redondea al día que se guarda. */
+  zona: string;
 }
 
 /** Comprueba una prueba de trabajo y la consume: cada solución sirve una sola vez. */

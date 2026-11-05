@@ -13,6 +13,7 @@ import { borrarBorrador, guardarBorrador, leerBorrador } from "@/lib/denuncia/bo
 import { elegirPosiciones } from "@/lib/denuncia/frase";
 import { PASOS, anuncioPaso, numeroPaso, tituloPaso } from "@/lib/denuncia/pasos";
 import { almacenLocal } from "@/lib/infraestructura/navegador";
+import { cancelarModeloNer } from "@/lib/privacidad";
 import { PantallaFinal } from "./pantalla-final";
 import { PasoEnvio } from "./paso-envio";
 import { PasoEvidencias } from "./paso-evidencias";
@@ -53,7 +54,7 @@ function Progreso({ estado }: { estado: EstadoAsistente }) {
   );
 }
 
-export function Asistente() {
+export function Asistente({ modeloDisponible }: { modeloDisponible: boolean }) {
   const [estado, despachar] = useReducer(reducirAsistente, undefined, estadoInicial);
   const [borradorGuardado, setBorradorGuardado] = useState(() => leerBorrador(almacenLocal()));
   const [intento, setIntento] = useState(0);
@@ -76,9 +77,15 @@ export function Asistente() {
     if (guardarActivo) guardarBorrador(almacenLocal(), { hechos, personas });
   }, [guardarActivo, hechos, personas]);
 
+  // Al enviar se libera el modelo: el reductor vuelve a apagar la opción.
   useEffect(() => {
-    if (folio) borrarBorrador(almacenLocal());
+    if (!folio) return;
+    borrarBorrador(almacenLocal());
+    cancelarModeloNer();
   }, [folio]);
+
+  // El modelo vive fuera de React: si sobreviviera, una denuncia nueva lo usaría con la opción apagada.
+  useEffect(() => cancelarModeloNer, []);
 
   if (folio) return <PantallaFinal folio={folio} />;
 
@@ -159,7 +166,9 @@ export function Asistente() {
         )}
         {paso === "personas" && <PasoPersonas estado={estado} despachar={despachar} />}
         {paso === "evidencias" && <PasoEvidencias estado={estado} despachar={despachar} />}
-        {paso === "revision" && <PasoRevision estado={estado} despachar={despachar} />}
+        {paso === "revision" && (
+          <PasoRevision estado={estado} despachar={despachar} modeloDisponible={modeloDisponible} />
+        )}
         {paso === "frase" && <PasoFrase estado={estado} despachar={despachar} avanzar={avanzar} />}
         {paso === "envio" && <PasoEnvio estado={estado} despachar={despachar} />}
 

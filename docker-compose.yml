@@ -1,12 +1,197 @@
+# Despliegue completo:      docker compose up --build
+# Postgres de desarrollo:   docker compose up -d postgres   (perfil "dev", puerto en localhost)
+#
+# Solo Caddy publica puertos. La red "interna" no tiene salida a internet: backend, frontend
+# y base de datos no pueden hablar con terceros aunque el código lo intentara.
+
+x-endurecido: &endurecido
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  restart: unless-stopped
+  logging:
+    driver: json-file
+    options: { max-size: "5m", max-file: "2" }
+
 services:
+  # Genera secretos en un volumen la primera vez. Nada se escribe en el repositorio.
+  # La clave privada de demostración va a otro volumen que ningún servicio en ejecución monta (D3);
+  # docker/compose.test.mjs lo comprueba sobre la configuración resuelta.
+  secretos:
+    image: node:24.22.2-bookworm-slim
+    read_only: true
+    network_mode: none
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER]
+    security_opt: ["no-new-privileges:true"]
+    environment:
+      # Para uso real: genera el par fuera del servidor y pasa aquí solo la clave pública.
+      CLAVE_PUBLICA_AUTORIDAD: ${CLAVE_PUBLICA_AUTORIDAD:-}
+      SECRETOS_DIR: /secretos
+      CLAVE_AUTORIDAD_DIR: /clave-autoridad
+    volumes:
+      - secretos:/secretos
+      - clave-autoridad-demo:/clave-autoridad
+      - ./docker/generar-secretos.mjs:/generar-secretos.mjs:ro
+    command: ["node", "/generar-secretos.mjs"]
+    restart: "no"
+
+  # Solo a mano, para la demostración. No arranca con "up" (perfil) y no tiene red.
+  #   docker compose run --rm --no-deps clave-autoridad > autoridad.jwk        # clave privada, para el panel
+  #   docker compose run --rm --no-deps clave-autoridad cat /clave-autoridad/acceso_panel.txt
+  clave-autoridad:
+    profiles: [demo]
+    image: node:24.22.2-bookworm-slim
+    read_only: true
+    network_mode: none
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    volumes:
+      - clave-autoridad-demo:/clave-autoridad:ro
+    command: ["cat", "/clave-autoridad/autoridad_clave_privada.jwk"]
+    restart: "no"
+
+  db:
+    <<: *endurecido
+    image: postgres:17.11-alpine3.24
+    # El entrypoint de la imagen arranca como root solo para ajustar permisos y baja a "postgres".
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
+    depends_on:
+      secretos:
+        condition: service_completed_successfully
+    environment:
+      POSTGRES_USER: dataton
+      POSTGRES_DB: dataton
+      POSTGRES_PASSWORD_FILE: /secretos/db_password
+    networks: [interna]
+    # Sin "ports": no se puede llegar a la base desde fuera de la red interna.
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - secretos:/secretos:ro
+    tmpfs:
+      - /var/run/postgresql
+      - /tmp
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dataton -d dataton"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  migraciones:
+    <<: *endurecido
+    build: &backend-build
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    image: dataton/backend:local
+    # Migra, rota la contraseña del rol público y crea el usuario demo del panel (con hash Argon2id).
+    command:
+      - sh
+      - -c
+      - node dist/db/migrate.js && node rotar-rol-lector.mjs && node dist/scripts/semilla-autoridad.js
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment: &backend-env
+      NODE_ENV: production
+    networks: [interna]
+    volumes:
+      - secretos:/secretos:ro
+
+  backend:
+    <<: *endurecido
+    build: *backend-build
+    image: dataton/backend:local
+    depends_on:
+      migraciones:
+        condition: service_completed_successfully
+    environment:
+      <<: *backend-env
+      PORT: "4000"
+      CORS_ORIGIN: https://${SITIO_HOST:-localhost}
+    networks: [interna]
+    volumes:
+      - secretos:/secretos:ro
+    tmpfs:
+      - /tmp
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch("http://127.0.0.1:4000/api/health").then((r)=>process.exit(r.ok?0:1),()=>process.exit(1))
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  frontend:
+    <<: *endurecido
+    build:
+      context: .
+      dockerfile: apps/frontend/dashboard/Dockerfile
+      args:
+        DESCARGAR_MODELO_NER: ${DESCARGAR_MODELO_NER:-1}
+    image: dataton/frontend:local
+    environment:
+      # El tablero consulta la API desde el servidor al renderizar.
+      API_INTERNA: http://backend:4000
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks: [interna]
+    tmpfs:
+      - /tmp
+      - /app/apps/frontend/dashboard/.next/cache:uid=1000,gid=1000
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch("http://127.0.0.1:3000/").then((r)=>process.exit(r.ok?0:1),()=>process.exit(1))
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  caddy:
+    <<: *endurecido
+    build:
+      context: docker/caddy
+    image: dataton/caddy:local
+    depends_on:
+      frontend:
+        condition: service_healthy
+    environment:
+      SITIO_HOST: ${SITIO_HOST:-localhost}
+      PUERTO_HTTPS: ${PUERTO_HTTPS:-443}
+      HSTS_MAX_AGE: ${HSTS_MAX_AGE:-31536000}
+    # Permite escuchar en 80 y 443 sin root ni capacidades.
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: "0"
+    networks: [interna, publica]
+    ports:
+      - "${PUERTO_HTTP:-80}:80"
+      - "${PUERTO_HTTPS:-443}:443"
+    volumes:
+      - caddy-data:/data
+    tmpfs:
+      - /tmp
+      - /config:uid=1000,gid=1000
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8081/"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Solo para desarrollo con `npm run dev:*`. No arranca con `docker compose up`.
   postgres:
-    image: postgres:17-alpine
+    profiles: [dev]
+    image: postgres:17.11-alpine3.24
     environment:
       POSTGRES_USER: dataton
       POSTGRES_PASSWORD: dataton
       POSTGRES_DB: dataton
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -15,5 +200,16 @@ services:
       timeout: 5s
       retries: 10
 
+networks:
+  interna:
+    internal: true
+  publica:
+
 volumes:
+  secretos:
+  # Clave privada y acceso demo de la autoridad. Solo "secretos" (al generar) y "clave-autoridad"
+  # (a mano) lo montan: ni backend, ni frontend, ni db, ni caddy, ni migraciones.
+  clave-autoridad-demo:
+  db-data:
+  caddy-data:
   postgres-data:

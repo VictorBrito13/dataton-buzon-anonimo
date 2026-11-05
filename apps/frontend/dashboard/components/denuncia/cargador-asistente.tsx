@@ -12,6 +12,6 @@ const Asistente = dynamic(() => import("./asistente").then((m) => m.Asistente), 
   ),
 });
 
-export function CargadorAsistente() {
-  return <Asistente />;
+export function CargadorAsistente({ modeloDisponible }: { modeloDisponible: boolean }) {
+  return <Asistente modeloDisponible={modeloDisponible} />;
 }

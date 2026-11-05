@@ -10,6 +10,17 @@ import { registrarError } from "../../src/compartido/infraestructura/registro.js
 const CLAVE = "c".repeat(64);
 
 describe("cargarEnv", () => {
+  it("redondea en la zona de México si no se configura otra", () => {
+    expect(cargarEnv({ NODE_ENV: "test" }).zonaHoraria).toBe("America/Mexico_City");
+    expect(cargarEnv({ NODE_ENV: "test", ZONA_HORARIA: "UTC" }).zonaHoraria).toBe("UTC");
+  });
+
+  it("no arranca con una zona horaria que no existe", () => {
+    expect(() => cargarEnv({ NODE_ENV: "test", ZONA_HORARIA: "Marte/Olympus" })).toThrow(
+      /ZONA_HORARIA/,
+    );
+  });
+
   const produccion = {
     NODE_ENV: "production",
     DATABASE_URL: "postgres://x",

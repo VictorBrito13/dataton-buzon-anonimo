@@ -4,15 +4,17 @@ import {
   respuestaConfiguracion,
   respuestaConsulta,
   respuestaEvidencia,
+  respuestaListadoAutoridad,
   type DetalleDenunciaAutoridad,
   type RespuestaConsulta,
   type RespuestaEvidencia,
-  type ResumenDenunciaAutoridad,
 } from "@dataton/shared";
 import type { Express } from "express";
 import sharp from "sharp";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { diaDe } from "../../src/compartido/dominio/dia.js";
+import { env } from "../../src/config/env.js";
 import { enTransaccion } from "../../src/compartido/infraestructura/transaccion.js";
 import { closeDatabase, pool } from "../../src/db/postgres.js";
 import { limpiarHuerfanas } from "../../src/composicion.js";
@@ -154,7 +156,8 @@ describe("POST /denuncias", () => {
       "SELECT to_char(e.dia, 'YYYY-MM-DD') AS dia, e.etapa, e.orden FROM denuncia_etapas e LIMIT 1",
     );
     expect(rows[0]?.etapa).toBe("recibida");
-    expect(rows[0]?.dia).toBe(new Date().toISOString().slice(0, 10));
+    // Se compara con la misma regla: la prueba no depende de la hora en que corra.
+    expect(rows[0]?.dia).toBe(diaDe(new Date(), env.zonaHoraria));
     expect(rows[0]?.orden).toBe(1);
     const columnas = await pool.query<{ data_type: string }>(
       "SELECT data_type FROM information_schema.columns WHERE table_name = 'denuncias' AND column_name = 'recibida_dia'",
@@ -513,6 +516,35 @@ describe("panel de autoridad", () => {
     await request(app).get("/api/v1/autoridad/sesion").set("Cookie", cookie).expect(401);
   });
 
+  it("el listado corta en 500 filas, pero dice cuántas denuncias hay en total", async () => {
+    const { rows } = await pool.query<{ total: number }>(
+      "SELECT count(*)::int AS total FROM denuncias",
+    );
+    const previas = rows[0]?.total as number;
+    const agregadas = 501;
+    // Día del pasado lejano: el listado las deja al final y las pruebas no las confunden con otras.
+    const { rows: creadas } = await pool.query<{ id: string }>(
+      `INSERT INTO denuncias (folio_hmac, acceso_hmac, estado, tipo_falta, recibida_dia, relato_sellado)
+       SELECT gen_random_uuid()::text::bytea, gen_random_uuid()::text::bytea, '17', 'cohecho', '2001-01-01', '\\x01'
+       FROM generate_series(1, $1) RETURNING id`,
+      [agregadas],
+    );
+    try {
+      const cookie = await iniciarSesion(app);
+      const res = await request(app)
+        .get("/api/v1/autoridad/denuncias")
+        .set("Cookie", cookie)
+        .expect(200);
+      const listado = respuestaListadoAutoridad.parse(res.body);
+      expect(listado.denuncias).toHaveLength(500);
+      expect(listado.total).toBe(previas + agregadas);
+    } finally {
+      await pool.query("DELETE FROM denuncias WHERE id = ANY($1::uuid[])", [
+        creadas.map((c) => c.id),
+      ]);
+    }
+  });
+
   it("recorre el flujo completo y deja rastro en la bitácora", async () => {
     const foto = (await subir(await jpegConMetadatos())).body as RespuestaEvidencia;
     const { folio, accesoId } = await crearDenuncia(app, { evidenciaIds: [foto.evidenciaId] });
@@ -522,7 +554,7 @@ describe("panel de autoridad", () => {
       .get("/api/v1/autoridad/denuncias")
       .set("Cookie", cookie)
       .expect(200);
-    const resumenes = lista.body as ResumenDenunciaAutoridad[];
+    const { denuncias: resumenes } = respuestaListadoAutoridad.parse(lista.body);
     const { rows } = await pool.query<{ denuncia_id: string }>(
       "SELECT denuncia_id FROM evidencias WHERE id = $1",
       [foto.evidenciaId],

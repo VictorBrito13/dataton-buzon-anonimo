@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { Reloj } from "../../../src/compartido/aplicacion/puertos.js";
 import { LimpiarEvidenciasHuerfanas } from "../../../src/contextos/evidencias/aplicacion/limpiar-huerfanas.js";
 import type {
   EvidenciaSellada,
@@ -35,6 +36,7 @@ const armar = (
     limpiador?: Limpiador;
     max?: number;
     cuota?: { filas: number; bytes: number };
+    reloj?: Reloj;
   } = {},
 ): { repo: RepositorioFalso; caso: RecibirEvidencia; sellados: Uint8Array[] } => {
   const repo = new RepositorioFalso();
@@ -52,7 +54,10 @@ const armar = (
         },
       },
       repositorio: repo,
-      reloj: { ahora: () => new Date("2026-05-02T18:44:12Z") },
+      reloj: sobre.reloj ?? {
+        ahora: () => new Date("2026-05-02T18:44:12Z"),
+        zona: "America/Mexico_City",
+      },
     },
     { maxBytes: sobre.max ?? 1000, cuotaHuerfanas: sobre.cuota ?? { filas: 10, bytes: 10_000 } },
   );
@@ -78,6 +83,14 @@ describe("RecibirEvidencia", () => {
       blobSellado: new TextEncoder().encode("sellado"),
       subidaDia: "2026-05-02",
     });
+  });
+
+  it("una subida de noche queda en el día de la zona, no en el de UTC", async () => {
+    const { repo, caso } = armar({
+      reloj: { ahora: () => new Date("2026-11-05T03:30:00Z"), zona: "America/Mexico_City" },
+    });
+    await caso.ejecutar(original);
+    expect(repo.guardadas[0]?.subidaDia).toBe("2026-11-04");
   });
 
   it("usa el tipo real detectado y rechaza lo no permitido", async () => {
@@ -132,9 +145,10 @@ describe("LimpiarEvidenciasHuerfanas", () => {
     const repo = new RepositorioFalso();
     const caso = new LimpiarEvidenciasHuerfanas({
       repositorio: repo,
-      reloj: { ahora: () => new Date("2026-05-03T01:00:00Z") },
+      // En México todavía es 2 de mayo: el día anterior es el 1, sin importar la fecha en UTC.
+      reloj: { ahora: () => new Date("2026-05-03T01:00:00Z"), zona: "America/Mexico_City" },
     });
     expect(await caso.ejecutar()).toBe(3);
-    expect(repo.eliminadasAntesDe).toBe("2026-05-02");
+    expect(repo.eliminadasAntesDe).toBe("2026-05-01");
   });
 });

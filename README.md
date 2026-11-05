@@ -12,7 +12,7 @@ La planeación y los requerimientos están en [`docs/`](./docs). Las decisiones 
 | Backend               | Node + TypeScript (Express)  |
 | Base de datos         | PostgreSQL                   |
 | Frase de recuperación | Argon2id                     |
-| Despliegue            | Docker Compose               |
+| Despliegue            | Docker Compose y Caddy       |
 
 ## Estructura del repositorio
 
@@ -23,7 +23,10 @@ La planeación y los requerimientos están en [`docs/`](./docs). Las decisiones 
 │   └── frontend/dashboard/   # Aplicación Next.js
 ├── packages/shared/          # Contratos de la API, catálogos, frase y sellado
 ├── docs/                     # Requerimientos y planeación
-├── docker-compose.yml        # PostgreSQL para desarrollo local
+├── docker/                   # Caddy, generación de secretos y pruebas sobre docker-compose.yml
+├── e2e/anonimato/            # Pruebas que demuestran el anonimato
+├── scripts/                  # Verificadores de arquitectura y de terceros
+├── docker-compose.yml        # Despliegue completo y PostgreSQL de desarrollo
 └── package.json              # Raíz de npm workspaces
 ```
 
@@ -31,13 +34,29 @@ La planeación y los requerimientos están en [`docs/`](./docs). Las decisiones 
 
 - Node.js >= 20 (se recomienda LTS 24)
 - npm >= 10
-- Docker y Docker Compose
+- Docker y Docker Compose. En Windows, Docker Desktop con el motor WSL2 (contenedores Linux)
 
-## Primeros pasos
+Funciona en macOS, Linux y Windows. En Windows usa PowerShell; antes de clonar, `git config --global core.autocrlf false`
+para que los archivos que entran a los contenedores conserven LF. Los scripts npm no dependen de bash.
+
+## Despliegue en un comando
+
+```bash
+docker compose up --build
+```
+
+Abre <https://localhost> y acepta el certificado local. Levanta PostgreSQL, migraciones, backend,
+frontend y Caddy, y genera los secretos en un volumen. La clave privada de demostración de la
+autoridad queda en otro volumen que ningún servicio monta; se obtiene con
+`docker compose run --rm --no-deps clave-autoridad > autoridad.jwk`. Los pasos completos, las
+variantes para PowerShell y la solución de problemas están en la
+[guía de réplica](./docs/guia-de-replica.md).
+
+## Desarrollo
 
 ```bash
 npm ci
-docker compose up -d      # PostgreSQL en localhost:5432
+docker compose up -d postgres   # Solo PostgreSQL, en localhost:5432
 npm run migrate           # Crea las tablas
 npm run dev:backend       # http://localhost:4000
 npm run dev:frontend      # http://localhost:3000
@@ -51,23 +70,28 @@ Para usar otro puerto de PostgreSQL (por ejemplo, si el 5432 ya está ocupado),
 define `POSTGRES_PORT` y mantén `DATABASE_URL` sincronizada:
 
 ```bash
-POSTGRES_PORT=5433 docker compose up -d
+POSTGRES_PORT=5433 docker compose up -d postgres
 DATABASE_URL=postgres://dataton:dataton@localhost:5433/dataton npm run dev:backend
 ```
 
 ## Scripts disponibles
 
-| Comando                | Descripción                                    |
-| ---------------------- | ---------------------------------------------- |
-| `npm run dev:backend`  | Inicia la API en modo watch en el puerto 4000  |
-| `npm run dev:frontend` | Inicia la aplicación Next.js en el puerto 3000 |
-| `npm run build`        | Compila todos los workspaces                   |
-| `npm run lint`         | Ejecuta ESLint en todos los workspaces         |
-| `npm run typecheck`    | Verifica tipos en todos los workspaces         |
-| `npm test`             | Ejecuta las pruebas de todos los workspaces    |
-| `npm run migrate`      | Aplica las migraciones de la base de datos     |
-| `npm run format`       | Formatea el repositorio con Prettier           |
-| `npm run format:check` | Verifica el formato sin escribir cambios       |
+| Comando                          | Descripción                                               |
+| -------------------------------- | --------------------------------------------------------- |
+| `npm run dev:backend`            | Inicia la API en modo watch en el puerto 4000             |
+| `npm run dev:frontend`           | Inicia la aplicación Next.js en el puerto 3000            |
+| `npm run build`                  | Compila todos los workspaces                              |
+| `npm run lint`                   | Ejecuta ESLint en todos los workspaces                    |
+| `npm run typecheck`              | Verifica tipos en todos los workspaces                    |
+| `npm test`                       | Ejecuta las pruebas de todos los workspaces               |
+| `npm run migrate`                | Aplica las migraciones de la base de datos                |
+| `npm run format`                 | Formatea el repositorio con Prettier                      |
+| `npm run format:check`           | Verifica el formato sin escribir cambios                  |
+| `npm run test:anonimato`         | Levanta el despliegue y corre las pruebas de anonimato    |
+| `npm run test:compose`           | Comprueba que ningún servicio pueda leer la clave privada |
+| `npm run test:cobertura-dominio` | Exige cobertura mínima en `dominio/`                      |
+| `npm run verificar:arquitectura` | Revisa las dependencias entre capas (D10)                 |
+| `npm run verificar:terceros`     | Busca terceros y lectura de IP o user-agent               |
 
 ## API
 
@@ -88,7 +112,19 @@ docker volume inspect dataton_postgres-data
 docker compose exec postgres pg_dump -U dataton dataton > backup.sql
 ```
 
-No se registran ni se persisten direcciones IP ni user agents.
+No se registran ni se persisten direcciones IP ni user agents: ver el
+[modelo de amenazas](./docs/modelo-de-amenazas.md) y el
+[último reporte de pruebas](./docs/evidencia/reporte-anonimato.md).
+
+## Documentación
+
+| Documento                                                 | Contenido                                    |
+| --------------------------------------------------------- | -------------------------------------------- |
+| [Modelo de amenazas](./docs/modelo-de-amenazas.md)        | Adversarios, mitigaciones, pruebas y límites |
+| [Metodología](./docs/metodologia.md)                      | Cómo se construyó y con qué tecnologías      |
+| [Guía de réplica](./docs/guia-de-replica.md)              | Cómo levantarlo desde cero                   |
+| [Uso de IA](./docs/uso-de-ia.md)                          | Declaración exigida por las bases            |
+| [Cumplimiento de las bases](./docs/cumplimiento-bases.md) | Cada base y criterio, con su evidencia       |
 
 ## Licencia
 

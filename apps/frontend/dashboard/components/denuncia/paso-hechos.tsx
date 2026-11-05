@@ -175,7 +175,10 @@ export function PasoHechos({
             ))}
           </select>
         </Campo>
-        <Orientador alElegir={(tipo) => campo("tipoFalta", tipo)} />
+        <Orientador
+          tipoFaltaActual={hechos.tipoFalta}
+          alElegir={(tipo) => campo("tipoFalta", tipo)}
+        />
       </div>
 
       <BuscadorEnte
