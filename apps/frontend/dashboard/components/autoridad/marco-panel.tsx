@@ -1,6 +1,6 @@
 "use client";
 
-import "@/lib/autoridad/zod-sin-eval";
+import "@dataton/shared";
 import type { ReactNode } from "react";
 import { BarraSesion } from "./barra-sesion";
 import { ProveedorPanel, usePanel } from "./contexto";

@@ -1,3 +1,4 @@
+import "@dataton/shared"; // Configura Zod sin eval antes de crear esquemas.
 import { z } from "zod";
 
 export type MotivoClave = "demasiado_grande" | "formato" | "es_publica" | "invalida";
