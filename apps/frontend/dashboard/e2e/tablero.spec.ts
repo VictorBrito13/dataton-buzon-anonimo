@@ -164,12 +164,186 @@ test("axe tampoco encuentra violaciones con las tablas equivalentes abiertas", a
 test("los datos sintéticos y los reales se distinguen en pantalla", async ({ page }) => {
   await abrir(page);
   await expect(page.getByText("Datos sintéticos", { exact: true })).toBeVisible();
-  await expect(page.getByText("Datos reales de la PDN", { exact: true })).toBeVisible();
+  await expect(page.getByText("Datos reales de la PDN", { exact: true })).toHaveCount(2);
+  await expect(page.getByText("Datos reales de la PDN", { exact: true }).first()).toBeVisible();
   await expect(page.getByText(/nunca una acusación/).first()).toBeVisible();
   await expect(page.getByText(/S6 llega hasta 2021/)).toBeVisible();
   await expect(page.getByText(/Cobertura incompleta/)).toBeVisible();
   await expect(page.getByText(/prueba de concepto/).first()).toBeVisible();
   await expect(page.getByText(/Consultado el \d{4}-\d{2}-\d{2}/).first()).toBeVisible();
+});
+
+test.describe("Cobertura de la PDN", () => {
+  const seccion = (page: Page) =>
+    page.getByRole("region", { name: "Cobertura de la PDN", exact: true });
+
+  const API_COBERTURA = "/api/v1/publico/cobertura-pdn";
+
+  interface Conexion {
+    aplicables: number;
+    conectados: number;
+    porcentaje: number | null;
+  }
+  interface Fila {
+    entidad: string | null;
+    nombre: string;
+    registros: number;
+    s1: Conexion;
+    s3: Conexion;
+    s6: Conexion;
+  }
+  interface Cobertura {
+    nacional: Fila;
+    porEntidad: Fila[];
+    kAnonimato: string;
+    datosSinteticos: boolean;
+  }
+
+  test("se etiqueta como datos reales, separada de las denuncias sintéticas", async ({ page }) => {
+    await abrir(page);
+    const zona = seccion(page);
+    await expect(zona.getByRole("heading", { level: 2 })).toHaveText("Cobertura de la PDN");
+    await expect(zona.getByText("Datos reales de la PDN", { exact: true })).toBeVisible();
+    await expect(zona.getByText(/cobertura de información, no conducta/i)).toBeVisible();
+    await expect(zona.getByText(/no significa que no tenga sanciones/)).toBeVisible();
+    await expect(zona.getByText(/No mide conducta ni riesgo de corrupción/)).toBeVisible();
+    await expect(zona.getByText(/k-anonimato no aplica/)).toBeVisible();
+  });
+
+  test("las cifras en pantalla coinciden con la API", async ({ page, request }) => {
+    const { nacional, kAnonimato, datosSinteticos } = (await (
+      await request.get(API_COBERTURA)
+    ).json()) as Cobertura;
+    expect(kAnonimato).toBe("no_aplica");
+    expect(datosSinteticos).toBe(false);
+    await abrir(page);
+    const enlace = seccion(page).getByRole("link", { name: /^S3/ });
+    await expect(enlace).toContainText(`${nacional.s3.porcentaje}%`);
+    await expect(enlace).toContainText(
+      `${nacional.s3.conectados.toLocaleString("en-US")} de ${nacional.s3.aplicables.toLocaleString("en-US")}`,
+    );
+  });
+
+  test("el selector de sistema cambia el mapa y funciona con teclado", async ({
+    page,
+    request,
+  }) => {
+    const { porEntidad } = (await (await request.get(API_COBERTURA)).json()) as Cobertura;
+    const sonora = porEntidad.find((f) => f.entidad === "26");
+    await abrir(page);
+    const zona = seccion(page);
+    await expect(zona.getByRole("link", { name: /^S3/ })).toHaveAttribute("aria-current", "true");
+    await zona.getByRole("link", { name: /^S6/ }).focus();
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/cobertura=s6/);
+    // El encabezado fijo del sitio no debe tapar el título al llegar con el ancla.
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+    const titulo = await seccion(page).getByRole("heading", { level: 2 }).boundingBox();
+    const encabezado = await page.locator("body header").first().boundingBox();
+    expect(titulo?.y ?? 0).toBeGreaterThanOrEqual((encabezado?.y ?? 0) + (encabezado?.height ?? 0));
+    await expect(seccion(page).getByRole("link", { name: /^S6/ })).toHaveAttribute(
+      "aria-current",
+      "true",
+    );
+    await expect(seccion(page).getByRole("heading", { name: /^S6 por estado/ })).toBeVisible();
+    await expect(page.locator(".casilla-cobertura")).toHaveCount(32);
+    await expect(page.locator(".casilla-cobertura title").nth(0)).toContainText("conectados a S6");
+    expect(sonora?.s6.conectados).toBe(0);
+    await expect(page.locator(".casilla-cobertura title", { hasText: "Sonora: 0 de" })).toHaveCount(
+      1,
+    );
+  });
+
+  test("un valor desconocido del selector no rompe la página", async ({ page }) => {
+    await abrir(page, "/tablero?cobertura=%3Cscript%3E");
+    await expect(seccion(page).getByRole("link", { name: /^S3/ })).toHaveAttribute(
+      "aria-current",
+      "true",
+    );
+  });
+
+  test("el mapa tiene una tabla equivalente con los mismos datos", async ({ page, request }) => {
+    const { porEntidad } = (await (await request.get(API_COBERTURA)).json()) as Cobertura;
+    await abrir(page);
+    await expect(seccion(page).getByRole("img", { name: /Mapa de cuadrícula/ })).toBeVisible();
+    await seccion(page).getByText("Ver la tabla con los 32 estados").click();
+    const tabla = seccion(page).getByRole("table", { name: "Cobertura por estado y sistema" });
+    await expect(tabla.locator("tbody tr")).toHaveCount(33);
+    const morelos = porEntidad.find((f) => f.entidad === "17");
+    const fila = tabla.locator("tr", { hasText: "Morelos" });
+    await expect(fila.locator("td").nth(3)).toContainText(`${morelos?.s3.porcentaje}%`);
+  });
+
+  test("las descargas y el diccionario traen el conjunto, sin nombres de entes", async ({
+    page,
+    request,
+  }) => {
+    await abrir(page);
+    const zona = seccion(page);
+    const csv = await request.get(
+      (await zona.getByRole("link", { name: "Cobertura en CSV" }).getAttribute("href")) ?? "",
+    );
+    expect(csv.status()).toBe(200);
+    const texto = await csv.text();
+    expect(texto.split("\n")[0]).toMatch(/^corte,entidad,ambito,nombre,registros,/);
+    expect(texto).not.toMatch(/AYUNTAMIENTO|SECRETARIA DE/i);
+
+    const json = await request.get(
+      (await zona.getByRole("link", { name: "Cobertura en JSON" }).getAttribute("href")) ?? "",
+    );
+    expect(json.status()).toBe(200);
+    const cuerpo = (await json.json()) as Cobertura & { diccionario: { campos: unknown[] } };
+    expect(cuerpo.nacional.registros).toBe(10_144);
+    expect(cuerpo.diccionario.campos.length).toBeGreaterThan(5);
+
+    const diccionario = await request.get("/api/v1/publico/descargas/diccionario.json");
+    expect(((await diccionario.json()) as { cobertura: unknown }).cobertura).toBeTruthy();
+  });
+
+  test("no toca la garantía del motor: la descarga de denuncias no lleva cobertura", async ({
+    page,
+    request,
+  }) => {
+    await abrir(page);
+    const enlace = await page.getByRole("link", { name: "Agregados en CSV" }).getAttribute("href");
+    const texto = await (await request.get(enlace ?? "")).text();
+    expect(texto).not.toMatch(/cobertura|s3_conectados/i);
+    const { alcanceCobertura } = (await (
+      await request.get("/api/v1/publico/metodologia")
+    ).json()) as { alcanceCobertura: string };
+    expect(alcanceCobertura).toMatch(/No aplica/);
+  });
+
+  for (const esquema of ["light", "dark"] as const) {
+    for (const ancho of [320, 768, 1280]) {
+      test(`${esquema} a ${ancho} px: sin desborde, CSP limpia y axe sin violaciones`, async ({
+        page,
+      }) => {
+        await page.setViewportSize({ width: ancho, height: 900 });
+        await page.emulateMedia({ colorScheme: esquema });
+        const errores = registrarErroresCsp(page);
+        await abrir(page, "/tablero?cobertura=s3");
+        await seccion(page).getByText("Ver la tabla con los 32 estados").click();
+        const desborde = await page.evaluate(
+          () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        );
+        expect(desborde).toBeLessThanOrEqual(0);
+        const { violations } = await new AxeBuilder({ page }).include("#cobertura-pdn").analyze();
+        expect(
+          violations
+            .filter((v) => ["serious", "critical"].includes(v.impact ?? ""))
+            .map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(" | ")}`),
+        ).toEqual([]);
+        await page.locator("#cobertura-pdn").screenshot({
+          path: `${CAPTURAS}/cobertura-${esquema}-${ancho}.png`,
+        });
+        await page
+          .getByRole("region", { name: /^Mapa de cobertura/ })
+          .screenshot({ path: `${CAPTURAS}/cobertura-mapa-${esquema}-${ancho}.png` });
+        expect(errores).toEqual([]);
+      });
+    }
+  }
 });
 
 test("la sección de protección muestra el ataque y su resultado real", async ({ page }) => {
