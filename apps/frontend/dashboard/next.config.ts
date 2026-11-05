@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
+import { fileURLToPath } from "node:url";
 
 const API_INTERNA = process.env.API_INTERNA ?? "http://localhost:4000";
+// fileURLToPath y no `.pathname`: en Windows este último da "/C:/..." y rompe el rastreo de archivos.
+const RAIZ_REPO = fileURLToPath(new URL("../../../", import.meta.url));
 
 /**
  * El frontend y la API comparten origen: sin CORS y sin dominios adicionales que
@@ -10,9 +13,9 @@ const API_INTERNA = process.env.API_INTERNA ?? "http://localhost:4000";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   output: "standalone",
-  outputFileTracingRoot: new URL("../../../", import.meta.url).pathname,
+  outputFileTracingRoot: RAIZ_REPO,
   turbopack: {
-    root: new URL("../../../", import.meta.url).pathname,
+    root: RAIZ_REPO,
     rules: {
       "*.css": {
         loaders: ["@tailwindcss/turbopack"],

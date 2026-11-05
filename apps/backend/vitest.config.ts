@@ -15,6 +15,7 @@ export default defineConfig({
     include: ["test/**/*.test.ts", "src/**/*.test.ts"],
     exclude: ["node_modules", "dist"],
     fileParallelism: false,
+    // Las pruebas de ataque con muchas publicaciones rebasan 5 s en los ejecutores de CI.
     testTimeout: 30_000,
     hookTimeout: 30_000,
     // Aplica las migraciones una vez, antes de cualquier archivo: así ninguna prueba depende del orden.

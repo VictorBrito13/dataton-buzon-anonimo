@@ -1,6 +1,10 @@
 .git
 .gitignore
 .github
+.claude
+.dockerignore
+docker-compose*.yml
+**/Dockerfile
 node_modules
 **/node_modules
 dist
@@ -9,8 +13,26 @@ dist
 **/.next
 out
 coverage
+**/coverage
 docs
+scripts
+# Las pruebas no van en las imágenes; las E2E usan dependencias de la raíz que allí no se instalan.
+**/e2e
+**/*.test.ts
+**/*.test.tsx
+**/playwright.config.ts
+test-results
+playwright-report
+**/*.tsbuildinfo
+**/*.log
+.DS_Store
+**/.DS_Store
+
+# Secretos: nunca dentro de una imagen, en ninguna carpeta.
 .env
 .env.*
-!.env.example
-*.log
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+**/*.key
