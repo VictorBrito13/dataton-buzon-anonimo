@@ -70,6 +70,29 @@
   stroke-dasharray: none;
 }
 
+/* Cobertura de la PDN. El relleno con trama del cero va en el atributo `fill` del SVG: una url(#id)
+   escrita aquí se resolvería contra esta hoja de estilos, no contra el documento. */
+.cobertura-cero {
+  stroke: var(--tinta-suave);
+  stroke-width: 1.5;
+}
+.cobertura-sin-dato {
+  fill: var(--papel);
+  stroke: var(--borde-fuerte);
+  stroke-width: 1;
+}
+.trama-fondo {
+  fill: var(--superficie);
+}
+.trama-linea {
+  stroke: var(--borde);
+  stroke-width: 3;
+}
+.casilla-cobertura:hover rect {
+  stroke: var(--tinta);
+  stroke-width: 2;
+}
+
 .barra {
   fill: var(--marca);
 }

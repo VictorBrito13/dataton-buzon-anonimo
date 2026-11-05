@@ -5,7 +5,9 @@ import {
   CLAVES_ETAPA,
   CLAVES_TIPO_FALTA,
   ENTES_SINTETICOS,
+  ESTADOS,
   respuestaAgregados,
+  respuestaCoberturaPdn,
   respuestaIndicadores,
   respuestaMetodologia,
   respuestaMunicipios,
@@ -48,6 +50,7 @@ const metodologia = respuestaMetodologia.parse({
   reglas: ["Ninguna cifra menor que k se publica.", "Cada periodo publicado no cambia."],
   garantia: "Ninguna celda publicada permite deducir un conteo menor que k.",
   noCubre: ["Lo que la propia persona cuente en otro lado."],
+  alcanceCobertura: "El k-anonimato no aplica a la cobertura de la PDN.",
   ejemploAtaque: {
     original: [
       { municipio: "A", cohecho: 5, abuso: 7, total: 12 },
@@ -146,8 +149,57 @@ const municipios = respuestaMunicipios.parse({
   fuente: "Catálogo del Marco Geoestadístico de INEGI.",
 });
 
+const conexion = (aplicables, conectados) => ({
+  aplicables,
+  conectados,
+  porcentaje: aplicables === 0 ? null : Math.round((conectados / aplicables) * 1000) / 10,
+});
+
+/** Tensa el ancho de la tabla: miles, un cero, un denominador bajo y un sistema sin aplicables. */
+const filaCobertura = (entidad, ambito, nombre, i) => ({
+  entidad,
+  ambito,
+  nombre,
+  registros: 12_400 + i,
+  sujetosObligados: 7_000,
+  organosControl: 5_000,
+  tribunales: 400 + i,
+  s1: conexion(7_400, i % 3 === 0 ? 0 : 3_700 + i),
+  s2: conexion(7_400, i * 200),
+  s3: conexion(i % 5 === 1 ? 1 : 5_400, 0),
+  s6: conexion(i % 7 === 2 ? 0 : 7_400, 0),
+  sinConexion: 6_000,
+  porcentajeSinConexion: 48.4,
+});
+
+const cobertura = respuestaCoberturaPdn.parse({
+  fuente: {
+    nombre: "Cobertura de la PDN",
+    url: "https://datos.ejemplo.invalid/ruta/muy/larga/sin/espacios/para/forzar/el/ajuste/de/linea/entes",
+    consultadoEl: "2026-11-05",
+    licencia: "No encontrada. Pendiente de confirmar con SESNA.",
+  },
+  datosSinteticos: false,
+  kAnonimato: "no_aplica",
+  avisos: ["Una bandera dice que el catálogo marca el registro como conectado."],
+  ultimaModificacion: "2026-10-21",
+  banderasFueraDeAlcance: 0,
+  nacional: filaCobertura(null, null, "Nacional", 4),
+  porAmbito: ["Federal", "Estatal", "Municipal"].map((a, i) => filaCobertura(null, a, a, i + 1)),
+  porEntidad: [
+    filaCobertura("00", null, "Federación", 4),
+    ...CLAVES_ESTADO.map((estado, i) => filaCobertura(estado, null, ESTADOS[estado], i)),
+  ],
+  porEntidadAmbito: [],
+  contrasteS3: {
+    conRegistrosSinConexion: [{ estado: "29", registros: 77 }],
+    conConexionSinRegistros: [{ estado: "04", conectados: 1 }],
+  },
+});
+
 /** Responde a /publico/*; devuelve undefined si la ruta no corresponde. */
 export const responderPublico = (ruta, parametros) => {
+  if (ruta === "/publico/cobertura-pdn") return cobertura;
   if (ruta === "/publico/periodos") return periodos;
   if (ruta === "/publico/metodologia") return metodologia;
   if (ruta === "/publico/indicadores") return indicadores;

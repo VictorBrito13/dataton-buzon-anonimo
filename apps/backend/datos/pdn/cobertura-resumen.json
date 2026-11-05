@@ -1,274 +1,3179 @@
 {
   "fuente": {
-    "nombre": "Cobertura de la PDN: entes por entidad y sistema",
+    "nombre": "Cobertura de la PDN: entes públicos por entidad, ámbito y sistema",
     "url": "https://cobertura.plataformadigitalnacional.org/directus/items/entes?limit=-1",
     "consultadoEl": "2026-11-05",
-    "licencia": "No encontrada. Pendiente de confirmar con SESNA."
+    "licencia": "No encontrada. Pendiente de confirmar con SESNA.",
+    "cobertura": "Catálogo del Tablero Estadístico de Interconexión Nacional. Lo aportan las Secretarías Ejecutivas estatales; la propia PDN advierte que SESNA no responde por su veracidad, exactitud o actualización."
   },
+  "ultimaModificacion": "2026-10-21",
+  "banderasFueraDeAlcance": 0,
+  "nacional": {
+    "entidad": null,
+    "ambito": null,
+    "nombre": "Nacional",
+    "registros": 10144,
+    "sujetosObligados": 6231,
+    "organosControl": 3880,
+    "tribunales": 33,
+    "s1": {
+      "aplicables": 6264,
+      "conectados": 2797,
+      "porcentaje": 44.7
+    },
+    "s2": {
+      "aplicables": 6264,
+      "conectados": 2591,
+      "porcentaje": 41.4
+    },
+    "s3": {
+      "aplicables": 3913,
+      "conectados": 1088,
+      "porcentaje": 27.8
+    },
+    "s6": {
+      "aplicables": 6264,
+      "conectados": 438,
+      "porcentaje": 7
+    },
+    "sinConexion": 5451,
+    "porcentajeSinConexion": 53.7
+  },
+  "porAmbito": [
+    {
+      "entidad": null,
+      "ambito": "Federal",
+      "nombre": "Federal",
+      "registros": 535,
+      "sujetosObligados": 336,
+      "organosControl": 198,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 337,
+        "conectados": 304,
+        "porcentaje": 90.2
+      },
+      "s2": {
+        "aplicables": 337,
+        "conectados": 267,
+        "porcentaje": 79.2
+      },
+      "s3": {
+        "aplicables": 199,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 337,
+        "conectados": 267,
+        "porcentaje": 79.2
+      },
+      "sinConexion": 214,
+      "porcentajeSinConexion": 40
+    },
+    {
+      "entidad": null,
+      "ambito": "Estatal",
+      "nombre": "Estatal",
+      "registros": 3872,
+      "sujetosObligados": 2654,
+      "organosControl": 1186,
+      "tribunales": 32,
+      "s1": {
+        "aplicables": 2686,
+        "conectados": 1087,
+        "porcentaje": 40.5
+      },
+      "s2": {
+        "aplicables": 2686,
+        "conectados": 955,
+        "porcentaje": 35.6
+      },
+      "s3": {
+        "aplicables": 1218,
+        "conectados": 359,
+        "porcentaje": 29.5
+      },
+      "s6": {
+        "aplicables": 2686,
+        "conectados": 69,
+        "porcentaje": 2.6
+      },
+      "sinConexion": 2079,
+      "porcentajeSinConexion": 53.7
+    },
+    {
+      "entidad": null,
+      "ambito": "Municipal",
+      "nombre": "Municipal",
+      "registros": 5737,
+      "sujetosObligados": 3241,
+      "organosControl": 2496,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 3241,
+        "conectados": 1406,
+        "porcentaje": 43.4
+      },
+      "s2": {
+        "aplicables": 3241,
+        "conectados": 1369,
+        "porcentaje": 42.2
+      },
+      "s3": {
+        "aplicables": 2496,
+        "conectados": 729,
+        "porcentaje": 29.2
+      },
+      "s6": {
+        "aplicables": 3241,
+        "conectados": 102,
+        "porcentaje": 3.1
+      },
+      "sinConexion": 3158,
+      "porcentajeSinConexion": 55
+    }
+  ],
   "porEntidad": [
     {
       "entidad": "00",
-      "entes": 535,
-      "s1": 304,
-      "s2": 267,
-      "s3": 0,
-      "s6": 267
+      "ambito": null,
+      "nombre": "Federación",
+      "registros": 535,
+      "sujetosObligados": 336,
+      "organosControl": 198,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 337,
+        "conectados": 304,
+        "porcentaje": 90.2
+      },
+      "s2": {
+        "aplicables": 337,
+        "conectados": 267,
+        "porcentaje": 79.2
+      },
+      "s3": {
+        "aplicables": 199,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 337,
+        "conectados": 267,
+        "porcentaje": 79.2
+      },
+      "sinConexion": 214,
+      "porcentajeSinConexion": 40
     },
     {
       "entidad": "01",
-      "entes": 159,
-      "s1": 92,
-      "s2": 89,
-      "s3": 51,
-      "s6": 13
+      "ambito": null,
+      "nombre": "Aguascalientes",
+      "registros": 159,
+      "sujetosObligados": 91,
+      "organosControl": 67,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 92,
+        "conectados": 92,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 92,
+        "conectados": 89,
+        "porcentaje": 96.7
+      },
+      "s3": {
+        "aplicables": 68,
+        "conectados": 51,
+        "porcentaje": 75
+      },
+      "s6": {
+        "aplicables": 92,
+        "conectados": 13,
+        "porcentaje": 14.1
+      },
+      "sinConexion": 17,
+      "porcentajeSinConexion": 10.7
     },
     {
       "entidad": "02",
-      "entes": 112,
-      "s1": 10,
-      "s2": 0,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Baja California",
+      "registros": 112,
+      "sujetosObligados": 16,
+      "organosControl": 95,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 17,
+        "conectados": 10,
+        "porcentaje": 58.8
+      },
+      "s2": {
+        "aplicables": 17,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 96,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 17,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 102,
+      "porcentajeSinConexion": 91.1
     },
     {
       "entidad": "03",
-      "entes": 151,
-      "s1": 132,
-      "s2": 132,
-      "s3": 20,
-      "s6": 42
+      "ambito": null,
+      "nombre": "Baja California Sur",
+      "registros": 151,
+      "sujetosObligados": 131,
+      "organosControl": 19,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 132,
+        "conectados": 132,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 132,
+        "conectados": 132,
+        "porcentaje": 100
+      },
+      "s3": {
+        "aplicables": 20,
+        "conectados": 20,
+        "porcentaje": 100
+      },
+      "s6": {
+        "aplicables": 132,
+        "conectados": 42,
+        "porcentaje": 31.8
+      },
+      "sinConexion": 0,
+      "porcentajeSinConexion": 0
     },
     {
       "entidad": "04",
-      "entes": 151,
-      "s1": 77,
-      "s2": 17,
-      "s3": 1,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Campeche",
+      "registros": 151,
+      "sujetosObligados": 106,
+      "organosControl": 44,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 107,
+        "conectados": 77,
+        "porcentaje": 72
+      },
+      "s2": {
+        "aplicables": 107,
+        "conectados": 17,
+        "porcentaje": 15.9
+      },
+      "s3": {
+        "aplicables": 45,
+        "conectados": 1,
+        "porcentaje": 2.2
+      },
+      "s6": {
+        "aplicables": 107,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 59,
+      "porcentajeSinConexion": 39.1
     },
     {
       "entidad": "05",
-      "entes": 150,
-      "s1": 0,
-      "s2": 20,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Coahuila de Zaragoza",
+      "registros": 150,
+      "sujetosObligados": 118,
+      "organosControl": 31,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 119,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 119,
+        "conectados": 20,
+        "porcentaje": 16.8
+      },
+      "s3": {
+        "aplicables": 32,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 119,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 130,
+      "porcentajeSinConexion": 86.7
     },
     {
       "entidad": "06",
-      "entes": 122,
-      "s1": 30,
-      "s2": 0,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Colima",
+      "registros": 122,
+      "sujetosObligados": 82,
+      "organosControl": 39,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 83,
+        "conectados": 30,
+        "porcentaje": 36.1
+      },
+      "s2": {
+        "aplicables": 83,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 40,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 83,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 92,
+      "porcentajeSinConexion": 75.4
     },
     {
       "entidad": "07",
-      "entes": 398,
-      "s1": 233,
-      "s2": 230,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Chiapas",
+      "registros": 398,
+      "sujetosObligados": 232,
+      "organosControl": 165,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 233,
+        "conectados": 233,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 233,
+        "conectados": 230,
+        "porcentaje": 98.7
+      },
+      "s3": {
+        "aplicables": 166,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 233,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 165,
+      "porcentajeSinConexion": 41.5
     },
     {
       "entidad": "08",
-      "entes": 171,
-      "s1": 69,
-      "s2": 67,
-      "s3": 15,
-      "s6": 1
+      "ambito": null,
+      "nombre": "Chihuahua",
+      "registros": 171,
+      "sujetosObligados": 150,
+      "organosControl": 20,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 151,
+        "conectados": 69,
+        "porcentaje": 45.7
+      },
+      "s2": {
+        "aplicables": 151,
+        "conectados": 67,
+        "porcentaje": 44.4
+      },
+      "s3": {
+        "aplicables": 21,
+        "conectados": 15,
+        "porcentaje": 71.4
+      },
+      "s6": {
+        "aplicables": 151,
+        "conectados": 1,
+        "porcentaje": 0.7
+      },
+      "sinConexion": 33,
+      "porcentajeSinConexion": 19.3
     },
     {
       "entidad": "09",
-      "entes": 150,
-      "s1": 0,
-      "s2": 0,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Ciudad de México",
+      "registros": 150,
+      "sujetosObligados": 89,
+      "organosControl": 60,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 90,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 90,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 61,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 90,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 150,
+      "porcentajeSinConexion": 100
     },
     {
       "entidad": "10",
-      "entes": 250,
-      "s1": 0,
-      "s2": 122,
-      "s3": 122,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Durango",
+      "registros": 250,
+      "sujetosObligados": 126,
+      "organosControl": 123,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 127,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 127,
+        "conectados": 122,
+        "porcentaje": 96.1
+      },
+      "s3": {
+        "aplicables": 124,
+        "conectados": 122,
+        "porcentaje": 98.4
+      },
+      "s6": {
+        "aplicables": 127,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 7,
+      "porcentajeSinConexion": 2.8
     },
     {
       "entidad": "11",
-      "entes": 182,
-      "s1": 10,
-      "s2": 28,
-      "s3": 53,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Guanajuato",
+      "registros": 182,
+      "sujetosObligados": 125,
+      "organosControl": 56,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 126,
+        "conectados": 10,
+        "porcentaje": 7.9
+      },
+      "s2": {
+        "aplicables": 126,
+        "conectados": 28,
+        "porcentaje": 22.2
+      },
+      "s3": {
+        "aplicables": 57,
+        "conectados": 53,
+        "porcentaje": 93
+      },
+      "s6": {
+        "aplicables": 126,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 101,
+      "porcentajeSinConexion": 55.5
     },
     {
       "entidad": "12",
-      "entes": 370,
-      "s1": 34,
-      "s2": 11,
-      "s3": 7,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Guerrero",
+      "registros": 370,
+      "sujetosObligados": 152,
+      "organosControl": 217,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 153,
+        "conectados": 34,
+        "porcentaje": 22.2
+      },
+      "s2": {
+        "aplicables": 153,
+        "conectados": 11,
+        "porcentaje": 7.2
+      },
+      "s3": {
+        "aplicables": 218,
+        "conectados": 7,
+        "porcentaje": 3.2
+      },
+      "s6": {
+        "aplicables": 153,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 327,
+      "porcentajeSinConexion": 88.4
     },
     {
       "entidad": "13",
-      "entes": 186,
-      "s1": 87,
-      "s2": 0,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Hidalgo",
+      "registros": 186,
+      "sujetosObligados": 180,
+      "organosControl": 5,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 181,
+        "conectados": 87,
+        "porcentaje": 48.1
+      },
+      "s2": {
+        "aplicables": 181,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 6,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 181,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 99,
+      "porcentajeSinConexion": 53.2
     },
     {
       "entidad": "14",
-      "entes": 897,
-      "s1": 389,
-      "s2": 279,
-      "s3": 386,
-      "s6": 2
+      "ambito": null,
+      "nombre": "Jalisco",
+      "registros": 897,
+      "sujetosObligados": 448,
+      "organosControl": 448,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 449,
+        "conectados": 389,
+        "porcentaje": 86.6
+      },
+      "s2": {
+        "aplicables": 449,
+        "conectados": 279,
+        "porcentaje": 62.1
+      },
+      "s3": {
+        "aplicables": 449,
+        "conectados": 386,
+        "porcentaje": 86
+      },
+      "s6": {
+        "aplicables": 449,
+        "conectados": 2,
+        "porcentaje": 0.4
+      },
+      "sinConexion": 96,
+      "porcentajeSinConexion": 10.7
     },
     {
       "entidad": "15",
-      "entes": 685,
-      "s1": 8,
-      "s2": 334,
-      "s3": 120,
-      "s6": 6
+      "ambito": null,
+      "nombre": "Estado de México",
+      "registros": 685,
+      "sujetosObligados": 550,
+      "organosControl": 134,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 551,
+        "conectados": 8,
+        "porcentaje": 1.5
+      },
+      "s2": {
+        "aplicables": 551,
+        "conectados": 334,
+        "porcentaje": 60.6
+      },
+      "s3": {
+        "aplicables": 135,
+        "conectados": 120,
+        "porcentaje": 88.9
+      },
+      "s6": {
+        "aplicables": 551,
+        "conectados": 6,
+        "porcentaje": 1.1
+      },
+      "sinConexion": 232,
+      "porcentajeSinConexion": 33.9
     },
     {
       "entidad": "16",
-      "entes": 388,
-      "s1": 134,
-      "s2": 173,
-      "s3": 125,
-      "s6": 84
+      "ambito": null,
+      "nombre": "Michoacán de Ocampo",
+      "registros": 388,
+      "sujetosObligados": 263,
+      "organosControl": 124,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 264,
+        "conectados": 134,
+        "porcentaje": 50.8
+      },
+      "s2": {
+        "aplicables": 264,
+        "conectados": 173,
+        "porcentaje": 65.5
+      },
+      "s3": {
+        "aplicables": 125,
+        "conectados": 125,
+        "porcentaje": 100
+      },
+      "s6": {
+        "aplicables": 264,
+        "conectados": 84,
+        "porcentaje": 31.8
+      },
+      "sinConexion": 48,
+      "porcentajeSinConexion": 12.4
     },
     {
       "entidad": "17",
-      "entes": 221,
-      "s1": 130,
-      "s2": 119,
-      "s3": 1,
-      "s6": 3
+      "ambito": null,
+      "nombre": "Morelos",
+      "registros": 221,
+      "sujetosObligados": 155,
+      "organosControl": 65,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 156,
+        "conectados": 130,
+        "porcentaje": 83.3
+      },
+      "s2": {
+        "aplicables": 156,
+        "conectados": 119,
+        "porcentaje": 76.3
+      },
+      "s3": {
+        "aplicables": 66,
+        "conectados": 1,
+        "porcentaje": 1.5
+      },
+      "s6": {
+        "aplicables": 156,
+        "conectados": 3,
+        "porcentaje": 1.9
+      },
+      "sinConexion": 82,
+      "porcentajeSinConexion": 37.1
     },
     {
       "entidad": "18",
-      "entes": 188,
-      "s1": 10,
-      "s2": 0,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Nayarit",
+      "registros": 188,
+      "sujetosObligados": 109,
+      "organosControl": 78,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 110,
+        "conectados": 10,
+        "porcentaje": 9.1
+      },
+      "s2": {
+        "aplicables": 110,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 79,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 110,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 178,
+      "porcentajeSinConexion": 94.7
     },
     {
       "entidad": "19",
-      "entes": 188,
-      "s1": 0,
-      "s2": 3,
-      "s3": 0,
-      "s6": 15
+      "ambito": null,
+      "nombre": "Nuevo León",
+      "registros": 188,
+      "sujetosObligados": 171,
+      "organosControl": 16,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 172,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 172,
+        "conectados": 3,
+        "porcentaje": 1.7
+      },
+      "s3": {
+        "aplicables": 17,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 172,
+        "conectados": 15,
+        "porcentaje": 8.7
+      },
+      "sinConexion": 170,
+      "porcentajeSinConexion": 90.4
     },
     {
       "entidad": "20",
-      "entes": 661,
-      "s1": 0,
-      "s2": 0,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Oaxaca",
+      "registros": 661,
+      "sujetosObligados": 375,
+      "organosControl": 285,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 376,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 376,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 286,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 376,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 661,
+      "porcentajeSinConexion": 100
     },
     {
       "entidad": "21",
-      "entes": 614,
-      "s1": 307,
-      "s2": 307,
-      "s3": 90,
-      "s6": 1
+      "ambito": null,
+      "nombre": "Puebla",
+      "registros": 614,
+      "sujetosObligados": 307,
+      "organosControl": 306,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 308,
+        "conectados": 307,
+        "porcentaje": 99.7
+      },
+      "s2": {
+        "aplicables": 308,
+        "conectados": 307,
+        "porcentaje": 99.7
+      },
+      "s3": {
+        "aplicables": 307,
+        "conectados": 90,
+        "porcentaje": 29.3
+      },
+      "s6": {
+        "aplicables": 308,
+        "conectados": 1,
+        "porcentaje": 0.3
+      },
+      "sinConexion": 218,
+      "porcentajeSinConexion": 35.5
     },
     {
       "entidad": "22",
-      "entes": 217,
-      "s1": 127,
-      "s2": 42,
-      "s3": 4,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Querétaro",
+      "registros": 217,
+      "sujetosObligados": 126,
+      "organosControl": 90,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 127,
+        "conectados": 127,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 127,
+        "conectados": 42,
+        "porcentaje": 33.1
+      },
+      "s3": {
+        "aplicables": 91,
+        "conectados": 4,
+        "porcentaje": 4.4
+      },
+      "s6": {
+        "aplicables": 127,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 86,
+      "porcentajeSinConexion": 39.6
     },
     {
       "entidad": "23",
-      "entes": 108,
-      "s1": 86,
-      "s2": 8,
-      "s3": 22,
-      "s6": 1
+      "ambito": null,
+      "nombre": "Quintana Roo",
+      "registros": 108,
+      "sujetosObligados": 85,
+      "organosControl": 22,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 86,
+        "conectados": 86,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 86,
+        "conectados": 8,
+        "porcentaje": 9.3
+      },
+      "s3": {
+        "aplicables": 23,
+        "conectados": 22,
+        "porcentaje": 95.7
+      },
+      "s6": {
+        "aplicables": 86,
+        "conectados": 1,
+        "porcentaje": 1.2
+      },
+      "sinConexion": 1,
+      "porcentajeSinConexion": 0.9
     },
     {
       "entidad": "24",
-      "entes": 366,
-      "s1": 96,
-      "s2": 99,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "San Luis Potosí",
+      "registros": 366,
+      "sujetosObligados": 182,
+      "organosControl": 183,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 183,
+        "conectados": 96,
+        "porcentaje": 52.5
+      },
+      "s2": {
+        "aplicables": 183,
+        "conectados": 99,
+        "porcentaje": 54.1
+      },
+      "s3": {
+        "aplicables": 184,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 183,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 267,
+      "porcentajeSinConexion": 73
     },
     {
       "entidad": "25",
-      "entes": 264,
-      "s1": 4,
-      "s2": 59,
-      "s3": 22,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Sinaloa",
+      "registros": 264,
+      "sujetosObligados": 226,
+      "organosControl": 37,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 227,
+        "conectados": 4,
+        "porcentaje": 1.8
+      },
+      "s2": {
+        "aplicables": 227,
+        "conectados": 59,
+        "porcentaje": 26
+      },
+      "s3": {
+        "aplicables": 38,
+        "conectados": 22,
+        "porcentaje": 57.9
+      },
+      "s6": {
+        "aplicables": 227,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 184,
+      "porcentajeSinConexion": 69.7
     },
     {
       "entidad": "26",
-      "entes": 318,
-      "s1": 0,
-      "s2": 0,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Sonora",
+      "registros": 318,
+      "sujetosObligados": 171,
+      "organosControl": 146,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 172,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 172,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 147,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 172,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 318,
+      "porcentajeSinConexion": 100
     },
     {
       "entidad": "27",
-      "entes": 185,
-      "s1": 65,
-      "s2": 0,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Tabasco",
+      "registros": 185,
+      "sujetosObligados": 92,
+      "organosControl": 92,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 93,
+        "conectados": 65,
+        "porcentaje": 69.9
+      },
+      "s2": {
+        "aplicables": 93,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 93,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 93,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 120,
+      "porcentajeSinConexion": 64.9
     },
     {
       "entidad": "28",
-      "entes": 411,
-      "s1": 143,
-      "s2": 0,
-      "s3": 1,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Tamaulipas",
+      "registros": 411,
+      "sujetosObligados": 209,
+      "organosControl": 201,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 210,
+        "conectados": 143,
+        "porcentaje": 68.1
+      },
+      "s2": {
+        "aplicables": 210,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 202,
+        "conectados": 1,
+        "porcentaje": 0.5
+      },
+      "s6": {
+        "aplicables": 210,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 267,
+      "porcentajeSinConexion": 65
     },
     {
       "entidad": "29",
-      "entes": 134,
-      "s1": 70,
-      "s2": 70,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Tlaxcala",
+      "registros": 134,
+      "sujetosObligados": 133,
+      "organosControl": 0,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 134,
+        "conectados": 70,
+        "porcentaje": 52.2
+      },
+      "s2": {
+        "aplicables": 134,
+        "conectados": 70,
+        "porcentaje": 52.2
+      },
+      "s3": {
+        "aplicables": 1,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 134,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 64,
+      "porcentajeSinConexion": 47.8
     },
     {
       "entidad": "30",
-      "entes": 567,
-      "s1": 0,
-      "s2": 48,
-      "s3": 44,
-      "s6": 3
+      "ambito": null,
+      "nombre": "Veracruz de Ignacio de la Llave",
+      "registros": 567,
+      "sujetosObligados": 326,
+      "organosControl": 240,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 327,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 327,
+        "conectados": 48,
+        "porcentaje": 14.7
+      },
+      "s3": {
+        "aplicables": 241,
+        "conectados": 44,
+        "porcentaje": 18.3
+      },
+      "s6": {
+        "aplicables": 327,
+        "conectados": 3,
+        "porcentaje": 0.9
+      },
+      "sinConexion": 476,
+      "porcentajeSinConexion": 84
     },
     {
       "entidad": "31",
-      "entes": 406,
-      "s1": 0,
-      "s2": 2,
-      "s3": 4,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Yucatán",
+      "registros": 406,
+      "sujetosObligados": 215,
+      "organosControl": 190,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 216,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 216,
+        "conectados": 2,
+        "porcentaje": 0.9
+      },
+      "s3": {
+        "aplicables": 191,
+        "conectados": 4,
+        "porcentaje": 2.1
+      },
+      "s6": {
+        "aplicables": 216,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 400,
+      "porcentajeSinConexion": 98.5
     },
     {
       "entidad": "32",
-      "entes": 239,
-      "s1": 150,
-      "s2": 65,
-      "s3": 0,
-      "s6": 0
+      "ambito": null,
+      "nombre": "Zacatecas",
+      "registros": 239,
+      "sujetosObligados": 154,
+      "organosControl": 84,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 155,
+        "conectados": 150,
+        "porcentaje": 96.8
+      },
+      "s2": {
+        "aplicables": 155,
+        "conectados": 65,
+        "porcentaje": 41.9
+      },
+      "s3": {
+        "aplicables": 85,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 155,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 87,
+      "porcentajeSinConexion": 36.4
+    }
+  ],
+  "porEntidadAmbito": [
+    {
+      "entidad": "00",
+      "ambito": "Federal",
+      "nombre": "Federación",
+      "registros": 535,
+      "sujetosObligados": 336,
+      "organosControl": 198,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 337,
+        "conectados": 304,
+        "porcentaje": 90.2
+      },
+      "s2": {
+        "aplicables": 337,
+        "conectados": 267,
+        "porcentaje": 79.2
+      },
+      "s3": {
+        "aplicables": 199,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 337,
+        "conectados": 267,
+        "porcentaje": 79.2
+      },
+      "sinConexion": 214,
+      "porcentajeSinConexion": 40
+    },
+    {
+      "entidad": "01",
+      "ambito": "Estatal",
+      "nombre": "Aguascalientes",
+      "registros": 118,
+      "sujetosObligados": 70,
+      "organosControl": 47,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 71,
+        "conectados": 71,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 71,
+        "conectados": 68,
+        "porcentaje": 95.8
+      },
+      "s3": {
+        "aplicables": 48,
+        "conectados": 36,
+        "porcentaje": 75
+      },
+      "s6": {
+        "aplicables": 71,
+        "conectados": 8,
+        "porcentaje": 11.3
+      },
+      "sinConexion": 12,
+      "porcentajeSinConexion": 10.2
+    },
+    {
+      "entidad": "01",
+      "ambito": "Municipal",
+      "nombre": "Aguascalientes",
+      "registros": 41,
+      "sujetosObligados": 21,
+      "organosControl": 20,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 21,
+        "conectados": 21,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 21,
+        "conectados": 21,
+        "porcentaje": 100
+      },
+      "s3": {
+        "aplicables": 20,
+        "conectados": 15,
+        "porcentaje": 75
+      },
+      "s6": {
+        "aplicables": 21,
+        "conectados": 5,
+        "porcentaje": 23.8
+      },
+      "sinConexion": 5,
+      "porcentajeSinConexion": 12.2
+    },
+    {
+      "entidad": "02",
+      "ambito": "Estatal",
+      "nombre": "Baja California",
+      "registros": 54,
+      "sujetosObligados": 9,
+      "organosControl": 44,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 10,
+        "conectados": 4,
+        "porcentaje": 40
+      },
+      "s2": {
+        "aplicables": 10,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 45,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 10,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 50,
+      "porcentajeSinConexion": 92.6
+    },
+    {
+      "entidad": "02",
+      "ambito": "Municipal",
+      "nombre": "Baja California",
+      "registros": 58,
+      "sujetosObligados": 7,
+      "organosControl": 51,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 7,
+        "conectados": 6,
+        "porcentaje": 85.7
+      },
+      "s2": {
+        "aplicables": 7,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 51,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 7,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 52,
+      "porcentajeSinConexion": 89.7
+    },
+    {
+      "entidad": "03",
+      "ambito": "Estatal",
+      "nombre": "Baja California Sur",
+      "registros": 104,
+      "sujetosObligados": 94,
+      "organosControl": 9,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 95,
+        "conectados": 95,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 95,
+        "conectados": 95,
+        "porcentaje": 100
+      },
+      "s3": {
+        "aplicables": 10,
+        "conectados": 10,
+        "porcentaje": 100
+      },
+      "s6": {
+        "aplicables": 95,
+        "conectados": 28,
+        "porcentaje": 29.5
+      },
+      "sinConexion": 0,
+      "porcentajeSinConexion": 0
+    },
+    {
+      "entidad": "03",
+      "ambito": "Municipal",
+      "nombre": "Baja California Sur",
+      "registros": 47,
+      "sujetosObligados": 37,
+      "organosControl": 10,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 37,
+        "conectados": 37,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 37,
+        "conectados": 37,
+        "porcentaje": 100
+      },
+      "s3": {
+        "aplicables": 10,
+        "conectados": 10,
+        "porcentaje": 100
+      },
+      "s6": {
+        "aplicables": 37,
+        "conectados": 14,
+        "porcentaje": 37.8
+      },
+      "sinConexion": 0,
+      "porcentajeSinConexion": 0
+    },
+    {
+      "entidad": "04",
+      "ambito": "Estatal",
+      "nombre": "Campeche",
+      "registros": 116,
+      "sujetosObligados": 87,
+      "organosControl": 28,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 88,
+        "conectados": 77,
+        "porcentaje": 87.5
+      },
+      "s2": {
+        "aplicables": 88,
+        "conectados": 7,
+        "porcentaje": 8
+      },
+      "s3": {
+        "aplicables": 29,
+        "conectados": 1,
+        "porcentaje": 3.4
+      },
+      "s6": {
+        "aplicables": 88,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 34,
+      "porcentajeSinConexion": 29.3
+    },
+    {
+      "entidad": "04",
+      "ambito": "Municipal",
+      "nombre": "Campeche",
+      "registros": 35,
+      "sujetosObligados": 19,
+      "organosControl": 16,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 19,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 19,
+        "conectados": 10,
+        "porcentaje": 52.6
+      },
+      "s3": {
+        "aplicables": 16,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 19,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 25,
+      "porcentajeSinConexion": 71.4
+    },
+    {
+      "entidad": "05",
+      "ambito": "Estatal",
+      "nombre": "Coahuila de Zaragoza",
+      "registros": 91,
+      "sujetosObligados": 68,
+      "organosControl": 22,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 69,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 69,
+        "conectados": 20,
+        "porcentaje": 29
+      },
+      "s3": {
+        "aplicables": 23,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 69,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 71,
+      "porcentajeSinConexion": 78
+    },
+    {
+      "entidad": "05",
+      "ambito": "Municipal",
+      "nombre": "Coahuila de Zaragoza",
+      "registros": 59,
+      "sujetosObligados": 50,
+      "organosControl": 9,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 50,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 50,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 9,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 50,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 59,
+      "porcentajeSinConexion": 100
+    },
+    {
+      "entidad": "06",
+      "ambito": "Estatal",
+      "nombre": "Colima",
+      "registros": 57,
+      "sujetosObligados": 45,
+      "organosControl": 11,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 46,
+        "conectados": 8,
+        "porcentaje": 17.4
+      },
+      "s2": {
+        "aplicables": 46,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 12,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 46,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 49,
+      "porcentajeSinConexion": 86
+    },
+    {
+      "entidad": "06",
+      "ambito": "Municipal",
+      "nombre": "Colima",
+      "registros": 65,
+      "sujetosObligados": 37,
+      "organosControl": 28,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 37,
+        "conectados": 22,
+        "porcentaje": 59.5
+      },
+      "s2": {
+        "aplicables": 37,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 28,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 37,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 43,
+      "porcentajeSinConexion": 66.2
+    },
+    {
+      "entidad": "07",
+      "ambito": "Estatal",
+      "nombre": "Chiapas",
+      "registros": 92,
+      "sujetosObligados": 79,
+      "organosControl": 12,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 80,
+        "conectados": 80,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 80,
+        "conectados": 80,
+        "porcentaje": 100
+      },
+      "s3": {
+        "aplicables": 13,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 80,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 12,
+      "porcentajeSinConexion": 13
+    },
+    {
+      "entidad": "07",
+      "ambito": "Municipal",
+      "nombre": "Chiapas",
+      "registros": 306,
+      "sujetosObligados": 153,
+      "organosControl": 153,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 153,
+        "conectados": 153,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 153,
+        "conectados": 150,
+        "porcentaje": 98
+      },
+      "s3": {
+        "aplicables": 153,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 153,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 153,
+      "porcentajeSinConexion": 50
+    },
+    {
+      "entidad": "08",
+      "ambito": "Estatal",
+      "nombre": "Chihuahua",
+      "registros": 101,
+      "sujetosObligados": 83,
+      "organosControl": 17,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 84,
+        "conectados": 3,
+        "porcentaje": 3.6
+      },
+      "s2": {
+        "aplicables": 84,
+        "conectados": 57,
+        "porcentaje": 67.9
+      },
+      "s3": {
+        "aplicables": 18,
+        "conectados": 12,
+        "porcentaje": 66.7
+      },
+      "s6": {
+        "aplicables": 84,
+        "conectados": 1,
+        "porcentaje": 1.2
+      },
+      "sinConexion": 32,
+      "porcentajeSinConexion": 31.7
+    },
+    {
+      "entidad": "08",
+      "ambito": "Municipal",
+      "nombre": "Chihuahua",
+      "registros": 70,
+      "sujetosObligados": 67,
+      "organosControl": 3,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 67,
+        "conectados": 66,
+        "porcentaje": 98.5
+      },
+      "s2": {
+        "aplicables": 67,
+        "conectados": 10,
+        "porcentaje": 14.9
+      },
+      "s3": {
+        "aplicables": 3,
+        "conectados": 3,
+        "porcentaje": 100
+      },
+      "s6": {
+        "aplicables": 67,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 1,
+      "porcentajeSinConexion": 1.4
+    },
+    {
+      "entidad": "09",
+      "ambito": "Estatal",
+      "nombre": "Ciudad de México",
+      "registros": 148,
+      "sujetosObligados": 88,
+      "organosControl": 59,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 89,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 89,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 60,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 89,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 148,
+      "porcentajeSinConexion": 100
+    },
+    {
+      "entidad": "09",
+      "ambito": "Municipal",
+      "nombre": "Ciudad de México",
+      "registros": 2,
+      "sujetosObligados": 1,
+      "organosControl": 1,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 1,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 1,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 1,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 1,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 2,
+      "porcentajeSinConexion": 100
+    },
+    {
+      "entidad": "10",
+      "ambito": "Estatal",
+      "nombre": "Durango",
+      "registros": 120,
+      "sujetosObligados": 61,
+      "organosControl": 58,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 62,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 62,
+        "conectados": 57,
+        "porcentaje": 91.9
+      },
+      "s3": {
+        "aplicables": 59,
+        "conectados": 57,
+        "porcentaje": 96.6
+      },
+      "s6": {
+        "aplicables": 62,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 7,
+      "porcentajeSinConexion": 5.8
+    },
+    {
+      "entidad": "10",
+      "ambito": "Municipal",
+      "nombre": "Durango",
+      "registros": 130,
+      "sujetosObligados": 65,
+      "organosControl": 65,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 65,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 65,
+        "conectados": 65,
+        "porcentaje": 100
+      },
+      "s3": {
+        "aplicables": 65,
+        "conectados": 65,
+        "porcentaje": 100
+      },
+      "s6": {
+        "aplicables": 65,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 0,
+      "porcentajeSinConexion": 0
+    },
+    {
+      "entidad": "11",
+      "ambito": "Estatal",
+      "nombre": "Guanajuato",
+      "registros": 90,
+      "sujetosObligados": 79,
+      "organosControl": 10,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 80,
+        "conectados": 9,
+        "porcentaje": 11.3
+      },
+      "s2": {
+        "aplicables": 80,
+        "conectados": 12,
+        "porcentaje": 15
+      },
+      "s3": {
+        "aplicables": 11,
+        "conectados": 11,
+        "porcentaje": 100
+      },
+      "s6": {
+        "aplicables": 80,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 68,
+      "porcentajeSinConexion": 75.6
+    },
+    {
+      "entidad": "11",
+      "ambito": "Municipal",
+      "nombre": "Guanajuato",
+      "registros": 92,
+      "sujetosObligados": 46,
+      "organosControl": 46,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 46,
+        "conectados": 1,
+        "porcentaje": 2.2
+      },
+      "s2": {
+        "aplicables": 46,
+        "conectados": 16,
+        "porcentaje": 34.8
+      },
+      "s3": {
+        "aplicables": 46,
+        "conectados": 42,
+        "porcentaje": 91.3
+      },
+      "s6": {
+        "aplicables": 46,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 33,
+      "porcentajeSinConexion": 35.9
+    },
+    {
+      "entidad": "12",
+      "ambito": "Estatal",
+      "nombre": "Guerrero",
+      "registros": 96,
+      "sujetosObligados": 67,
+      "organosControl": 28,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 68,
+        "conectados": 7,
+        "porcentaje": 10.3
+      },
+      "s2": {
+        "aplicables": 68,
+        "conectados": 7,
+        "porcentaje": 10.3
+      },
+      "s3": {
+        "aplicables": 29,
+        "conectados": 4,
+        "porcentaje": 13.8
+      },
+      "s6": {
+        "aplicables": 68,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 83,
+      "porcentajeSinConexion": 86.5
+    },
+    {
+      "entidad": "12",
+      "ambito": "Municipal",
+      "nombre": "Guerrero",
+      "registros": 274,
+      "sujetosObligados": 85,
+      "organosControl": 189,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 85,
+        "conectados": 27,
+        "porcentaje": 31.8
+      },
+      "s2": {
+        "aplicables": 85,
+        "conectados": 4,
+        "porcentaje": 4.7
+      },
+      "s3": {
+        "aplicables": 189,
+        "conectados": 3,
+        "porcentaje": 1.6
+      },
+      "s6": {
+        "aplicables": 85,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 244,
+      "porcentajeSinConexion": 89.1
+    },
+    {
+      "entidad": "13",
+      "ambito": "Estatal",
+      "nombre": "Hidalgo",
+      "registros": 102,
+      "sujetosObligados": 96,
+      "organosControl": 5,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 97,
+        "conectados": 87,
+        "porcentaje": 89.7
+      },
+      "s2": {
+        "aplicables": 97,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 6,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 97,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 15,
+      "porcentajeSinConexion": 14.7
+    },
+    {
+      "entidad": "13",
+      "ambito": "Municipal",
+      "nombre": "Hidalgo",
+      "registros": 84,
+      "sujetosObligados": 84,
+      "organosControl": 0,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 84,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 84,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 0,
+        "conectados": 0,
+        "porcentaje": null
+      },
+      "s6": {
+        "aplicables": 84,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 84,
+      "porcentajeSinConexion": 100
+    },
+    {
+      "entidad": "14",
+      "ambito": "Estatal",
+      "nombre": "Jalisco",
+      "registros": 265,
+      "sujetosObligados": 132,
+      "organosControl": 132,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 133,
+        "conectados": 129,
+        "porcentaje": 97
+      },
+      "s2": {
+        "aplicables": 133,
+        "conectados": 105,
+        "porcentaje": 78.9
+      },
+      "s3": {
+        "aplicables": 133,
+        "conectados": 88,
+        "porcentaje": 66.2
+      },
+      "s6": {
+        "aplicables": 133,
+        "conectados": 2,
+        "porcentaje": 1.5
+      },
+      "sinConexion": 46,
+      "porcentajeSinConexion": 17.4
+    },
+    {
+      "entidad": "14",
+      "ambito": "Municipal",
+      "nombre": "Jalisco",
+      "registros": 632,
+      "sujetosObligados": 316,
+      "organosControl": 316,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 316,
+        "conectados": 260,
+        "porcentaje": 82.3
+      },
+      "s2": {
+        "aplicables": 316,
+        "conectados": 174,
+        "porcentaje": 55.1
+      },
+      "s3": {
+        "aplicables": 316,
+        "conectados": 298,
+        "porcentaje": 94.3
+      },
+      "s6": {
+        "aplicables": 316,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 50,
+      "porcentajeSinConexion": 7.9
+    },
+    {
+      "entidad": "15",
+      "ambito": "Estatal",
+      "nombre": "Estado de México",
+      "registros": 131,
+      "sujetosObligados": 121,
+      "organosControl": 9,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 122,
+        "conectados": 8,
+        "porcentaje": 6.6
+      },
+      "s2": {
+        "aplicables": 122,
+        "conectados": 109,
+        "porcentaje": 89.3
+      },
+      "s3": {
+        "aplicables": 10,
+        "conectados": 8,
+        "porcentaje": 80
+      },
+      "s6": {
+        "aplicables": 122,
+        "conectados": 6,
+        "porcentaje": 4.9
+      },
+      "sinConexion": 15,
+      "porcentajeSinConexion": 11.5
+    },
+    {
+      "entidad": "15",
+      "ambito": "Municipal",
+      "nombre": "Estado de México",
+      "registros": 554,
+      "sujetosObligados": 429,
+      "organosControl": 125,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 429,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 429,
+        "conectados": 225,
+        "porcentaje": 52.4
+      },
+      "s3": {
+        "aplicables": 125,
+        "conectados": 112,
+        "porcentaje": 89.6
+      },
+      "s6": {
+        "aplicables": 429,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 217,
+      "porcentajeSinConexion": 39.2
+    },
+    {
+      "entidad": "16",
+      "ambito": "Estatal",
+      "nombre": "Michoacán de Ocampo",
+      "registros": 116,
+      "sujetosObligados": 104,
+      "organosControl": 11,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 105,
+        "conectados": 4,
+        "porcentaje": 3.8
+      },
+      "s2": {
+        "aplicables": 105,
+        "conectados": 68,
+        "porcentaje": 64.8
+      },
+      "s3": {
+        "aplicables": 12,
+        "conectados": 12,
+        "porcentaje": 100
+      },
+      "s6": {
+        "aplicables": 105,
+        "conectados": 2,
+        "porcentaje": 1.9
+      },
+      "sinConexion": 36,
+      "porcentajeSinConexion": 31
+    },
+    {
+      "entidad": "16",
+      "ambito": "Municipal",
+      "nombre": "Michoacán de Ocampo",
+      "registros": 272,
+      "sujetosObligados": 159,
+      "organosControl": 113,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 159,
+        "conectados": 130,
+        "porcentaje": 81.8
+      },
+      "s2": {
+        "aplicables": 159,
+        "conectados": 105,
+        "porcentaje": 66
+      },
+      "s3": {
+        "aplicables": 113,
+        "conectados": 113,
+        "porcentaje": 100
+      },
+      "s6": {
+        "aplicables": 159,
+        "conectados": 82,
+        "porcentaje": 51.6
+      },
+      "sinConexion": 12,
+      "porcentajeSinConexion": 4.4
+    },
+    {
+      "entidad": "17",
+      "ambito": "Estatal",
+      "nombre": "Morelos",
+      "registros": 104,
+      "sujetosObligados": 90,
+      "organosControl": 13,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 91,
+        "conectados": 86,
+        "porcentaje": 94.5
+      },
+      "s2": {
+        "aplicables": 91,
+        "conectados": 84,
+        "porcentaje": 92.3
+      },
+      "s3": {
+        "aplicables": 14,
+        "conectados": 1,
+        "porcentaje": 7.1
+      },
+      "s6": {
+        "aplicables": 91,
+        "conectados": 2,
+        "porcentaje": 2.2
+      },
+      "sinConexion": 13,
+      "porcentajeSinConexion": 12.5
+    },
+    {
+      "entidad": "17",
+      "ambito": "Municipal",
+      "nombre": "Morelos",
+      "registros": 117,
+      "sujetosObligados": 65,
+      "organosControl": 52,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 65,
+        "conectados": 44,
+        "porcentaje": 67.7
+      },
+      "s2": {
+        "aplicables": 65,
+        "conectados": 35,
+        "porcentaje": 53.8
+      },
+      "s3": {
+        "aplicables": 52,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 65,
+        "conectados": 1,
+        "porcentaje": 1.5
+      },
+      "sinConexion": 69,
+      "porcentajeSinConexion": 59
+    },
+    {
+      "entidad": "18",
+      "ambito": "Estatal",
+      "nombre": "Nayarit",
+      "registros": 104,
+      "sujetosObligados": 67,
+      "organosControl": 36,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 68,
+        "conectados": 4,
+        "porcentaje": 5.9
+      },
+      "s2": {
+        "aplicables": 68,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 37,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 68,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 100,
+      "porcentajeSinConexion": 96.2
+    },
+    {
+      "entidad": "18",
+      "ambito": "Municipal",
+      "nombre": "Nayarit",
+      "registros": 84,
+      "sujetosObligados": 42,
+      "organosControl": 42,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 42,
+        "conectados": 6,
+        "porcentaje": 14.3
+      },
+      "s2": {
+        "aplicables": 42,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 42,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 42,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 78,
+      "porcentajeSinConexion": 92.9
+    },
+    {
+      "entidad": "19",
+      "ambito": "Estatal",
+      "nombre": "Nuevo León",
+      "registros": 125,
+      "sujetosObligados": 108,
+      "organosControl": 16,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 109,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 109,
+        "conectados": 2,
+        "porcentaje": 1.8
+      },
+      "s3": {
+        "aplicables": 17,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 109,
+        "conectados": 15,
+        "porcentaje": 13.8
+      },
+      "sinConexion": 108,
+      "porcentajeSinConexion": 86.4
+    },
+    {
+      "entidad": "19",
+      "ambito": "Municipal",
+      "nombre": "Nuevo León",
+      "registros": 63,
+      "sujetosObligados": 63,
+      "organosControl": 0,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 63,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 63,
+        "conectados": 1,
+        "porcentaje": 1.6
+      },
+      "s3": {
+        "aplicables": 0,
+        "conectados": 0,
+        "porcentaje": null
+      },
+      "s6": {
+        "aplicables": 63,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 62,
+      "porcentajeSinConexion": 98.4
+    },
+    {
+      "entidad": "20",
+      "ambito": "Estatal",
+      "nombre": "Oaxaca",
+      "registros": 109,
+      "sujetosObligados": 99,
+      "organosControl": 9,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 100,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 100,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 10,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 100,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 109,
+      "porcentajeSinConexion": 100
+    },
+    {
+      "entidad": "20",
+      "ambito": "Municipal",
+      "nombre": "Oaxaca",
+      "registros": 552,
+      "sujetosObligados": 276,
+      "organosControl": 276,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 276,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 276,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 276,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 276,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 552,
+      "porcentajeSinConexion": 100
+    },
+    {
+      "entidad": "21",
+      "ambito": "Estatal",
+      "nombre": "Puebla",
+      "registros": 180,
+      "sujetosObligados": 90,
+      "organosControl": 89,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 91,
+        "conectados": 90,
+        "porcentaje": 98.9
+      },
+      "s2": {
+        "aplicables": 91,
+        "conectados": 90,
+        "porcentaje": 98.9
+      },
+      "s3": {
+        "aplicables": 90,
+        "conectados": 82,
+        "porcentaje": 91.1
+      },
+      "s6": {
+        "aplicables": 91,
+        "conectados": 1,
+        "porcentaje": 1.1
+      },
+      "sinConexion": 9,
+      "porcentajeSinConexion": 5
+    },
+    {
+      "entidad": "21",
+      "ambito": "Municipal",
+      "nombre": "Puebla",
+      "registros": 434,
+      "sujetosObligados": 217,
+      "organosControl": 217,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 217,
+        "conectados": 217,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 217,
+        "conectados": 217,
+        "porcentaje": 100
+      },
+      "s3": {
+        "aplicables": 217,
+        "conectados": 8,
+        "porcentaje": 3.7
+      },
+      "s6": {
+        "aplicables": 217,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 209,
+      "porcentajeSinConexion": 48.2
+    },
+    {
+      "entidad": "22",
+      "ambito": "Estatal",
+      "nombre": "Querétaro",
+      "registros": 167,
+      "sujetosObligados": 94,
+      "organosControl": 72,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 95,
+        "conectados": 95,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 95,
+        "conectados": 28,
+        "porcentaje": 29.5
+      },
+      "s3": {
+        "aplicables": 73,
+        "conectados": 1,
+        "porcentaje": 1.4
+      },
+      "s6": {
+        "aplicables": 95,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 71,
+      "porcentajeSinConexion": 42.5
+    },
+    {
+      "entidad": "22",
+      "ambito": "Municipal",
+      "nombre": "Querétaro",
+      "registros": 50,
+      "sujetosObligados": 32,
+      "organosControl": 18,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 32,
+        "conectados": 32,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 32,
+        "conectados": 14,
+        "porcentaje": 43.8
+      },
+      "s3": {
+        "aplicables": 18,
+        "conectados": 3,
+        "porcentaje": 16.7
+      },
+      "s6": {
+        "aplicables": 32,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 15,
+      "porcentajeSinConexion": 30
+    },
+    {
+      "entidad": "23",
+      "ambito": "Estatal",
+      "nombre": "Quintana Roo",
+      "registros": 86,
+      "sujetosObligados": 74,
+      "organosControl": 11,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 75,
+        "conectados": 75,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 75,
+        "conectados": 8,
+        "porcentaje": 10.7
+      },
+      "s3": {
+        "aplicables": 12,
+        "conectados": 11,
+        "porcentaje": 91.7
+      },
+      "s6": {
+        "aplicables": 75,
+        "conectados": 1,
+        "porcentaje": 1.3
+      },
+      "sinConexion": 1,
+      "porcentajeSinConexion": 1.2
+    },
+    {
+      "entidad": "23",
+      "ambito": "Municipal",
+      "nombre": "Quintana Roo",
+      "registros": 22,
+      "sujetosObligados": 11,
+      "organosControl": 11,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 11,
+        "conectados": 11,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 11,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 11,
+        "conectados": 11,
+        "porcentaje": 100
+      },
+      "s6": {
+        "aplicables": 11,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 0,
+      "porcentajeSinConexion": 0
+    },
+    {
+      "entidad": "24",
+      "ambito": "Estatal",
+      "nombre": "San Luis Potosí",
+      "registros": 194,
+      "sujetosObligados": 96,
+      "organosControl": 97,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 97,
+        "conectados": 11,
+        "porcentaje": 11.3
+      },
+      "s2": {
+        "aplicables": 97,
+        "conectados": 14,
+        "porcentaje": 14.4
+      },
+      "s3": {
+        "aplicables": 98,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 97,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 180,
+      "porcentajeSinConexion": 92.8
+    },
+    {
+      "entidad": "24",
+      "ambito": "Municipal",
+      "nombre": "San Luis Potosí",
+      "registros": 172,
+      "sujetosObligados": 86,
+      "organosControl": 86,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 86,
+        "conectados": 85,
+        "porcentaje": 98.8
+      },
+      "s2": {
+        "aplicables": 86,
+        "conectados": 85,
+        "porcentaje": 98.8
+      },
+      "s3": {
+        "aplicables": 86,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 86,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 87,
+      "porcentajeSinConexion": 50.6
+    },
+    {
+      "entidad": "25",
+      "ambito": "Estatal",
+      "nombre": "Sinaloa",
+      "registros": 112,
+      "sujetosObligados": 94,
+      "organosControl": 17,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 95,
+        "conectados": 3,
+        "porcentaje": 3.2
+      },
+      "s2": {
+        "aplicables": 95,
+        "conectados": 14,
+        "porcentaje": 14.7
+      },
+      "s3": {
+        "aplicables": 18,
+        "conectados": 11,
+        "porcentaje": 61.1
+      },
+      "s6": {
+        "aplicables": 95,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 88,
+      "porcentajeSinConexion": 78.6
+    },
+    {
+      "entidad": "25",
+      "ambito": "Municipal",
+      "nombre": "Sinaloa",
+      "registros": 152,
+      "sujetosObligados": 132,
+      "organosControl": 20,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 132,
+        "conectados": 1,
+        "porcentaje": 0.8
+      },
+      "s2": {
+        "aplicables": 132,
+        "conectados": 45,
+        "porcentaje": 34.1
+      },
+      "s3": {
+        "aplicables": 20,
+        "conectados": 11,
+        "porcentaje": 55
+      },
+      "s6": {
+        "aplicables": 132,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 96,
+      "porcentajeSinConexion": 63.2
+    },
+    {
+      "entidad": "26",
+      "ambito": "Estatal",
+      "nombre": "Sonora",
+      "registros": 160,
+      "sujetosObligados": 92,
+      "organosControl": 67,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 93,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 93,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 68,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 93,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 160,
+      "porcentajeSinConexion": 100
+    },
+    {
+      "entidad": "26",
+      "ambito": "Municipal",
+      "nombre": "Sonora",
+      "registros": 158,
+      "sujetosObligados": 79,
+      "organosControl": 79,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 79,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 79,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 79,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 79,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 158,
+      "porcentajeSinConexion": 100
+    },
+    {
+      "entidad": "27",
+      "ambito": "Estatal",
+      "nombre": "Tabasco",
+      "registros": 151,
+      "sujetosObligados": 75,
+      "organosControl": 75,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 76,
+        "conectados": 65,
+        "porcentaje": 85.5
+      },
+      "s2": {
+        "aplicables": 76,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 76,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 76,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 86,
+      "porcentajeSinConexion": 57
+    },
+    {
+      "entidad": "27",
+      "ambito": "Municipal",
+      "nombre": "Tabasco",
+      "registros": 34,
+      "sujetosObligados": 17,
+      "organosControl": 17,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 17,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 17,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 17,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 17,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 34,
+      "porcentajeSinConexion": 100
+    },
+    {
+      "entidad": "28",
+      "ambito": "Estatal",
+      "nombre": "Tamaulipas",
+      "registros": 132,
+      "sujetosObligados": 68,
+      "organosControl": 63,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 69,
+        "conectados": 2,
+        "porcentaje": 2.9
+      },
+      "s2": {
+        "aplicables": 69,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 64,
+        "conectados": 1,
+        "porcentaje": 1.6
+      },
+      "s6": {
+        "aplicables": 69,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 129,
+      "porcentajeSinConexion": 97.7
+    },
+    {
+      "entidad": "28",
+      "ambito": "Municipal",
+      "nombre": "Tamaulipas",
+      "registros": 279,
+      "sujetosObligados": 141,
+      "organosControl": 138,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 141,
+        "conectados": 141,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 141,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 138,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 141,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 138,
+      "porcentajeSinConexion": 49.5
+    },
+    {
+      "entidad": "29",
+      "ambito": "Estatal",
+      "nombre": "Tlaxcala",
+      "registros": 70,
+      "sujetosObligados": 69,
+      "organosControl": 0,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 70,
+        "conectados": 6,
+        "porcentaje": 8.6
+      },
+      "s2": {
+        "aplicables": 70,
+        "conectados": 6,
+        "porcentaje": 8.6
+      },
+      "s3": {
+        "aplicables": 1,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 70,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 64,
+      "porcentajeSinConexion": 91.4
+    },
+    {
+      "entidad": "29",
+      "ambito": "Municipal",
+      "nombre": "Tlaxcala",
+      "registros": 64,
+      "sujetosObligados": 64,
+      "organosControl": 0,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 64,
+        "conectados": 64,
+        "porcentaje": 100
+      },
+      "s2": {
+        "aplicables": 64,
+        "conectados": 64,
+        "porcentaje": 100
+      },
+      "s3": {
+        "aplicables": 0,
+        "conectados": 0,
+        "porcentaje": null
+      },
+      "s6": {
+        "aplicables": 64,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 0,
+      "porcentajeSinConexion": 0
+    },
+    {
+      "entidad": "30",
+      "ambito": "Estatal",
+      "nombre": "Veracruz de Ignacio de la Llave",
+      "registros": 105,
+      "sujetosObligados": 95,
+      "organosControl": 9,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 96,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 96,
+        "conectados": 12,
+        "porcentaje": 12.5
+      },
+      "s3": {
+        "aplicables": 10,
+        "conectados": 9,
+        "porcentaje": 90
+      },
+      "s6": {
+        "aplicables": 96,
+        "conectados": 3,
+        "porcentaje": 3.1
+      },
+      "sinConexion": 85,
+      "porcentajeSinConexion": 81
+    },
+    {
+      "entidad": "30",
+      "ambito": "Municipal",
+      "nombre": "Veracruz de Ignacio de la Llave",
+      "registros": 462,
+      "sujetosObligados": 231,
+      "organosControl": 231,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 231,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 231,
+        "conectados": 36,
+        "porcentaje": 15.6
+      },
+      "s3": {
+        "aplicables": 231,
+        "conectados": 35,
+        "porcentaje": 15.2
+      },
+      "s6": {
+        "aplicables": 231,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 391,
+      "porcentajeSinConexion": 84.6
+    },
+    {
+      "entidad": "31",
+      "ambito": "Estatal",
+      "nombre": "Yucatán",
+      "registros": 177,
+      "sujetosObligados": 92,
+      "organosControl": 84,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 93,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 93,
+        "conectados": 2,
+        "porcentaje": 2.2
+      },
+      "s3": {
+        "aplicables": 85,
+        "conectados": 4,
+        "porcentaje": 4.7
+      },
+      "s6": {
+        "aplicables": 93,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 171,
+      "porcentajeSinConexion": 96.6
+    },
+    {
+      "entidad": "31",
+      "ambito": "Municipal",
+      "nombre": "Yucatán",
+      "registros": 229,
+      "sujetosObligados": 123,
+      "organosControl": 106,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 123,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s2": {
+        "aplicables": 123,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s3": {
+        "aplicables": 106,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 123,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 229,
+      "porcentajeSinConexion": 100
+    },
+    {
+      "entidad": "32",
+      "ambito": "Estatal",
+      "nombre": "Zacatecas",
+      "registros": 95,
+      "sujetosObligados": 68,
+      "organosControl": 26,
+      "tribunales": 1,
+      "s1": {
+        "aplicables": 69,
+        "conectados": 68,
+        "porcentaje": 98.6
+      },
+      "s2": {
+        "aplicables": 69,
+        "conectados": 10,
+        "porcentaje": 14.5
+      },
+      "s3": {
+        "aplicables": 27,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 69,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 27,
+      "porcentajeSinConexion": 28.4
+    },
+    {
+      "entidad": "32",
+      "ambito": "Municipal",
+      "nombre": "Zacatecas",
+      "registros": 144,
+      "sujetosObligados": 86,
+      "organosControl": 58,
+      "tribunales": 0,
+      "s1": {
+        "aplicables": 86,
+        "conectados": 82,
+        "porcentaje": 95.3
+      },
+      "s2": {
+        "aplicables": 86,
+        "conectados": 55,
+        "porcentaje": 64
+      },
+      "s3": {
+        "aplicables": 58,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "s6": {
+        "aplicables": 86,
+        "conectados": 0,
+        "porcentaje": 0
+      },
+      "sinConexion": 60,
+      "porcentajeSinConexion": 41.7
     }
   ]
 }

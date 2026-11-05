@@ -1,4 +1,4 @@
-import type { Etapa, RespuestaPdn } from "@dataton/shared";
+import type { Etapa, RespuestaCoberturaPdn, RespuestaPdn } from "@dataton/shared";
 import type { Motivo } from "../dominio/k-anonimato.js";
 
 /** Lo mínimo que la agregación lee de una denuncia. Nunca el relato ni las credenciales. */
@@ -46,4 +46,6 @@ export interface LecturaAgregados {
  */
 export interface FuenteDatosPdn {
   resumen(estado?: string): RespuestaPdn;
+  /** Cobertura del catálogo de entes: información de entes, sin relación con las denuncias. */
+  cobertura(): RespuestaCoberturaPdn;
 }

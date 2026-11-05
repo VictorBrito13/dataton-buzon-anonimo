@@ -9,6 +9,7 @@ import {
   type TipoFalta,
 } from "@dataton/shared";
 import type { Metadata } from "next";
+import { CoberturaPdn } from "@/components/tablero/cobertura-pdn";
 import { ComoProtegemos } from "@/components/tablero/como-protegemos";
 import { ConteosPdn } from "@/components/tablero/conteos-pdn";
 import { GraficaBarras, type FilaBarra } from "@/components/tablero/grafica-barras";
@@ -21,12 +22,13 @@ import {
 } from "@/components/tablero/tablas-denuncias";
 import { obtenerPeriodos, obtenerTablero, type DatosTablero } from "@/lib/tablero/api";
 import { ordenarCeldas } from "@/lib/tablero/celdas";
+import { leerSistemaCobertura } from "@/lib/tablero/cobertura";
 import "./tablero.css";
 
 export const metadata: Metadata = {
   title: "Tablero público",
   description:
-    "Estadísticas de denuncias protegidas con k-anonimato, datos abiertos y conteos de la Plataforma Digital Nacional.",
+    "Estadísticas de denuncias protegidas con k-anonimato, datos abiertos, y cobertura y conteos reales de la Plataforma Digital Nacional.",
 };
 
 const unico = (valor: string | string[] | undefined): string | undefined =>
@@ -56,6 +58,7 @@ export default async function Tablero({ searchParams }: PageProps<"/tablero">) {
   const estado = (CLAVES_ESTADO as readonly string[]).includes(estadoPedido ?? "")
     ? (estadoPedido as ClaveEstado)
     : null;
+  const sistemaCobertura = leerSistemaCobertura(unico(parametros.cobertura));
   const datos = await cargar(unico(parametros.periodo), estado);
 
   if (datos === "sin_servicio" || datos === "sin_datos") {
@@ -137,6 +140,7 @@ export default async function Tablero({ searchParams }: PageProps<"/tablero">) {
             </select>
           </div>
           {estado ? <input type="hidden" name="estado" value={estado} /> : null}
+          <input type="hidden" name="cobertura" value={sistemaCobertura} />
           <button
             type="submit"
             className="min-h-11 rounded bg-marca px-4 py-1.5 font-semibold text-marca-tinta"
@@ -242,6 +246,22 @@ export default async function Tablero({ searchParams }: PageProps<"/tablero">) {
             ))}
           </ul>
         </Panel>
+      </section>
+
+      <section
+        id="cobertura-pdn"
+        aria-labelledby="titulo-cobertura"
+        className="scroll-mt-4 space-y-4 border-t-4 border-exito pt-6"
+      >
+        <h2 id="titulo-cobertura" className="text-2xl font-semibold">
+          Cobertura de la PDN
+        </h2>
+        <CoberturaPdn
+          datos={datos.cobertura}
+          sistema={sistemaCobertura}
+          periodo={periodo}
+          estado={estado}
+        />
       </section>
 
       <section aria-labelledby="titulo-pdn" className="space-y-4 border-t-4 border-exito pt-6">

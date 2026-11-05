@@ -4,6 +4,7 @@
  *
  * Uso (desde apps/backend):
  *   npm run pdn:instantaneas -- --s3-csv <conteos.csv> [--cache <dir>] [--sin-s6]
+ *   npm run pdn:instantaneas -- --solo-cobertura [--cache <dir>]
  *
  * El catálogo de municipios del S5 se lee con `RealS5`, el mismo adaptador que el backend tiene
  * disponible y que el flujo de denuncia no invoca: así sus lecturas reales se ejercitan aquí, fuera
@@ -14,14 +15,19 @@
  * --cache   directorio con c_municipios.json, entes_all.json y s6_buyers.json ya descargados.
  * --sin-s6  no consulta S6 y conserva el archivo existente.
  * --reusar-s6  no consulta S6: reprocesa los conteos del archivo existente.
+ * --solo-cobertura  regenera solo el agregado de Cobertura, con una sola descarga y sin nombres de entes.
  *
  * Usa fetch sin simular un navegador, de forma secuencial y con pausa entre consultas.
  */
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, readFileSync, statSync, writeFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { ZONA_HORARIA_POR_DEFECTO, diaDe } from "../../apps/backend/src/compartido/dominio/dia.js";
 import { RealS5 } from "../../apps/backend/src/contextos/denuncias/infraestructura/s5/real-s5.js";
+import {
+  agregarCobertura,
+  type EnteCatalogo,
+} from "../../apps/backend/src/contextos/transparencia/dominio/cobertura.js";
 import {
   consolidarCompradores,
   consolidarConteosS3,
@@ -97,14 +103,7 @@ interface MunicipioS5 {
   claveAGEM: string;
   claveAGEE: number;
 }
-interface EnteCobertura {
-  nombre: string;
-  entidad: string | null;
-  sistema1: boolean;
-  sistema2: boolean;
-  sistema3: boolean;
-  sistema6: boolean;
-}
+type EnteCobertura = EnteCatalogo & { nombre: string };
 
 const municipios = async (): Promise<void> => {
   const local = cache ? path.join(cache, "c_municipios.json") : undefined;
@@ -157,7 +156,6 @@ const s6 = async (entes: EnteCobertura[]): Promise<void> => {
   const compradores = await leerFuente<{ name: string }[]>("s6_buyers.json", `${API_S6}/buyers`);
   const jurisdicciones = new Map<string, Set<string>>();
   for (const ente of entes) {
-    if (ente.entidad === null) continue;
     const clave = normalizarNombre(ente.nombre);
     jurisdicciones.set(clave, (jurisdicciones.get(clave) ?? new Set()).add(ente.entidad));
   }
@@ -209,35 +207,36 @@ const s6 = async (entes: EnteCobertura[]): Promise<void> => {
   });
 };
 
+/** Si el catálogo viene del caché, la fecha de consulta es la de esa descarga, no la de hoy. */
+const fechaDeCobertura = (): string => {
+  const local = cache ? path.join(cache, "entes_all.json") : undefined;
+  return local && existsSync(local)
+    ? diaDe(statSync(local).mtime, process.env.ZONA_HORARIA || ZONA_HORARIA_POR_DEFECTO)
+    : hoy;
+};
+
 const cobertura = (entes: EnteCobertura[]): void => {
-  const resumen = new Map<string, Record<string, number>>();
-  for (const ente of entes) {
-    const clave = ente.entidad ?? "sin_entidad";
-    const fila = resumen.get(clave) ?? { entes: 0, s1: 0, s2: 0, s3: 0, s6: 0 };
-    fila.entes = (fila.entes ?? 0) + 1;
-    if (ente.sistema1) fila.s1 = (fila.s1 ?? 0) + 1;
-    if (ente.sistema2) fila.s2 = (fila.s2 ?? 0) + 1;
-    if (ente.sistema3) fila.s3 = (fila.s3 ?? 0) + 1;
-    if (ente.sistema6) fila.s6 = (fila.s6 ?? 0) + 1;
-    resumen.set(clave, fila);
-  }
   guardar("cobertura-resumen.json", {
     fuente: {
-      nombre: "Cobertura de la PDN: entes por entidad y sistema",
+      nombre: "Cobertura de la PDN: entes públicos por entidad, ámbito y sistema",
       url: COBERTURA,
-      consultadoEl: hoy,
+      consultadoEl: fechaDeCobertura(),
       licencia: LICENCIA,
+      cobertura:
+        "Catálogo del Tablero Estadístico de Interconexión Nacional. Lo aportan las Secretarías Ejecutivas estatales; la propia PDN advierte que SESNA no responde por su veracidad, exactitud o actualización.",
     },
-    porEntidad: [...resumen.entries()]
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([entidad, conteos]) => ({ entidad, ...conteos })),
+    ...agregarCobertura(entes),
   });
 };
 
 const principal = async (): Promise<void> => {
+  const { data: entes } = await leerFuente<{ data: EnteCobertura[] }>("entes_all.json", COBERTURA);
+  if (process.argv.includes("--solo-cobertura")) {
+    cobertura(entes);
+    return;
+  }
   const csv = opcion("--s3-csv");
   if (!csv) throw new Error("Falta --s3-csv <conteos.csv>");
-  const { data: entes } = await leerFuente<{ data: EnteCobertura[] }>("entes_all.json", COBERTURA);
   await municipios();
   s3(csv);
   cobertura(entes);

@@ -1,5 +1,6 @@
 import {
   respuestaAgregados,
+  respuestaCoberturaPdn,
   respuestaIndicadores,
   respuestaMetodologia,
   respuestaPdn,
@@ -7,8 +8,9 @@ import {
 } from "@dataton/shared";
 import express from "express";
 import request from "supertest";
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { FilaAgregado, LecturaAgregados } from "../aplicacion/puertos.js";
+import { agregarCobertura } from "../dominio/cobertura.js";
 import { calcularIndicadoresEnte } from "../dominio/indicadores.js";
 import { crearRutasPublicas } from "./rutas-publicas.js";
 
@@ -82,7 +84,36 @@ const pdn = {
     s6: { compradores: 0, procedimientos: 0, mayores: [] },
     cruce: { coincidencias: [], homonimosDescartados: 0, sinJurisdiccionConocida: 0 },
   }),
+  cobertura: () => ({
+    fuente: {
+      nombre: "Cobertura",
+      url: "https://ejemplo.invalid",
+      consultadoEl: "2026-11-05",
+      licencia: "Pendiente de confirmar con SESNA.",
+    },
+    datosSinteticos: false as const,
+    kAnonimato: "no_aplica" as const,
+    avisos: ["Cobertura de información, no conducta."],
+    contrasteS3: { conRegistrosSinConexion: [], conConexionSinRegistros: [] },
+    ...agregarCobertura([
+      {
+        ambitoGobierno: "Estatal",
+        controlOIC: false,
+        controlTribunal: false,
+        sistema1: true,
+        sistema2: false,
+        sistema3: false,
+        sistema6: false,
+        entidad: "17",
+        date_created: "2026-10-20T00:00:00.000Z",
+        date_updated: null,
+      },
+    ]),
+  }),
 };
+
+const leerPeriodoEspia = vi.spyOn(lectura, "leerPeriodo");
+const leerTablaEspia = vi.spyOn(lectura, "leerTabla");
 
 const app = express();
 beforeAll(() => {
@@ -181,6 +212,78 @@ describe("GET /periodos, /metodologia, /indicadores, /pdn", () => {
   it("municipios: catálogo servido desde el mismo origen", async () => {
     const r = await request(app).get("/catalogos/municipios?estado=17");
     expect(cuerpoDe(r).municipios).toEqual([{ clave: "17007", nombre: "Cuernavaca" }]);
+  });
+});
+
+describe("cobertura de la PDN: otra fuente, fuera del motor de k-anonimato", () => {
+  it("GET /cobertura-pdn responde según el contrato y se puede cachear", async () => {
+    const r = await request(app).get("/cobertura-pdn");
+    expect(r.status).toBe(200);
+    expect(r.headers["cache-control"]).toBe("public, max-age=300");
+    const cuerpo = respuestaCoberturaPdn.parse(r.body);
+    expect(cuerpo.kAnonimato).toBe("no_aplica");
+    expect(cuerpo.datosSinteticos).toBe(false);
+    expect(cuerpo.nacional.s1.conectados).toBe(1);
+  });
+
+  it("descarga en CSV, con su nombre de archivo", async () => {
+    const r = await request(app).get("/descargas/cobertura-pdn.csv");
+    expect(r.status).toBe(200);
+    expect(r.headers["content-type"]).toMatch(/text\/csv/);
+    expect(r.headers["content-disposition"]).toContain("cobertura-pdn.csv");
+    expect(r.text.split("\n")[0]).toMatch(/^corte,entidad,ambito,nombre,registros,/);
+    expect(r.text).toContain("entidad,17,,Morelos,1,1,0,0,");
+  });
+
+  it("descarga en JSON, con su fuente y su diccionario", async () => {
+    const r = await request(app).get("/descargas/cobertura-pdn.json");
+    expect(r.status).toBe(200);
+    expect(r.headers["content-disposition"]).toContain("cobertura-pdn.json");
+    const { diccionario, ...datos } = r.body as Record<string, unknown> & {
+      diccionario: { campos: { campo: string }[] };
+    };
+    expect(respuestaCoberturaPdn.parse(datos).fuente.consultadoEl).toBe("2026-11-05");
+    expect(diccionario.campos.map((c) => c.campo)).toContain("s3_conectados");
+  });
+
+  it("el diccionario de datos describe el conjunto y sus límites", async () => {
+    const r = await request(app).get("/descargas/diccionario.json");
+    const { cobertura } = r.body as {
+      cobertura: { descripcion: string; licencia: string; campos: { campo: string }[] };
+    };
+    expect(cobertura.descripcion).toMatch(/no de denuncias/);
+    expect(cobertura.licencia).toMatch(/Pendiente de confirmar con SESNA/);
+    expect(cobertura.campos.map((c) => c.campo)).toEqual(
+      expect.arrayContaining(["corte", "s3_aplicables", "sin_conexion", "k_anonimato"]),
+    );
+  });
+
+  it("no toca los agregados de denuncias", async () => {
+    leerPeriodoEspia.mockClear();
+    leerTablaEspia.mockClear();
+    await request(app).get("/cobertura-pdn");
+    await request(app).get("/descargas/cobertura-pdn.csv");
+    await request(app).get("/descargas/cobertura-pdn.json");
+    expect(leerPeriodoEspia).not.toHaveBeenCalled();
+    expect(leerTablaEspia).not.toHaveBeenCalled();
+  });
+
+  it("las descargas de denuncias no llevan cifras de cobertura", async () => {
+    const csv = await request(app).get("/descargas/agregados.csv?periodo=2026-T3");
+    const json = await request(app).get("/descargas/agregados.json?periodo=2026-T3");
+    expect(csv.text).not.toMatch(/cobertura|s3_conectados/i);
+    expect(JSON.stringify((json.body as { filas: unknown[] }).filas)).not.toMatch(
+      /cobertura|s3_conectados/i,
+    );
+  });
+
+  it("la metodología aclara que k-anonimato no aplica a Cobertura, sin cambiar la garantía", async () => {
+    const r = await request(app).get("/metodologia");
+    const cuerpo = respuestaMetodologia.parse(r.body);
+    expect(cuerpo.alcanceCobertura).toMatch(/No aplica a la cobertura/);
+    expect(cuerpo.alcanceCobertura).toMatch(/entes/);
+    expect(cuerpo.garantia).not.toMatch(/cobertura/i);
+    expect(cuerpo.tablas.join(" ")).not.toMatch(/cobertura/i);
   });
 });
 

@@ -1,5 +1,6 @@
 import {
   respuestaAgregados,
+  respuestaCoberturaPdn,
   respuestaIndicadores,
   respuestaMetodologia,
   respuestaMunicipios,
@@ -7,6 +8,7 @@ import {
   respuestaPeriodos,
   type Dimension,
   type RespuestaAgregados,
+  type RespuestaCoberturaPdn,
   type RespuestaIndicadores,
   type RespuestaMetodologia,
   type RespuestaMunicipios,
@@ -39,6 +41,7 @@ export interface DatosTablero {
   indicadores: RespuestaIndicadores;
   metodologia: RespuestaMetodologia;
   pdn: RespuestaPdn;
+  cobertura: RespuestaCoberturaPdn;
 }
 
 export const obtenerPeriodos = (): Promise<RespuestaPeriodos> =>
@@ -59,6 +62,7 @@ export const obtenerTablero = async (
     indicadores,
     metodologia,
     pdn,
+    cobertura,
   ] = await Promise.all([
     tabla(periodo, "estado"),
     tabla(periodo, "tipoFalta"),
@@ -69,6 +73,7 @@ export const obtenerTablero = async (
     pedir(`/indicadores?periodo=${periodo}`, respuestaIndicadores),
     pedir("/metodologia", respuestaMetodologia),
     pedir(`/pdn${estado ? `?estado=${estado}` : ""}`, respuestaPdn),
+    pedir("/cobertura-pdn", respuestaCoberturaPdn),
   ]);
   return {
     periodos,
@@ -82,5 +87,6 @@ export const obtenerTablero = async (
     indicadores,
     metodologia,
     pdn,
+    cobertura,
   };
 };

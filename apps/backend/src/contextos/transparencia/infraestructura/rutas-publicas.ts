@@ -4,6 +4,7 @@ import { Router, type Response } from "express";
 import { HttpError } from "../../../errors/http-error.js";
 import { TABLA_INDICADORES } from "../aplicacion/agregar-periodos.js";
 import type { FilaAgregado, FuenteDatosPdn, LecturaAgregados } from "../aplicacion/puertos.js";
+import { comoCsvCobertura } from "../dominio/cobertura.js";
 import type { IndicadoresEnte } from "../dominio/indicadores.js";
 import { DATOS_SINTETICOS, metodologia } from "../dominio/metodologia.js";
 import { normalizarDimensiones, TABLA_TOTAL, TABLAS_PUBLICADAS } from "../dominio/publicacion.js";
@@ -172,6 +173,11 @@ export const crearRutasPublicas = ({
     res.json(pdn.resumen(estado));
   });
 
+  rutas.get("/cobertura-pdn", (_req, res) => {
+    cachearPublico(res);
+    res.json(pdn.cobertura());
+  });
+
   rutas.get("/catalogos/municipios", (req, res) => {
     const estado = typeof req.query.estado === "string" ? req.query.estado : "";
     if (!/^\d{2}$/.test(estado)) throw new HttpError(400, "estado debe tener dos dígitos");
@@ -200,6 +206,20 @@ export const crearRutasPublicas = ({
       diccionario: DICCIONARIO_DATOS,
       filas: soloTablas(filas),
     });
+  });
+
+  rutas.get("/descargas/cobertura-pdn.csv", (_req, res) => {
+    const cobertura = pdn.cobertura();
+    cachearPublico(res);
+    res.setHeader("Content-Type", "text/csv; charset=utf-8");
+    res.setHeader("Content-Disposition", 'attachment; filename="cobertura-pdn.csv"');
+    res.send(comoCsvCobertura(cobertura, cobertura.fuente.consultadoEl));
+  });
+
+  rutas.get("/descargas/cobertura-pdn.json", (_req, res) => {
+    cachearPublico(res);
+    res.setHeader("Content-Disposition", 'attachment; filename="cobertura-pdn.json"');
+    res.json({ ...pdn.cobertura(), diccionario: DICCIONARIO_DATOS.cobertura });
   });
 
   rutas.get("/descargas/diccionario.json", (_req, res) => {
