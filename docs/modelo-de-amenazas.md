@@ -6,7 +6,7 @@ Complementa a [`decisiones-arquitectura.md`](./decisiones-arquitectura.md). Los 
 
 **Estados usados en la matriz:**
 
-- **Verificado:** una prueba automática lo comprobó contra el despliegue real con Docker (`e2e/anonimato/`, 38 pruebas en el último [reporte](./evidencia/reporte-anonimato.md) antes de este cambio; ninguna pendiente ni omitida).
+- **Verificado:** una prueba automática lo comprobó contra el despliegue real con Docker (`e2e/anonimato/`, 44 pruebas en el último [reporte](./evidencia/reporte-anonimato.md); ninguna pendiente ni omitida).
 - **Pruebas del módulo:** lo comprueban pruebas unitarias o de integración (Vitest, con Postgres cuando hace falta), pero no una prueba contra el despliegue. Es evidencia, no garantía sobre lo desplegado.
 - **Pendiente de verificar:** aún no hay prueba que lo demuestre. No debe leerse como garantía.
 - **Sin mitigación técnica:** límite conocido; solo se informa a la persona.
