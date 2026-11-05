@@ -34,6 +34,7 @@ next-env.d.ts
 apps/frontend/dashboard/public/modelos/
 
 # misc
+test-results/
 .DS_Store
 *.pem
 
