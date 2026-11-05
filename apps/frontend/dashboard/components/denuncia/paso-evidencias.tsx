@@ -2,7 +2,7 @@
 
 import type { RespuestaConfiguracion } from "@dataton/shared";
 import { useCallback, useEffect, useState, type ChangeEvent } from "react";
-import { Aviso, BOTON_SECUNDARIO, CONTROL } from "@/components/ui";
+import { Aviso, BOTON_SECUNDARIO } from "@/components/ui";
 import type { EstadoAsistente } from "@/lib/denuncia/asistente";
 import { mensajeDeError } from "@/lib/denuncia/errores";
 import { describirTamano, describirTipos } from "@/lib/denuncia/evidencias";
