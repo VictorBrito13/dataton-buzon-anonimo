@@ -60,8 +60,9 @@ contexto de transparencia.
 | 401           | `ERROR_ACCESO` en `/acceso/*` ante **cualquier** fallo; sin sesión o credenciales incorrectas en el panel |
 | 403           | Prueba de trabajo inválida, expirada o ya usada, salvo en `/acceso/*`                                     |
 | 404, 409      | No existe; transición inválida o frase ya usada                                                           |
-| 413, 415, 422 | Excede el tamaño; tipo no permitido; archivo dañado, cifrado, con macros o con metadatos residuales       |
-| 429           | Demasiados intentos de inicio de sesión                                                                   |
+| 413, 415, 422 | Excede el tamaño o las 500 páginas; tipo no permitido; dañado, cifrado, con macros o con residuales       |
+| 429           | Demasiados intentos: inicio de sesión (por usuario y global) o `POST /denuncias` (por frase y global)     |
+| 503           | Cuota global de subidas sin denuncia agotada, o demasiadas limpiezas de archivos en curso                 |
 
 ## Variables de entorno
 
@@ -136,11 +137,11 @@ validada; nuestras etapas (`ETAPAS` en `@dataton/shared`) no cambian y hoy nada 
 Se valida el tipo real por magic bytes contra una lista de permitidos. El original solo vive en
 memoria durante la petición; a disco y a la base de datos llega únicamente el sello.
 
-| Formato          | Se elimina                                                                                                                                                                                                                                                 | No está garantizado                                                                                                                                    |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| JPEG, PNG, WebP  | Todo lo que no sean píxeles: se recodifica con `sharp`. EXIF, GPS, XMP, IPTC, perfil de color, datos pegados al final                                                                                                                                      | La recodificación con pérdida altera la imagen, y esto importa si su valor probatorio depende de los bytes originales. Lo visible en la foto sigue ahí |
-| PDF              | Se reescribe copiando solo las páginas a un documento nuevo: Info, XMP, adjuntos, JavaScript, marcadores, revisiones incrementales, objetos huérfanos, anotaciones, `Metadata`/`PieceInfo` en objetos, EXIF de JPEG incrustados (filtro único `DCTDecode`) | Ver abajo                                                                                                                                              |
-| DOCX, XLSX, PPTX | `docProps/`, `customXml/`, sus referencias, autores y fechas de comentarios y control de cambios, fechas del ZIP, metadatos de imágenes JPEG/PNG/WebP y de documentos Office incrustados. Rechaza macros, ActiveX, OLE y ejecutables                       | Ver abajo                                                                                                                                              |
+| Formato          | Se elimina                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | No está garantizado                                                                                                                                    |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| JPEG, PNG, WebP  | Todo lo que no sean píxeles: se recodifica con `sharp`. EXIF, GPS, XMP, IPTC, perfil de color, datos pegados al final                                                                                                                                                                                                                                                                                                                                                                                                                            | La recodificación con pérdida altera la imagen, y esto importa si su valor probatorio depende de los bytes originales. Lo visible en la foto sigue ahí |
+| PDF              | Se reescribe copiando solo las páginas a un documento nuevo: Info, XMP, adjuntos, JavaScript, marcadores, revisiones incrementales, objetos huérfanos, anotaciones, `Metadata`/`PieceInfo` en objetos, EXIF de JPEG incrustados (filtro único `DCTDecode`)                                                                                                                                                                                                                                                                                       | Ver abajo                                                                                                                                              |
+| DOCX, XLSX, PPTX | `docProps/`, `customXml/`, sus referencias, autores y fechas de comentarios y control de cambios, fechas del ZIP, metadatos de imágenes JPEG/PNG/WebP y de documentos Office incrustados, ruta absoluta y usuario compartido del libro (`absPath`, `fileSharing`), rutas locales en cualquier `.rels` (plantillas, vínculos, orígenes de datos: `file:`, unidades, UNC y todo lo externo que no sea http(s), vaciado a `about:blank`), `rsid` de Word y autores del historial de revisiones de Excel. Rechaza macros, ActiveX, OLE y ejecutables | Ver abajo                                                                                                                                              |
 
 **Límites conocidos en PDF** (pdf-lib no es una herramienta forense):
 
@@ -154,11 +155,20 @@ memoria durante la petición; a disco y a la base de datos llega únicamente el 
 - Rechaza los PDF cifrados, porque no se pueden inspeccionar.
 - Comprueba el resultado buscando marcas (`/Metadata`, `/Author`, `/JavaScript`…) y rechaza el
   archivo si queda alguna, por lo que un PDF legítimo con esas cadenas sin comprimir se rechazaría.
+- Rechaza más de 500 páginas o 50,000 objetos indirectos antes de aplanar y copiar páginas. El
+  análisis inicial (`PDFDocument.load`) sí se ejecuta y para 100,000 páginas tarda unos 2 s.
 
-**Límites conocidos en Office:** no se revisan nombres de usuario en rutas de vínculos externos,
-texto oculto, propiedades dentro de partes específicas de cada programa, ni imágenes EMF/WMF. Los
-tamaños anti-bomba ZIP son los declarados en el archivo, y un ZIP manipulado puede mentir sobre
-ellos.
+**Límites conocidos en Office.** Regla: lo que no se sabe limpiar no se da por limpio, se rechaza.
+
+- Imágenes en `media/` que no sean JPEG, PNG o WebP (TIFF, GIF, BMP, EMF, WMF) y objetos en
+  `embeddings/` que no sean DOCX/XLSX/PPTX (`.docm`, `.xlsm`, `.pptm`, `.dotm`, `.pdf`, `.bin`)
+  se reportan como residuales y el archivo se rechaza con 422.
+- Tras limpiar, se vuelve a recorrer cada parte de texto buscando `file:`, rutas de disco, UNC,
+  `absPath`, `rsid` y referencias a `docProps/`; si algo sobrevive, también se rechaza.
+- No se revisan texto oculto, `printerSettings/` (binarios con nombres de impresoras) ni fuentes
+  incrustadas, que pueden identificar al programa o la organización.
+- Tamaño anti-bomba: 50 MB inflados. Se comprueba el tamaño real inflando cada parte en flujo,
+  sin retenerla, además del declarado; un ZIP que mienta en sus cabeceras se rechaza igual.
 
 **Sin antimalware:** ClamAV (HU-19, prioridad "Could") no está integrado. La defensa actual es la
 lista de permitidos, el rechazo de contenido activo y la recodificación.
