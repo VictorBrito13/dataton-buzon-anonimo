@@ -27,12 +27,16 @@ export const periodoDeDia = (fecha: string): string => {
   return `${fecha.slice(0, 4)}-T${Math.ceil(mes / 3)}`;
 };
 
-/** Publicable solo si cerró y además pasó el rezago, para no ligar un caso a un hecho reciente. */
-export const esPublicable = (periodo: string, hoy: string, rezagoDias: number): boolean => {
+/** Último día que entra a la publicación del trimestre. Lo posterior no la altera nunca. */
+export const fechaDeCorte = (periodo: string, rezagoDias: number): string => {
   const fin = new Date(`${finDePeriodo(periodo)}T00:00:00Z`);
   fin.setUTCDate(fin.getUTCDate() + rezagoDias);
-  return dia(fin) < hoy;
+  return dia(fin);
 };
+
+/** Publicable solo si cerró y además pasó el rezago, para no ligar un caso a un hecho reciente. */
+export const esPublicable = (periodo: string, hoy: string, rezagoDias: number): boolean =>
+  fechaDeCorte(periodo, rezagoDias) < hoy;
 
 const siguiente = (periodo: string): string => {
   const { anio, trimestre } = partes(periodo);

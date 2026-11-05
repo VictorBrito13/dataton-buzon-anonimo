@@ -35,7 +35,9 @@ const exigirProtegida = (red: RedConteos, kUsada = k) => {
     const real = red.conteos.get(id) ?? 0;
     const cota = cotas.get(id);
     if (!cota) throw new Error(`Sin cota para ${id}`);
-    expect(cota.min, `${id}: el valor real debe seguir dentro de la cota`).toBeLessThanOrEqual(real);
+    expect(cota.min, `${id}: el valor real debe seguir dentro de la cota`).toBeLessThanOrEqual(
+      real,
+    );
     expect(cota.max, `${id}: el valor real debe seguir dentro de la cota`).toBeGreaterThanOrEqual(
       real,
     );
@@ -254,7 +256,9 @@ describe("HU-31 · Ataques al k-anonimato", () => {
           const cota = cotas.get(id);
           if (!cota) throw new Error(`Sin cota para ${id}`);
           if (cota.min > real || cota.max < real) {
-            throw new Error(`Cota falsa en el cubo ${n}, ${id}: ${JSON.stringify(cota)} vs ${real}`);
+            throw new Error(
+              `Cota falsa en el cubo ${n}, ${id}: ${JSON.stringify(cota)} vs ${real}`,
+            );
           }
           if (celda.conteo === null) {
             suprimidas += 1;

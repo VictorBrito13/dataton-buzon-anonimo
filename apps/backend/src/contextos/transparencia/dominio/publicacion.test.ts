@@ -75,9 +75,9 @@ describe("construirPublicacion", () => {
       universo,
       { k },
     );
-    expect(buscar(filas, "municipio", { municipio: claveMunicipioSinEspecificar("17") })?.conteo).toBe(
-      20,
-    );
+    expect(
+      buscar(filas, "municipio", { municipio: claveMunicipioSinEspecificar("17") })?.conteo,
+    ).toBe(20);
   });
 
   it("agrupa los casos sin ente en una clave propia", () => {
@@ -147,12 +147,7 @@ describe("HU-31 · Ataques entre tablas de una misma publicación", () => {
       const filas = generar(semilla);
       const red = construirRed(filas, { municipios, entes });
       const publicacion = construirPublicacion(filas, { municipios, entes }, { k });
-      const vista = new Map(
-        publicacion.map((f) => [
-          f.id,
-          { conteo: f.conteo, motivo: f.motivo },
-        ]),
-      );
+      const vista = new Map(publicacion.map((f) => [f.id, { conteo: f.conteo, motivo: f.motivo }]));
       const cotas = acotarPorIntervalos(vista, red.lineas, k);
       for (const fila of publicacion) {
         const real = red.conteos.get(fila.id) ?? 0;
