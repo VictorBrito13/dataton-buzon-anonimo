@@ -43,7 +43,7 @@ El contrato es `packages/shared/src/api.ts`. Lo que el contrato deja abierto se 
 | `POST /autoridad/sesion`                       | Inicia sesión; cookie `sesion_autoridad`                 | 200 `{ usuario }`                         |
 | `GET /autoridad/sesion`                        | Sesión actual                                            | 200 `{ usuario }`                         |
 | `DELETE /autoridad/sesion`                     | Cierra la sesión                                         | 204                                       |
-| `GET /autoridad/denuncias`                     | Hasta 500 resúmenes, por día e id                        | 200 arreglo de `resumenDenunciaAutoridad` |
+| `GET /autoridad/denuncias`                     | Hasta 500 resúmenes, por día e id, y el total            | 200 `respuestaListadoAutoridad`           |
 | `GET /autoridad/denuncias/:id`                 | Detalle con relato y mensajes sellados                   | 200 `detalleDenunciaAutoridad`            |
 | `POST /autoridad/denuncias/:id/etapa`          | Cambio validado con `TRANSICIONES`                       | 200 `{ etapa }`                           |
 | `POST /autoridad/denuncias/:id/mensajes`       | Mensaje de la autoridad                                  | 201 `{ ok: true }`                        |

@@ -51,8 +51,12 @@ const simularApi = async (page: Page, publica: JsonWebKey) => {
 
   const resumenDe = (id: string) =>
     id === ID_RECIBIDA
-      ? resumen(id, estado.etapas[id]!, "17", "2026-03-01")
-      : resumen(id, estado.etapas[id]!, "09", "2026-01-10");
+      ? {
+          ...resumen(id, estado.etapas[id]!, "17", "2026-03-01"),
+          municipio: "17007",
+          enteId: "1",
+        }
+      : { ...resumen(id, estado.etapas[id]!, "09", "2026-01-10"), enteId: "ficticio-01" };
 
   await page.route("**/api/v1/**", async (route) => {
     const peticion = route.request();
@@ -85,7 +89,13 @@ const simularApi = async (page: Page, publica: JsonWebKey) => {
     if (ruta === "/autoridad/denuncias") {
       // Un dato de más en la respuesta no debe llegar a la pantalla.
       return route.fulfill({
-        json: [ID_BIFURCA, ID_RECIBIDA].map((id) => ({ ...resumenDe(id), ip: "203.0.113.9" })),
+        json: {
+          denuncias: [ID_BIFURCA, ID_RECIBIDA].map((id) => ({
+            ...resumenDe(id),
+            ip: "203.0.113.9",
+          })),
+          total: 2,
+        },
       });
     }
 
@@ -214,6 +224,15 @@ const recorrer = async (page: Page, auditarPantalla: Auditoria) => {
   await expect(page.getByText("2 de 2 denuncias")).toBeVisible();
   await expect(page.getByRole("columnheader", { name: "Etapa" })).toBeVisible();
   await expect(page.locator("main")).not.toContainText("203.0.113.9");
+
+  // Nombres de catálogo; un ente fuera del catálogo conserva su código.
+  await expect(page.getByRole("cell", { name: "Cuernavaca" })).toBeVisible();
+  await expect(
+    page.getByRole("cell", { name: "ADMINISTRACION DEL PATRIMONIO DE LA BENEFICENCIA PUBLICA" }),
+  ).toBeVisible();
+  await expect(page.getByRole("cell", { name: "ficticio-01" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "17007" })).toHaveCount(0);
+  await expect(page.getByLabel("Estado").locator("option")).toHaveCount(33);
   await auditarPantalla("2-lista");
 
   await page.getByLabel("Etapa").selectOption("recibida");

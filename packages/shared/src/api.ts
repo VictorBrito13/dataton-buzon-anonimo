@@ -103,6 +103,11 @@ export const resumenDenunciaAutoridad = z.object({
   etapa: esquemaEtapa,
   recibidaDia: dia,
 });
+/** `total` cuenta todas las denuncias: `denuncias` puede venir recortado. */
+export const respuestaListadoAutoridad = z.object({
+  denuncias: z.array(resumenDenunciaAutoridad),
+  total: z.number().int().nonnegative(),
+});
 export const detalleDenunciaAutoridad = resumenDenunciaAutoridad.extend({
   relatoSellado: base64url,
   lineaTiempo: z.array(z.object({ etapa: esquemaEtapa, dia })),
@@ -148,6 +153,7 @@ export type RespuestaConsulta = z.infer<typeof respuestaConsulta>;
 export type RespuestaConfiguracion = z.infer<typeof respuestaConfiguracion>;
 export type RespuestaEvidencia = z.infer<typeof respuestaEvidencia>;
 export type ResumenDenunciaAutoridad = z.infer<typeof resumenDenunciaAutoridad>;
+export type RespuestaListadoAutoridad = z.infer<typeof respuestaListadoAutoridad>;
 export type DetalleDenunciaAutoridad = z.infer<typeof detalleDenunciaAutoridad>;
 export type Dimension = z.infer<typeof esquemaDimension>;
 export type CeldaAgregada = z.infer<typeof celdaAgregada>;

@@ -51,17 +51,20 @@ class RepositorioFalso implements RepositorioTramite {
     return Promise.resolve();
   }
   listar() {
-    return Promise.resolve([
-      {
-        id: ID,
-        estado: "17",
-        municipio: null,
-        tipoFalta: "cohecho" as const,
-        enteId: null,
-        etapa: "recibida" as const,
-        recibidaDia: "2026-01-01",
-      },
-    ]);
+    return Promise.resolve({
+      denuncias: [
+        {
+          id: ID,
+          estado: "17",
+          municipio: null,
+          tipoFalta: "cohecho" as const,
+          enteId: null,
+          etapa: "recibida" as const,
+          recibidaDia: "2026-01-01",
+        },
+      ],
+      total: 3,
+    });
   }
   detalle(id: string): Promise<DetalleCrudo | null> {
     if (id !== ID) return Promise.resolve(null);
@@ -133,7 +136,9 @@ describe("CasosDenunciasAutoridad", () => {
   });
 
   it("lista y lo registra en la bitácora", async () => {
-    expect(await casos.listar(sesion)).toHaveLength(1);
+    const listado = await casos.listar(sesion);
+    expect(listado.denuncias).toHaveLength(1);
+    expect(listado.total).toBe(3);
     expect(repo.bitacora).toEqual([
       { usuarioId: "u1", accion: "denuncias_listadas", denunciaId: null },
     ]);

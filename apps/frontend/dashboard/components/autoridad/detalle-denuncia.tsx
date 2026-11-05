@@ -11,12 +11,14 @@ import { ALERTA, BOTON_SECUNDARIO, SECCION, TITULO_SECCION } from "./estilos";
 import { Evidencias } from "./evidencias";
 import { Mensajes } from "./mensajes";
 import { useCarga } from "./use-carga";
+import { useNombres } from "./use-nombres";
 
 export function DetalleDenuncia({ id }: { id: string }) {
   const cargar = useCallback((signal: AbortSignal) => obtenerDenuncia(id, signal), [id]);
   const { datos: denuncia, error, cargando, recargar } = useCarga(cargar);
   const [aviso, setAviso] = useState("");
   const tituloEtapa = useRef<HTMLHeadingElement>(null);
+  const nombres = useNombres();
 
   const alCambiarEtapa = (destino: Etapa) => {
     setAviso(`Etapa actualizada a: ${ETAPAS[destino].etiqueta}.`);
@@ -83,11 +85,11 @@ export function DetalleDenuncia({ id }: { id: string }) {
                 <dt className="font-semibold">Estado</dt>
                 <dd>{ESTADOS[denuncia.estado]}</dd>
                 <dt className="font-semibold">Municipio</dt>
-                <dd>{denuncia.municipio ?? "No indicado"}</dd>
+                <dd>{nombres.municipio(denuncia.municipio)}</dd>
                 <dt className="font-semibold">Falta</dt>
                 <dd>{TIPOS_FALTA[denuncia.tipoFalta].etiqueta}</dd>
                 <dt className="font-semibold">Ente</dt>
-                <dd>{denuncia.enteId ?? "No indicado"}</dd>
+                <dd>{nombres.ente(denuncia.enteId)}</dd>
               </dl>
             </section>
             <section aria-labelledby="titulo-etapa" className={SECCION}>

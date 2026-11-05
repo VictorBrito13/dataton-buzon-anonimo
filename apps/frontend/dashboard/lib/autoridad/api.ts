@@ -1,12 +1,12 @@
 import {
   detalleDenunciaAutoridad,
-  resumenDenunciaAutoridad,
+  respuestaListadoAutoridad,
   solicitudCambioEtapa,
   solicitudMensajeAutoridad,
   solicitudSesionAutoridad,
   type DetalleDenunciaAutoridad,
   type Etapa,
-  type ResumenDenunciaAutoridad,
+  type RespuestaListadoAutoridad,
 } from "@dataton/shared";
 import { z } from "zod";
 import { ErrorApi, llamarApi } from "@/lib/api";
@@ -35,10 +35,10 @@ export const cerrarSesion = async () => {
   await llamarApi<unknown>(RUTA_SESION, { ...CON_SESION, method: "DELETE" });
 };
 
-export const listarDenuncias = async (signal?: AbortSignal): Promise<ResumenDenunciaAutoridad[]> =>
-  z
-    .array(resumenDenunciaAutoridad)
-    .parse(await llamarApi<unknown>(RUTA_DENUNCIAS, { ...CON_SESION, signal }));
+export const listarDenuncias = async (signal?: AbortSignal): Promise<RespuestaListadoAutoridad> =>
+  respuestaListadoAutoridad.parse(
+    await llamarApi<unknown>(RUTA_DENUNCIAS, { ...CON_SESION, signal }),
+  );
 
 export const obtenerDenuncia = async (
   id: string,

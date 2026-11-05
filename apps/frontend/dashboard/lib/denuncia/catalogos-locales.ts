@@ -42,6 +42,10 @@ export const municipiosDeEstado = (
     .map(([clave, nombre]) => ({ clave: `${estado}${clave}`, nombre }))
     .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
 
+/** La clave INEGI de 5 dígitos es la del estado (2) seguida de la del municipio (3). */
+export const nombreMunicipio = (catalogo: CatalogoMunicipios, clave: string): string | null =>
+  catalogo[clave.slice(0, 2)]?.find(([agem]) => agem === clave.slice(2))?.[1] ?? null;
+
 export const indexarEntes = (catalogo: CatalogoEntes): EnteLocal[] =>
   catalogo
     .map(([id, nombre, entidad]) => ({ id, nombre, entidad, normalizado: normalizar(nombre) }))
