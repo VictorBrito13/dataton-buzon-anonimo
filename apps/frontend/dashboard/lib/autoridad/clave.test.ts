@@ -20,6 +20,12 @@ describe("interpretarClavePrivada", () => {
     expect(Object.keys(clave).sort()).toEqual(["crv", "d", "kty", "x", "y"]);
   });
 
+  it("tolera el BOM y los saltos de línea que deja PowerShell al redirigir a un archivo", async () => {
+    const { privada } = await generarParDeClaves();
+    const clave = await interpretarClavePrivada(`﻿${JSON.stringify(privada)}\r\n`);
+    expect(clave.d).toBe(privada.d);
+  });
+
   it("la clave resultante abre sellos aunque el archivo declare otros usos", async () => {
     const { privada, publica } = await generarParDeClaves();
     const sello = await sellar(publica, new TextEncoder().encode("hola"));

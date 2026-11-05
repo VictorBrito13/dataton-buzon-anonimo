@@ -23,7 +23,7 @@ La planeación y los requerimientos están en [`docs/`](./docs). Las decisiones 
 │   └── frontend/dashboard/   # Aplicación Next.js
 ├── packages/shared/          # Contratos de la API, catálogos, frase y sellado
 ├── docs/                     # Requerimientos y planeación
-├── docker/                   # Caddy y generación de secretos
+├── docker/                   # Caddy, generación de secretos y pruebas sobre docker-compose.yml
 ├── e2e/anonimato/            # Pruebas que demuestran el anonimato
 ├── scripts/                  # Verificadores de arquitectura y de terceros
 ├── docker-compose.yml        # Despliegue completo y PostgreSQL de desarrollo
@@ -34,7 +34,10 @@ La planeación y los requerimientos están en [`docs/`](./docs). Las decisiones 
 
 - Node.js >= 20 (se recomienda LTS 24)
 - npm >= 10
-- Docker y Docker Compose
+- Docker y Docker Compose. En Windows, Docker Desktop con el motor WSL2 (contenedores Linux)
+
+Funciona en macOS, Linux y Windows. En Windows usa PowerShell; antes de clonar, `git config --global core.autocrlf false`
+para que los archivos que entran a los contenedores conserven LF. Los scripts npm no dependen de bash.
 
 ## Despliegue en un comando
 
@@ -43,8 +46,11 @@ docker compose up --build
 ```
 
 Abre <https://localhost> y acepta el certificado local. Levanta PostgreSQL, migraciones, backend,
-frontend y Caddy, y genera los secretos en un volumen. Los pasos completos y la solución de
-problemas están en la [guía de réplica](./docs/guia-de-replica.md).
+frontend y Caddy, y genera los secretos en un volumen. La clave privada de demostración de la
+autoridad queda en otro volumen que ningún servicio monta; se obtiene con
+`docker compose run --rm --no-deps clave-autoridad > autoridad.jwk`. Los pasos completos, las
+variantes para PowerShell y la solución de problemas están en la
+[guía de réplica](./docs/guia-de-replica.md).
 
 ## Desarrollo
 
@@ -70,21 +76,22 @@ DATABASE_URL=postgres://dataton:dataton@localhost:5433/dataton npm run dev:backe
 
 ## Scripts disponibles
 
-| Comando                          | Descripción                                            |
-| -------------------------------- | ------------------------------------------------------ |
-| `npm run dev:backend`            | Inicia la API en modo watch en el puerto 4000          |
-| `npm run dev:frontend`           | Inicia la aplicación Next.js en el puerto 3000         |
-| `npm run build`                  | Compila todos los workspaces                           |
-| `npm run lint`                   | Ejecuta ESLint en todos los workspaces                 |
-| `npm run typecheck`              | Verifica tipos en todos los workspaces                 |
-| `npm test`                       | Ejecuta las pruebas de todos los workspaces            |
-| `npm run migrate`                | Aplica las migraciones de la base de datos             |
-| `npm run format`                 | Formatea el repositorio con Prettier                   |
-| `npm run format:check`           | Verifica el formato sin escribir cambios               |
-| `npm run test:anonimato`         | Levanta el despliegue y corre las pruebas de anonimato |
-| `npm run test:cobertura-dominio` | Exige cobertura mínima en `dominio/`                   |
-| `npm run verificar:arquitectura` | Revisa las dependencias entre capas (D10)              |
-| `npm run verificar:terceros`     | Busca terceros y lectura de IP o user-agent            |
+| Comando                          | Descripción                                               |
+| -------------------------------- | --------------------------------------------------------- |
+| `npm run dev:backend`            | Inicia la API en modo watch en el puerto 4000             |
+| `npm run dev:frontend`           | Inicia la aplicación Next.js en el puerto 3000            |
+| `npm run build`                  | Compila todos los workspaces                              |
+| `npm run lint`                   | Ejecuta ESLint en todos los workspaces                    |
+| `npm run typecheck`              | Verifica tipos en todos los workspaces                    |
+| `npm test`                       | Ejecuta las pruebas de todos los workspaces               |
+| `npm run migrate`                | Aplica las migraciones de la base de datos                |
+| `npm run format`                 | Formatea el repositorio con Prettier                      |
+| `npm run format:check`           | Verifica el formato sin escribir cambios                  |
+| `npm run test:anonimato`         | Levanta el despliegue y corre las pruebas de anonimato    |
+| `npm run test:compose`           | Comprueba que ningún servicio pueda leer la clave privada |
+| `npm run test:cobertura-dominio` | Exige cobertura mínima en `dominio/`                      |
+| `npm run verificar:arquitectura` | Revisa las dependencias entre capas (D10)                 |
+| `npm run verificar:terceros`     | Busca terceros y lectura de IP o user-agent               |
 
 ## API
 

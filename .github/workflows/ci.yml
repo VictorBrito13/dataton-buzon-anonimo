@@ -90,13 +90,40 @@ jobs:
       - run: docker compose config --quiet
       - run: docker compose build
 
+  # Las compañeras del equipo trabajan en Windows: lo que corre sin Docker debe pasar también ahí.
+  # Docker Desktop con WSL2 (contenedores Linux) no existe en este ejecutor, así que el despliegue
+  # en Windows queda documentado en la guía de réplica pero no lo comprueba la CI.
+  windows:
+    name: Windows sin Docker (build, tipos, lint, reglas y unitarias)
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      # Sin conversión a CRLF: el repositorio guarda LF y .gitattributes lo exige en lo que entra a contenedores.
+      - run: git config --global core.autocrlf false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run verificar:terceros
+      - run: npm run verificar:arquitectura
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npm run lint
+      - name: Unitarias sin Postgres y verificadores
+        run: |
+          npm test -w @dataton/shared -w @dataton/dashboard
+          npm run test:verificadores
+      - name: Los scripts npm del backend arrancan en cmd.exe
+        run: npm run claves:autoridad -w @dataton/backend
+
   playwright:
     name: Playwright y pruebas de anonimato
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      # Poner la variable del repositorio en 1 al integrar: un formulario roto deja de ser "fixme".
-      ANONIMATO_EXIGIR_FLUJO: ${{ vars.ANONIMATO_EXIGIR_FLUJO }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -191,7 +218,7 @@ jobs:
     name: ci-ok
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    needs: [calidad, pruebas, imagenes, playwright, tablero]
+    needs: [calidad, pruebas, imagenes, windows, playwright, tablero]
     if: always()
     steps:
       - name: Todos los trabajos requeridos terminaron bien
