@@ -6,13 +6,17 @@ import { defineConfig } from "vitest/config";
  */
 export default defineConfig({
   test: {
-    include: ["apps/backend/src/contextos/*/dominio/**/*.test.ts"],
+    include: [
+      "apps/backend/src/**/dominio/**/*.test.ts",
+      "apps/backend/test/**/dominio*.test.ts",
+      "apps/backend/test/**/dominio/**/*.test.ts",
+    ],
     passWithNoTests: true,
     coverage: {
       provider: "v8",
       reporter: ["text-summary"],
       reportsDirectory: "coverage/dominio",
-      include: ["apps/backend/src/contextos/*/dominio/**/*.ts"],
+      include: ["apps/backend/src/**/dominio/**/*.ts"],
       exclude: ["**/*.test.ts", "**/*.d.ts"],
       thresholds: { lines: 85, statements: 85, functions: 85, branches: 80 },
     },

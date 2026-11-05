@@ -8,7 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 
-const CONTEXTOS = "apps/backend/src/contextos";
+const FUENTES = "apps/backend/src";
 const EXTENSION = /\.(ts|tsx|mts|cts)$/;
 
 const esPaquete = (nombres) => (mod) => nombres.some((n) => mod === n || mod.startsWith(`${n}/`));
@@ -52,34 +52,41 @@ const usaProcessEnv = (fuente) => {
   return encontrado;
 };
 
-const capaDe = (ruta, baseContextos) => path.relative(baseContextos, ruta).split(path.sep)[1];
+/** Cada contexto tiene sus capas en contextos/<contexto>/<capa>; compartido, en compartido/<capa>. */
+const capaDe = (ruta, raiz) => {
+  const partes = path.relative(path.join(raiz, FUENTES), ruta).split(path.sep);
+  return partes[0] === "contextos" ? partes[2] : partes[1];
+};
 
 /** Devuelve las violaciones como { archivo, regla, modulo }, con rutas relativas a `raiz`. */
-export const revisarArquitectura = (raiz) => {
-  const base = path.join(raiz, CONTEXTOS);
-  if (!existsSync(base)) return [];
+export const revisarArquitectura = (raiz) =>
+  ["contextos", "compartido"]
+    .map((carpeta) => path.join(raiz, FUENTES, carpeta))
+    .filter(existsSync)
+    .flatMap(listarArchivos)
+    .flatMap((ruta) => {
+      const capa = capaDe(ruta, raiz);
+      const reglas = REGLAS[capa];
+      if (!reglas) return [];
 
-  return listarArchivos(base).flatMap((ruta) => {
-    const reglas = REGLAS[capaDe(ruta, base)];
-    if (!reglas) return [];
+      const texto = readFileSync(ruta, "utf8");
+      const archivo = path.relative(raiz, ruta).split(path.sep).join("/");
+      const violaciones = ts
+        .preProcessFile(texto, true, true)
+        .importedFiles.flatMap(({ fileName: modulo }) =>
+          reglas
+            .filter((r) => r.prohibido(modulo))
+            .map((r) => ({ archivo, regla: r.regla, modulo })),
+        );
 
-    const texto = readFileSync(ruta, "utf8");
-    const archivo = path.relative(raiz, ruta).split(path.sep).join("/");
-    const violaciones = ts
-      .preProcessFile(texto, true, true)
-      .importedFiles.flatMap(({ fileName: modulo }) =>
-        reglas.filter((r) => r.prohibido(modulo)).map((r) => ({ archivo, regla: r.regla, modulo })),
-      );
-
-    if (capaDe(ruta, base) === "dominio") {
-      const fuente = ts.createSourceFile(ruta, texto, ts.ScriptTarget.Latest, false);
-      if (usaProcessEnv(fuente)) {
-        violaciones.push({ archivo, regla: "dominio-sin-env", modulo: "process.env" });
+      if (capa === "dominio") {
+        const fuente = ts.createSourceFile(ruta, texto, ts.ScriptTarget.Latest, false);
+        if (usaProcessEnv(fuente)) {
+          violaciones.push({ archivo, regla: "dominio-sin-env", modulo: "process.env" });
+        }
       }
-    }
-    return violaciones;
-  });
-};
+      return violaciones;
+    });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const violaciones = revisarArquitectura(path.resolve(process.argv[2] ?? "."));

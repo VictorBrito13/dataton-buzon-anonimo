@@ -75,6 +75,26 @@ export const u = [environ, pgp];`,
   });
 });
 
+describe("compartido", () => {
+  const repoCompartido = (relativo, codigo) => {
+    const raiz = repoCon({});
+    const ruta = path.join(raiz, "apps/backend/src/compartido", relativo);
+    mkdirSync(path.dirname(ruta), { recursive: true });
+    writeFileSync(ruta, codigo);
+    return raiz;
+  };
+
+  it("aplica las mismas reglas a su dominio", () => {
+    const raiz = repoCompartido("dominio/hmac.ts", `import express from "express";`);
+    assert.equal(reglasDe(raiz).length, 1);
+  });
+
+  it("su infraestructura puede usar pg", () => {
+    const raiz = repoCompartido("infraestructura/pg.ts", `import { Pool } from "pg";`);
+    assert.deepEqual(reglasDe(raiz), []);
+  });
+});
+
 describe("aplicacion", () => {
   it("rechaza importar infraestructura", () => {
     const raiz = repoCon({

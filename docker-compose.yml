@@ -14,18 +14,21 @@ x-endurecido: &endurecido
     options: { max-size: "5m", max-file: "2" }
 
 services:
-  # Genera pimienta y contraseñas en un volumen la primera vez. Nada se escribe en el repo.
+  # Genera secretos en un volumen la primera vez. Nada se escribe en el repositorio.
   secretos:
-    image: alpine:3.24.3
+    image: node:24.22.2-bookworm-slim
     read_only: true
     network_mode: none
     cap_drop: [ALL]
     cap_add: [CHOWN, DAC_OVERRIDE, FOWNER]
     security_opt: ["no-new-privileges:true"]
+    environment:
+      # Para uso real: genera el par fuera del servidor y pasa aquí solo la clave pública.
+      CLAVE_PUBLICA_AUTORIDAD: ${CLAVE_PUBLICA_AUTORIDAD:-}
     volumes:
       - secretos:/secretos
-      - ./docker/generar-secretos.sh:/generar-secretos.sh:ro
-    command: ["sh", "/generar-secretos.sh"]
+      - ./docker/generar-secretos.mjs:/generar-secretos.mjs:ro
+    command: ["node", "/generar-secretos.mjs"]
     restart: "no"
 
   db:

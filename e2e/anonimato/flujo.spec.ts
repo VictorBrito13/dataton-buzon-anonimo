@@ -42,9 +42,9 @@ test.describe.serial("Flujo de denuncia", () => {
 
     const disponible = await flujoDisponible(pagina);
     if (!disponible && EXIGIR_FLUJO) {
-      throw new Error("ANONIMATO_EXIGIR_FLUJO=1 y /denunciar no expone denuncia-formulario");
+      throw new Error("ANONIMATO_EXIGIR_FLUJO=1, pero el formulario o la API no están disponibles");
     }
-    test.fixme(!disponible, "El formulario de /denunciar aún no está integrado en esta rama");
+    test.fixme(!disponible, "El formulario o la API de denuncias aún no están en esta rama");
 
     flujo = await completarDenuncia(pagina);
     peticiones = await grabadora.listas();

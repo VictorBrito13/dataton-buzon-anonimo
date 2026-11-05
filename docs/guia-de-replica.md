@@ -49,6 +49,20 @@ Navegador ──HTTPS──▶ Caddy ──▶ frontend (Next.js standalone)
 
 Backend, frontend y base de datos están en una red interna sin salida a internet.
 
+### La clave de la autoridad
+
+Para que el prototipo arranque con un comando, `secretos` también genera el par de claves de la autoridad y guarda la privada en el volumen, legible solo por root. Sirve para demostraciones: **en un uso real, la clave privada no debe estar en el servidor** (D3). Para eso, genera el par fuera del servidor y pasa solo la pública, antes del primer arranque:
+
+```bash
+CLAVE_PUBLICA_AUTORIDAD='{"kty":"EC","crv":"P-256","x":"…","y":"…"}' docker compose up --build
+```
+
+Para ver la privada generada en una demostración:
+
+```bash
+docker compose run --rm --no-deps secretos cat /secretos/autoridad_clave_privada.jwk
+```
+
 ## 3. Comprobar que funciona
 
 ```bash

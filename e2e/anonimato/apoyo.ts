@@ -211,45 +211,47 @@ export const visitar = async (pagina: Page, ruta: string) => {
   return respuesta;
 };
 
-/** ¿Existe ya el formulario? Sirve para marcar `fixme` en lugar de pasar sin probar nada. */
+/** ¿Ya funcionan el formulario y su API? Sirve para marcar `fixme` en lugar de pasar sin probar. */
 export const flujoDisponible = async (pagina: Page): Promise<boolean> => {
   const respuesta = await visitar(pagina, "/denunciar");
   if (!respuesta || respuesta.status() >= 400) return false;
-  return (await pagina.getByTestId("denuncia-formulario").count()) > 0;
+  const formulario = await pagina.getByRole("heading", { name: "Qué pasó" }).count();
+  const api = await pagina.request.get("/api/v1/configuracion");
+  return formulario > 0 && api.ok();
 };
 
-/**
- * Recorre el formulario sin suponer el orden de los pasos: llena lo que esté visible y avanza.
- * No activa el borrador. Contrato de `data-testid`: docs/modelo-de-amenazas.md, sección 6.
- */
+/** Recorre el formulario real sin activar el borrador ni la detección de nombres. */
 export const completarDenuncia = async (pagina: Page): Promise<ResultadoFlujo> => {
   const relato = `Relato sintético de prueba, no es un hecho real. ${RELATO_MARCADOR}.`;
-  const folio = pagina.getByTestId("folio-denuncia");
-  const fraseVisible = pagina.getByTestId("frase-recuperacion");
-  let frase = "";
+  const continuar = pagina.getByRole("button", { name: "Continuar" });
 
-  for (let paso = 0; paso < 15; paso += 1) {
-    if (await folio.isVisible()) break;
-    if (await fraseVisible.isVisible()) frase = ((await fraseVisible.textContent()) ?? "").trim();
+  await pagina.getByLabel("¿En qué estado pasó?").selectOption("17");
+  await pagina.getByLabel("¿Qué tipo de falta es?").selectOption("cohecho");
+  await pagina.getByLabel("Mes").selectOption("03");
+  await pagina.getByLabel("Año").selectOption("2026");
+  await pagina.getByLabel("Cuéntanos qué pasó").fill(relato);
+  await continuar.click();
 
-    const campoRelato = pagina.getByTestId("denuncia-relato");
-    if ((await campoRelato.isVisible()) && !(await campoRelato.inputValue())) {
-      await campoRelato.fill(relato);
-    }
-    for (const lista of await pagina.locator("select:visible").all()) {
-      if (!(await lista.inputValue())) await lista.selectOption({ index: 1 });
-    }
-    const confirmar = pagina.getByTestId("frase-confirmar");
-    if ((await confirmar.isVisible()) && !(await confirmar.isChecked())) await confirmar.check();
-
-    const enviar = pagina.getByTestId("denuncia-enviar");
-    const avanzar = (await enviar.isVisible()) ? enviar : pagina.getByTestId("denuncia-siguiente");
-    await avanzar.click();
-    await pagina.waitForTimeout(250);
+  for (const titulo of ["Personas o entes involucrados", "Evidencias", "Revisión"]) {
+    await pagina.getByRole("heading", { name: titulo, level: 2 }).waitFor();
+    await continuar.click();
   }
 
+  await pagina.getByRole("heading", { name: "Tu frase", level: 2 }).waitFor();
+  const frase = (await pagina.locator(".area-impresion li .font-mono").allTextContents()).join(" ");
+  await pagina.getByRole("button", { name: "Ya la guardé" }).click();
+  const palabras = frase.split(" ");
+  for (const campo of await pagina.getByLabel(/Palabra número/).all()) {
+    const etiqueta = await campo.evaluate(
+      (el) => document.querySelector(`label[for="${el.id}"]`)?.textContent ?? "",
+    );
+    await campo.fill(palabras[Number(/\d+/.exec(etiqueta)?.[0]) - 1] ?? "");
+  }
+  await pagina.getByRole("button", { name: "Confirmar y continuar" }).click();
+
   // La prueba de trabajo y Argon2id tardan: el folio llega cuando terminan.
-  await folio.waitFor({ state: "visible", timeout: 60_000 });
-  if (await fraseVisible.isVisible()) frase = ((await fraseVisible.textContent()) ?? "").trim();
-  return { frase, folio: ((await folio.textContent()) ?? "").trim(), relato };
+  await pagina.getByRole("button", { name: "Enviar mi denuncia" }).click();
+  await pagina.getByRole("heading", { name: "Tu denuncia se envió" }).waitFor({ timeout: 60_000 });
+  const folio = (await pagina.locator(".area-impresion .font-mono").textContent()) ?? "";
+  return { frase, folio: folio.trim(), relato };
 };

@@ -119,21 +119,9 @@ Ninguna de estas situaciones se resuelve del todo con tecnología. Se comunican 
 - **Proveedor de hospedaje y operador.** Quien controla el servidor o su red puede activar bitácoras o capturar IPs. Las pruebas demuestran el comportamiento del código publicado, no lo que corre en un servidor ajeno. Un despliegue real necesitaría medidas adicionales, como auditoría independiente y verificación de la versión desplegada.
 - **Compromiso del propio frontend.** El sellado ocurre en código que entrega el servidor. Si se altera, puede enviar la frase o el relato en claro. La CSP reduce la inyección de código ajeno, pero no protege de un servidor comprometido. Las pruebas detectan este tipo de cambio en el código del repositorio, no en un sitio ya modificado.
 
-## 6. Contrato con el flujo de denuncia
+## 6. Cómo se activa la prueba del flujo
 
-`flujo.spec.ts` no supone el orden de los pasos: en cada paso llena lo visible y avanza. Necesita estos `data-testid` en `/denunciar`:
-
-| `data-testid`        | Elemento                                                  |
-| -------------------- | --------------------------------------------------------- |
-| `denuncia-formulario` | Contenedor del formulario; su presencia activa las pruebas |
-| `denuncia-relato`    | Campo del relato                                          |
-| `denuncia-siguiente` | Botón para avanzar de paso                                |
-| `denuncia-enviar`    | Botón de envío final                                      |
-| `frase-recuperacion` | Elemento cuyo texto es la frase de seis palabras          |
-| `frase-confirmar`    | Casilla "ya la guardé"                                    |
-| `folio-denuncia`     | Elemento cuyo texto es el folio final                     |
-
-Los `<select>` visibles vacíos se llenan con su primera opción. Con `ANONIMATO_EXIGIR_FLUJO=1`, si el formulario falta, la suite falla en lugar de quedar pendiente.
+`flujo.spec.ts` recorre el formulario real de `/denunciar` con sus etiquetas visibles. Se activa cuando existen el formulario y `GET /api/v1/configuracion`. Si falta alguno, queda pendiente (`fixme`). Con `ANONIMATO_EXIGIR_FLUJO=1`, la falta es una falla: así un flujo roto no pasa por pendiente tras la integración.
 
 ## 7. Hallazgos al construir la infraestructura
 
