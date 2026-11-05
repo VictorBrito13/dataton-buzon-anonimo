@@ -185,12 +185,11 @@ describe("limpiarOffice: DOCX", () => {
 
   it("borra las fechas y comentarios del propio ZIP", async () => {
     const zip = docx();
-    zip.comment = "comentario de zip";
     const { bytes } = await limpiarOffice(
       await zip.generateAsync({ type: "uint8array", comment: "comentario de zip" }),
     );
     const limpio = await JSZip.loadAsync(bytes);
-    expect(limpio.comment ?? "").toBe("");
+    expect((limpio as JSZip & { comment?: string | null }).comment ?? "").toBe("");
     const anios = new Set(Object.values(limpio.files).map((f) => f.date.getUTCFullYear()));
     expect(anios).toEqual(new Set([1980]));
   });

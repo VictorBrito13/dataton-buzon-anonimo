@@ -6,3 +6,4 @@ out
 coverage
 package-lock.json
 docs
+apps/frontend/dashboard/public/modelos

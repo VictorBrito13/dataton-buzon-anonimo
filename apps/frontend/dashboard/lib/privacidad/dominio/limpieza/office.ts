@@ -185,7 +185,16 @@ const leerPaquete = async (bytes: Uint8Array) => {
 
 const esXml = (ruta: string) => /\.(xml|rels|vml)$/i.test(ruta);
 
-export const limpiarOffice = async (bytes: Uint8Array): Promise<BytesLimpios> => {
+export type TipoOffice = "docx" | "xlsx" | "pptx";
+
+const tipoDeOffice = (tipos: string): TipoOffice => {
+  if (tipos.includes("wordprocessingml.document.main")) return "docx";
+  return tipos.includes("spreadsheetml.sheet.main") ? "xlsx" : "pptx";
+};
+
+export const limpiarOffice = async (
+  bytes: Uint8Array,
+): Promise<BytesLimpios & { tipo: TipoOffice }> => {
   const zip = await leerPaquete(bytes);
   const entradaTipos = zip.file("[Content_Types].xml");
   if (!entradaTipos) throw new ErrorLimpieza(NO_ES_OFFICE);
@@ -194,7 +203,8 @@ export const limpiarOffice = async (bytes: Uint8Array): Promise<BytesLimpios> =>
   if (!TIPOS_ADMITIDOS.test(tipos)) throw new ErrorLimpieza(NO_ES_OFFICE);
 
   const eliminados = new Set<string>();
-  if (zip.comment) eliminados.add("Comentario");
+  // JSZip lo expone al leer, aunque sus tipos no lo declaren.
+  if ((zip as JSZip & { comment?: string | null }).comment) eliminados.add("Comentario");
 
   const partes = new Map<string, string | Uint8Array>();
   for (const [ruta, entrada] of Object.entries(zip.files)) {
@@ -260,5 +270,6 @@ export const limpiarOffice = async (bytes: Uint8Array): Promise<BytesLimpios> =>
   return {
     bytes: await salida.generateAsync({ type: "uint8array", compression: "DEFLATE" }),
     eliminados: [...eliminados],
+    tipo: tipoDeOffice(tipos),
   };
 };
