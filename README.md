@@ -122,8 +122,10 @@ Todo cuelga de `/api`; Caddy lo envía al backend. Las rutas con credencial la r
 | GET      | `/api/v1/publico/indicadores?periodo=`                                 | Indicadores por ente (señal, nunca acusación)                  |
 | GET      | `/api/v1/publico/metodologia`                                          | Reglas, garantía, lo que no cubre y el ejemplo de ataque       |
 | GET      | `/api/v1/publico/pdn?estado=`                                          | Conteos públicos de la PDN por institución, desde instantáneas |
+| GET      | `/api/v1/publico/cobertura-pdn`                                        | Cobertura de la PDN por entidad, ámbito y sistema              |
 | GET      | `/api/v1/publico/catalogos/municipios?estado=`                         | Catálogo de municipios                                         |
 | GET      | `/api/v1/publico/descargas/agregados.csv`, `.json`, `diccionario.json` | Datos abiertos con diccionario de datos                        |
+| GET      | `/api/v1/publico/descargas/cobertura-pdn.csv`, `.json`                 | Cobertura de la PDN en datos abiertos                          |
 
 ## Base de datos y volúmenes del despliegue
 
