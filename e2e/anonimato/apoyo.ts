@@ -13,9 +13,6 @@ export const URL_HTTP = `http://localhost:${PUERTO_HTTP}`;
 /** Con 1 se prueba un despliegue ya levantado y no se apaga al terminar. */
 export const USAR_DESPLIEGUE_EXISTENTE = process.env.ANONIMATO_DESPLIEGUE_EXISTENTE === "1";
 
-/** Con 1, un flujo ausente es una falla, no un `fixme`. Se activa al integrar los frentes. */
-export const EXIGIR_FLUJO = process.env.ANONIMATO_EXIGIR_FLUJO === "1";
-
 export const PAGINAS_PUBLICAS = [
   "/",
   "/como-te-protegemos",
@@ -209,15 +206,6 @@ export const visitar = async (pagina: Page, ruta: string) => {
   const respuesta = await pagina.goto(ruta, { waitUntil: "load" });
   await pagina.waitForTimeout(2_000);
   return respuesta;
-};
-
-/** ¿Ya funcionan el formulario y su API? Sirve para marcar `fixme` en lugar de pasar sin probar. */
-export const flujoDisponible = async (pagina: Page): Promise<boolean> => {
-  const respuesta = await visitar(pagina, "/denunciar");
-  if (!respuesta || respuesta.status() >= 400) return false;
-  const formulario = await pagina.getByRole("heading", { name: "Qué pasó" }).count();
-  const api = await pagina.request.get("/api/v1/configuracion");
-  return formulario > 0 && api.ok();
 };
 
 /** Recorre el formulario real sin activar el borrador ni la detección de nombres. */

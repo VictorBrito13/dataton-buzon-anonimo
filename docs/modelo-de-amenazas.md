@@ -19,7 +19,7 @@ Complementa a [`decisiones-arquitectura.md`](./decisiones-arquitectura.md). Los 
 
 - El navegador y el dispositivo de la persona no están comprometidos.
 - La criptografía estándar utilizada (Argon2id, HMAC-SHA-256, ECDH P-256, AES-256-GCM) es sólida.
-- La clave privada de la autoridad se resguarda fuera del servidor (D3).
+- La clave privada de la autoridad se resguarda fuera del servidor (D3). En la demostración de `docker compose up` se genera en la misma máquina, en un volumen (`clave-autoridad-demo`) que ningún servicio en ejecución monta; quien administre ese Docker podría leerla, y por eso ese modo no es un despliegue real.
 - Esto es un prototipo: usa datos sintéticos y no llega a ninguna autoridad (D9).
 
 ## 2. Activos
@@ -33,7 +33,7 @@ Complementa a [`decisiones-arquitectura.md`](./decisiones-arquitectura.md). Los 
 | Evidencias                          | Sus metadatos y su contenido pueden identificar  | Selladas en el servidor tras verificarlas                  |
 | Metadatos de conexión (IP, navegador, hora) | Vinculan a la persona con la denuncia    | Caddy los recibe; no se reenvían ni se guardan             |
 | Pimienta y secretos del despliegue  | Con ellos y un volcado se podrían comprobar credenciales | Volumen `secretos`, fuera de la base y del repositorio     |
-| Clave privada de la autoridad       | Abre relatos y evidencias                        | Navegador de la autoridad, nunca en el servidor            |
+| Clave privada de la autoridad       | Abre relatos y evidencias                        | Navegador de la autoridad; nunca en un servicio del servidor. En la demostración, volumen `clave-autoridad-demo` de la misma máquina, que backend, frontend, db, caddy y migraciones no montan (lo comprueba `docker/compose.test.mjs`) |
 | Estadísticas públicas               | Una celda pequeña puede señalar a alguien        | `agregados_publicos`, tras el motor de k-anonimato         |
 
 ## 3. Adversarios

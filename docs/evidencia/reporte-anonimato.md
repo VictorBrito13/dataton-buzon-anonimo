@@ -3,15 +3,14 @@
 Generado por `npm run test:anonimato`. No se edita a mano.
 
 - **Fecha:** 2026-11-05
-- **Commit:** `afcb56d`
+- **Commit:** `82ef5b4`
 - **Resultado de la corrida:** passed
-- **Flujo exigido (`ANONIMATO_EXIGIR_FLUJO`):** no
 
 | Aprobadas | Fallidas | Pendientes (fixme) | Omitidas | Total |
 |---|---|---|---|---|
-| 32 | 0 | 6 | 0 | 38 |
+| 38 | 0 | 0 | 0 | 38 |
 
-Una prueba **pendiente** no demuestra nada todavía: está escrita y espera a que exista lo que comprueba.
+Ninguna prueba queda pendiente ni omitida: todas corren contra el despliegue real.
 
 ## como-te-protegemos.spec.ts
 
@@ -54,7 +53,7 @@ Una prueba **pendiente** no demuestra nada todavía: está escrita y espera a qu
 | Infraestructura › frontend: sistema de archivos de solo lectura y sin privilegios nuevos | Aprobada |  |
 | Infraestructura › caddy: sistema de archivos de solo lectura y sin privilegios nuevos | Aprobada |  |
 | Infraestructura › backend y frontend no tienen salida a internet | Aprobada |  |
-| Bitácoras y base de datos › las bitácoras no guardan IP ni user-agent, incluso con errores 404 y 502 | Aprobada | 73 líneas revisadas; sin 203.0.113.77, sin la IP del anfitrión (172.25.0.1) y sin el user-agent marcador |
+| Bitácoras y base de datos › las bitácoras no guardan IP ni user-agent, incluso con errores 404 y 502 | Aprobada | 82 líneas revisadas; sin 203.0.113.77, sin la IP del anfitrión (172.25.0.1) y sin el user-agent marcador |
 | Bitácoras y base de datos › el volcado de pg_dump incluye los datos, así que buscar en él sí significa algo | Aprobada |  |
 | Bitácoras y base de datos › el rol de la API pública no acepta la contraseña de desarrollo y no lee denuncias | Aprobada |  |
 | Bitácoras y base de datos › el esquema no tiene columnas de IP ni de user-agent | Aprobada |  |
@@ -64,9 +63,9 @@ Una prueba **pendiente** no demuestra nada todavía: está escrita y espera a qu
 
 | Prueba | Estado | Evidencia |
 |---|---|---|
-| Flujo de denuncia › el flujo se completó y envió la denuncia | Pendiente (fixme) | El formulario o la API de denuncias aún no están en esta rama |
-| Flujo de denuncia › ningún request sale a un dominio distinto del propio | Pendiente (fixme) | El formulario o la API de denuncias aún no están en esta rama |
-| Flujo de denuncia › la frase y el relato no aparecen en cuerpo, URL ni cabeceras | Pendiente (fixme) | El formulario o la API de denuncias aún no están en esta rama |
-| Flujo de denuncia › sin cookies ni almacenamiento local si no se activó el borrador | Pendiente (fixme) | El formulario o la API de denuncias aún no están en esta rama |
-| Flujo de denuncia › pg_dump no contiene relato, frase, folio ni IP de prueba | Pendiente (fixme) | El formulario o la API de denuncias aún no están en esta rama |
-| Flujo de denuncia › las bitácoras de backend y Caddy no contienen IP ni user-agent | Pendiente (fixme) | El formulario o la API de denuncias aún no están en esta rama |
+| Flujo de denuncia › el flujo se completó y envió la denuncia | Aprobada |  |
+| Flujo de denuncia › ningún request sale a un dominio distinto del propio | Aprobada | 21 peticiones observadas |
+| Flujo de denuncia › la frase y el relato no aparecen en cuerpo, URL ni cabeceras | Aprobada |  |
+| Flujo de denuncia › sin cookies ni almacenamiento local si no se activó el borrador | Aprobada |  |
+| Flujo de denuncia › pg_dump no contiene relato, frase, folio ni IP de prueba | Aprobada |  |
+| Flujo de denuncia › las bitácoras de backend y Caddy no contienen IP ni user-agent | Aprobada |  |

@@ -99,7 +99,7 @@ test.describe("Páginas públicas", () => {
       });
 
       const respuesta = await visitar(pagina, ruta);
-      test.fixme(respuesta?.status() === 404, `${ruta} aún no existe en esta rama`);
+      expect(respuesta?.status()).toBe(200);
 
       const peticiones = await grabadora.listas();
       expect(peticiones.length).toBeGreaterThan(0);

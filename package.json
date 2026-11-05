@@ -18,13 +18,14 @@
     "typecheck": "npm run typecheck --workspaces --if-present && tsc -p e2e/tsconfig.json",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "npm run test --workspaces --if-present && npm run test:verificadores",
-    "test:verificadores": "node --test scripts/verificar-arquitectura.test.mjs scripts/verificar-sin-terceros.test.mjs",
+    "test": "npm run test --workspaces --if-present && npm run test:verificadores && npm run test:compose",
+    "test:verificadores": "node --test scripts/verificar-arquitectura.test.mjs scripts/verificar-sin-terceros.test.mjs scripts/con-entorno.test.mjs docker/generar-secretos.test.mjs",
     "test:cobertura-dominio": "vitest run --config vitest.dominio.config.mjs --coverage",
     "test:anonimato": "playwright test --config e2e/anonimato/playwright.config.ts",
     "verificar:arquitectura": "node scripts/verificar-arquitectura.mjs",
     "verificar:terceros": "node scripts/verificar-sin-terceros.mjs",
-    "migrate": "npm run migrate -w @dataton/backend"
+    "migrate": "npm run migrate -w @dataton/backend",
+    "test:compose": "node --test docker/compose.test.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

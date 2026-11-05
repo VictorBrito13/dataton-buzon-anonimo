@@ -15,6 +15,8 @@ x-endurecido: &endurecido
 
 services:
   # Genera secretos en un volumen la primera vez. Nada se escribe en el repositorio.
+  # La clave privada de demostración va a otro volumen que ningún servicio en ejecución monta (D3);
+  # docker/compose.test.mjs lo comprueba sobre la configuración resuelta.
   secretos:
     image: node:24.22.2-bookworm-slim
     read_only: true
@@ -25,10 +27,28 @@ services:
     environment:
       # Para uso real: genera el par fuera del servidor y pasa aquí solo la clave pública.
       CLAVE_PUBLICA_AUTORIDAD: ${CLAVE_PUBLICA_AUTORIDAD:-}
+      SECRETOS_DIR: /secretos
+      CLAVE_AUTORIDAD_DIR: /clave-autoridad
     volumes:
       - secretos:/secretos
+      - clave-autoridad-demo:/clave-autoridad
       - ./docker/generar-secretos.mjs:/generar-secretos.mjs:ro
     command: ["node", "/generar-secretos.mjs"]
+    restart: "no"
+
+  # Solo a mano, para la demostración. No arranca con "up" (perfil) y no tiene red.
+  #   docker compose run --rm --no-deps clave-autoridad > autoridad.jwk        # clave privada, para el panel
+  #   docker compose run --rm --no-deps clave-autoridad cat /clave-autoridad/acceso_panel.txt
+  clave-autoridad:
+    profiles: [demo]
+    image: node:24.22.2-bookworm-slim
+    read_only: true
+    network_mode: none
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    volumes:
+      - clave-autoridad-demo:/clave-autoridad:ro
+    command: ["cat", "/clave-autoridad/autoridad_clave_privada.jwk"]
     restart: "no"
 
   db:
@@ -63,7 +83,11 @@ services:
       context: .
       dockerfile: apps/backend/Dockerfile
     image: dataton/backend:local
-    command: ["sh", "-c", "node dist/db/migrate.js && node rotar-rol-lector.mjs"]
+    # Migra, rota la contraseña del rol público y crea el usuario demo del panel (con hash Argon2id).
+    command:
+      - sh
+      - -c
+      - node dist/db/migrate.js && node rotar-rol-lector.mjs && node dist/scripts/semilla-autoridad.js
     restart: "no"
     depends_on:
       db:
@@ -183,6 +207,9 @@ networks:
 
 volumes:
   secretos:
+  # Clave privada y acceso demo de la autoridad. Solo "secretos" (al generar) y "clave-autoridad"
+  # (a mano) lo montan: ni backend, ni frontend, ni db, ni caddy, ni migraciones.
+  clave-autoridad-demo:
   db-data:
   caddy-data:
   postgres-data:

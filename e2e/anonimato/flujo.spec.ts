@@ -4,8 +4,6 @@ import {
   almacenamientoDe,
   completarDenuncia,
   dominiosAjenos,
-  EXIGIR_FLUJO,
-  flujoDisponible,
   Grabadora,
   IP_MARCADOR,
   ipDelAnfitrion,
@@ -17,13 +15,13 @@ import {
   secretosPresentes,
   UA_MARCADOR,
   URL_BASE,
+  visitar,
   volcarBaseDeDatos,
 } from "./apoyo";
 
 /**
  * Recorre el flujo real una vez, con un navegador marcado, y lo examina desde cada ángulo.
- * Sin formulario, las pruebas quedan en `fixme`; `ANONIMATO_EXIGIR_FLUJO=1` las vuelve fallas,
- * para que al integrar un formulario roto no pase por pendiente.
+ * Formulario y API ya están integrados: si algo falta, la prueba falla; no queda pendiente.
  */
 test.describe.serial("Flujo de denuncia", () => {
   let contexto: BrowserContext;
@@ -40,11 +38,9 @@ test.describe.serial("Flujo de denuncia", () => {
     const grabadora = new Grabadora(contexto);
     pagina = await contexto.newPage();
 
-    const disponible = await flujoDisponible(pagina);
-    if (!disponible && EXIGIR_FLUJO) {
-      throw new Error("ANONIMATO_EXIGIR_FLUJO=1, pero el formulario o la API no están disponibles");
-    }
-    test.fixme(!disponible, "El formulario o la API de denuncias aún no están en esta rama");
+    const respuesta = await visitar(pagina, "/denunciar");
+    expect(respuesta?.status()).toBe(200);
+    expect((await pagina.request.get("/api/v1/configuracion")).ok()).toBe(true);
 
     flujo = await completarDenuncia(pagina);
     peticiones = await grabadora.listas();

@@ -1,15 +1,35 @@
 /**
  * Crea los secretos del despliegue en el volumen, una sola vez. Conservarlos importa: sin la
  * pimienta ningún folio ni frase existente vuelve a funcionar. `down -v` los borra junto con la base.
+ *
+ * Dos carpetas, dos volúmenes:
+ * - SECRETOS_DIR (volumen `secretos`): lo que el backend y la base necesitan para arrancar.
+ * - CLAVE_AUTORIDAD_DIR (volumen `clave-autoridad-demo`): la clave privada de demostración y el
+ *   acceso al panel. Ningún servicio en ejecución lo monta (D3); se lee con
+ *   `docker compose run --rm --no-deps clave-autoridad`.
  */
-import { chmodSync, chownSync, existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  chownSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+  writeFileSync,
+} from "node:fs";
+import path from "node:path";
 import { randomBytes, webcrypto } from "node:crypto";
 
-const DIR = "/secretos";
+const DIR = process.env.SECRETOS_DIR || "/secretos";
+const DIR_CLAVE = process.env.CLAVE_AUTORIDAD_DIR || "/clave-autoridad";
 const UID_BACKEND = 1000;
-const hex32 = () => randomBytes(32).toString("hex");
+const USUARIO_DEMO = "autoridad.demo";
+const hex = (bytes) => randomBytes(bytes).toString("hex");
+const hex32 = () => hex(32);
 
 process.umask(0o077);
+mkdirSync(DIR, { recursive: true });
+mkdirSync(DIR_CLAVE, { recursive: true });
 
 const escribirSoloLectura = (ruta, contenido) => {
   writeFileSync(`${ruta}.tmp`, contenido);
@@ -17,10 +37,10 @@ const escribirSoloLectura = (ruta, contenido) => {
   chmodSync(ruta, 0o400);
 };
 
-const rutaPassword = `${DIR}/db_password`;
+const rutaPassword = path.join(DIR, "db_password");
 if (!existsSync(rutaPassword)) escribirSoloLectura(rutaPassword, hex32());
 
-const rutaEnv = `${DIR}/backend.env`;
+const rutaEnv = path.join(DIR, "backend.env");
 const anteriores = existsSync(rutaEnv) ? readFileSync(rutaEnv, "utf8") : "";
 const existe = (variable) => new RegExp(`^${variable}=`, "m").test(anteriores);
 const nuevas = [];
@@ -39,21 +59,41 @@ if (!existe("DATABASE_URL_PUBLICO")) {
   nuevas.push(`DATABASE_URL_PUBLICO=postgres://buzon_lector_publico:${hex32()}@db:5432/dataton`);
 }
 
+// Usuario demo del panel. La contraseña se guarda con Argon2id en la base (semilla en `migraciones`);
+// quien hace la demostración la lee del volumen de la clave, no de este archivo.
+let contrasenaDemo = null;
+if (!existe("SEMILLA_AUTORIDAD_USUARIO")) {
+  contrasenaDemo = hex(16);
+  nuevas.push(`SEMILLA_AUTORIDAD_USUARIO=${USUARIO_DEMO}`);
+  nuevas.push(`SEMILLA_AUTORIDAD_CONTRASENA=${contrasenaDemo}`);
+}
+
 if (!existe("CLAVE_PUBLICA_AUTORIDAD")) {
   let publica = process.env.CLAVE_PUBLICA_AUTORIDAD;
   if (!publica) {
-    // Solo para que el prototipo arranque con un comando. La privada queda en el volumen, legible
-    // únicamente por root: en un uso real se genera fuera del servidor (D3). Ver guía de réplica.
+    // Solo para que el prototipo arranque con un comando. La privada se escribe en su propio
+    // volumen, que ningún servicio en ejecución monta. En uso real se genera fuera del servidor
+    // y aquí llega solo la pública (D3). Ver docs/guia-de-replica.md.
     const par = await webcrypto.subtle.generateKey({ name: "ECDH", namedCurve: "P-256" }, true, [
       "deriveBits",
     ]);
     const { kty, crv, x, y } = await webcrypto.subtle.exportKey("jwk", par.publicKey);
     publica = JSON.stringify({ kty, crv, x, y });
     const privada = await webcrypto.subtle.exportKey("jwk", par.privateKey);
-    escribirSoloLectura(`${DIR}/autoridad_clave_privada.jwk`, JSON.stringify(privada));
+    escribirSoloLectura(
+      path.join(DIR_CLAVE, "autoridad_clave_privada.jwk"),
+      JSON.stringify(privada),
+    );
   }
   // Comillas simples: el JSON se conserva íntegro al cargarlo con sh.
   nuevas.push(`CLAVE_PUBLICA_AUTORIDAD='${publica}'`);
+}
+
+if (contrasenaDemo) {
+  escribirSoloLectura(
+    path.join(DIR_CLAVE, "acceso_panel.txt"),
+    `usuario=${USUARIO_DEMO}\ncontrasena=${contrasenaDemo}\n`,
+  );
 }
 
 if (nuevas.length > 0) {
@@ -62,5 +102,6 @@ if (nuevas.length > 0) {
 }
 
 // Postgres lee su contraseña como root antes de bajar de privilegios; el backend, como uid 1000.
-chownSync(rutaEnv, UID_BACKEND, UID_BACKEND);
+// En el contenedor corre como root; en pruebas locales no hace falta cambiar el dueño.
+if (process.getuid?.() === 0) chownSync(rutaEnv, UID_BACKEND, UID_BACKEND);
 console.log("[secretos] listos");

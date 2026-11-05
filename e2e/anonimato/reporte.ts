@@ -2,7 +2,7 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import type { FullResult, Reporter, TestCase, TestResult } from "@playwright/test/reporter";
-import { EXIGIR_FLUJO, RAIZ } from "./apoyo";
+import { RAIZ } from "./apoyo";
 
 type Estado = "Aprobada" | "Fallida" | "Pendiente (fixme)" | "Omitida";
 
@@ -69,13 +69,12 @@ export default class ReporteAnonimato implements Reporter {
       `- **Fecha:** ${new Date().toISOString().slice(0, 10)}`,
       `- **Commit:** \`${commit()}\``,
       `- **Resultado de la corrida:** ${resultado.status}`,
-      `- **Flujo exigido (\`ANONIMATO_EXIGIR_FLUJO\`):** ${EXIGIR_FLUJO ? "sí" : "no"}`,
       "",
       "| Aprobadas | Fallidas | Pendientes (fixme) | Omitidas | Total |",
       "|---|---|---|---|---|",
       `| ${contar("Aprobada")} | ${contar("Fallida")} | ${contar("Pendiente (fixme)")} | ${contar("Omitida")} | ${filas.length} |`,
       "",
-      "Una prueba **pendiente** no demuestra nada todavía: está escrita y espera a que exista lo que comprueba.",
+      "Ninguna prueba queda pendiente ni omitida: todas corren contra el despliegue real.",
       "",
     ];
 
