@@ -122,7 +122,9 @@ const simularAutoridad = async (page: Page) => {
       return ruta.fulfill({ status: 401, json: { error: { message: "No autorizado" } } });
     }
     if (camino === "/autoridad/denuncias") {
-      return ruta.fulfill({ json: [resumen, { ...resumen, id: ID.replace("6f", "7a") }] });
+      return ruta.fulfill({
+        json: { denuncias: [resumen, { ...resumen, id: ID.replace("6f", "7a") }], total: 2 },
+      });
     }
     if (camino === `/autoridad/denuncias/${ID}`) {
       return ruta.fulfill({

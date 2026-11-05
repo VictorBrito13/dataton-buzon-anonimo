@@ -18,12 +18,17 @@ export function SimboloLogo({ className = "size-8" }: { className?: string }) {
   );
 }
 
-/** Símbolo y nombre. A 320 px el nombre ocupa dos líneas para dejar sitio a los controles. */
+/**
+ * Símbolo y nombre. Bajo 360 px solo se ve el símbolo, para que el encabezado fijo quede en una fila
+ * también con fuentes del sistema más anchas; el nombre sigue disponible para lectores de pantalla.
+ */
 export function Logo() {
   return (
     <span className="inline-flex items-center gap-2">
       <SimboloLogo />
-      <span className="max-w-min leading-tight font-semibold sm:max-w-none">Buzón Anónimo</span>
+      <span className="sr-only leading-tight font-semibold min-[360px]:not-sr-only min-[360px]:max-w-min sm:max-w-none">
+        Buzón Anónimo
+      </span>
     </span>
   );
 }
