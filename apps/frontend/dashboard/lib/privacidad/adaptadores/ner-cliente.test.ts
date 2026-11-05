@@ -187,3 +187,75 @@ describe("analizar", () => {
     expect(worker.enviados).toHaveLength(enviadosAntes);
   });
 });
+
+describe("cancelar", () => {
+  it("detiene la carga, termina el Worker y resuelve en false", async () => {
+    const { cliente, workers } = preparar();
+    const carga = cliente.cargar();
+    cliente.cancelar();
+    await expect(carga).resolves.toBe(false);
+    expect(workers[0].terminado).toBe(true);
+    expect(cliente.estado()).toBe("inactivo");
+  });
+
+  it("no avisa a nadie más después de cancelar", () => {
+    const { cliente, workers } = preparar();
+    const progreso: unknown[] = [];
+    const worker = (void cliente.cargar((p) => progreso.push(p)), workers[0]);
+    const alMensaje = worker.onmessage;
+    cliente.cancelar();
+    progreso.length = 0;
+    alMensaje?.({ data: { tipo: "progreso", porcentaje: 50 } });
+    expect(progreso).toEqual([]);
+    expect(cliente.estado()).toBe("inactivo");
+  });
+
+  it("no deja temporizadores que luego marquen un error", async () => {
+    vi.useFakeTimers();
+    const { cliente } = preparar();
+    void cliente.cargar();
+    cliente.cancelar();
+    await vi.advanceTimersByTimeAsync(600_000);
+    expect(cliente.estado()).toBe("inactivo");
+  });
+
+  it("permite volver a cargar con un Worker nuevo", async () => {
+    const { cliente, workers } = preparar();
+    void cliente.cargar();
+    cliente.cancelar();
+    const otra = cliente.cargar();
+    expect(workers).toHaveLength(2);
+    workers[1].emitir({ tipo: "listo" });
+    await expect(otra).resolves.toBe(true);
+    expect(cliente.estado()).toBe("listo");
+  });
+
+  it("libera un modelo ya cargado: el análisis deja de usarlo", async () => {
+    const { cliente, worker } = await preparaListo();
+    cliente.cancelar();
+    expect(worker.terminado).toBe(true);
+    expect(cliente.estado()).toBe("inactivo");
+    await expect(cliente.analizar("Juan Pérez")).resolves.toEqual([]);
+  });
+
+  it("resuelve sin hallazgos un análisis en curso", async () => {
+    const { cliente } = await preparaListo();
+    const analisis = cliente.analizar("Juan Pérez");
+    cliente.cancelar();
+    await expect(analisis).resolves.toEqual([]);
+  });
+
+  it("sin nada en marcha no crea nada, y limpia un error anterior", async () => {
+    const { cliente, workers } = preparar();
+    cliente.cancelar();
+    expect(workers).toHaveLength(0);
+    expect(cliente.estado()).toBe("inactivo");
+
+    const carga = cliente.cargar();
+    workers[0].emitir({ tipo: "error" });
+    await carga;
+    expect(cliente.estado()).toBe("error");
+    cliente.cancelar();
+    expect(cliente.estado()).toBe("inactivo");
+  });
+});

@@ -14,6 +14,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   output: "standalone",
   outputFileTracingRoot: RAIZ_REPO,
+  // /denunciar comprueba si existen estos archivos; solo los sirve public/, sin duplicarlos.
+  outputFileTracingExcludes: { "/*": ["public/modelos/**"] },
   turbopack: {
     root: RAIZ_REPO,
     rules: {

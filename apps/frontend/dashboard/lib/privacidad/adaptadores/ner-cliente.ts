@@ -7,6 +7,8 @@ export interface ClienteNer {
   cargar(alProgreso?: (progreso: ProgresoNer) => void): Promise<boolean>;
   analizar(texto: string): Promise<Hallazgo[]>;
   estado(): EstadoModeloNer;
+  /** Detiene la carga o el análisis y libera el modelo. Volver a cargarlo crea otro Worker. */
+  cancelar(): void;
 }
 
 /** Sin noticias del Worker durante este tiempo, la carga se da por perdida. */
@@ -35,8 +37,8 @@ export const crearClienteNer = (crearWorker: () => WorkerNer): ClienteNer => {
     for (const oyente of oyentes) oyente({ estado, porcentaje });
   };
 
-  const fallar = () => {
-    estado = "error";
+  const detener = (final: EstadoModeloNer) => {
+    estado = final;
     clearTimeout(temporizadorCarga);
     if (worker) {
       worker.onmessage = null;
@@ -55,6 +57,8 @@ export const crearClienteNer = (crearWorker: () => WorkerNer): ClienteNer => {
     terminarCarga = null;
     carga = null;
   };
+
+  const fallar = () => detener("error");
 
   const vigilarCarga = () => {
     clearTimeout(temporizadorCarga);
@@ -106,6 +110,8 @@ export const crearClienteNer = (crearWorker: () => WorkerNer): ClienteNer => {
 
   return {
     estado: () => estado,
+
+    cancelar: () => detener("inactivo"),
 
     cargar: (alProgreso) => {
       if (estado === "listo") return Promise.resolve(true);

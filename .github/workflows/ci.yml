@@ -188,7 +188,7 @@ jobs:
       - run: npm run migrate
       - name: Datos sintéticos y agregación
         run: |
-          npm run sintetico -w @dataton/backend
+          npm run sintetico -w @dataton/backend -- --hoy 2026-11-05
           npm run agregar -w @dataton/backend
       - name: Levantar API y frontend
         run: |
