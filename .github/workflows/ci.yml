@@ -1,0 +1,154 @@
+# Barrera de calidad de TDD y DDD (D10 en docs/decisiones-arquitectura.md).
+# Usar `ci-ok` como único check requerido en la protección de ramas.
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+      - "feat/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "24.22.2"
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  calidad:
+    name: Build, tipos, lint, formato y reglas
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Sin terceros ni lectura de IP o user-agent
+        run: npm run verificar:terceros
+      - name: Dependencias entre capas (D10)
+        run: npm run verificar:arquitectura
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+
+  pruebas:
+    name: Pruebas con Postgres
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17.11-alpine3.24
+        env:
+          POSTGRES_USER: dataton
+          POSTGRES_PASSWORD: dataton
+          POSTGRES_DB: dataton
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U dataton -d dataton"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      # Valores de prueba, iguales a apps/backend/.env.example. No son secretos.
+      DATABASE_URL: postgres://dataton:dataton@localhost:5432/dataton
+      PIMIENTA_ACCESO: "0000000000000000000000000000000000000000000000000000000000000000"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run migrate
+      - run: npm test
+      - name: Cobertura mínima del dominio
+        run: npm run test:cobertura-dominio
+
+  imagenes:
+    name: Construcción de imágenes Docker
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: docker compose config --quiet
+      - run: docker compose build
+
+  playwright:
+    name: Playwright y pruebas de anonimato
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # Poner la variable del repositorio en 1 al integrar: un formulario roto deja de ser "fixme".
+      ANONIMATO_EXIGIR_FLUJO: ${{ vars.ANONIMATO_EXIGIR_FLUJO }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Pruebas de anonimato contra el despliegue real
+        run: npm run test:anonimato
+      - name: Otras pruebas E2E, si existen
+        run: |
+          if [ -f playwright.config.ts ]; then
+            npx playwright test
+          else
+            echo "Sin playwright.config.ts en la raíz."
+          fi
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: evidencia-anonimato
+          path: |
+            docs/evidencia/reporte-anonimato.md
+            test-results/
+          if-no-files-found: warn
+
+  auditoria:
+    name: npm audit (informativo)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Informa, no bloquea: un aviso nuevo en una dependencia no debe detener un PR ajeno a ella.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: npm audit --audit-level=high
+
+  ci-ok:
+    name: ci-ok
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs: [calidad, pruebas, imagenes, playwright]
+    if: always()
+    steps:
+      - name: Todos los trabajos requeridos terminaron bien
+        env:
+          RESULTADOS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Resultados: $RESULTADOS"
+          for resultado in $RESULTADOS; do
+            [ "$resultado" = "success" ] || exit 1
+          done
