@@ -12,6 +12,9 @@ const RAIZ_REPO = fileURLToPath(new URL("../../../", import.meta.url));
  */
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Comprime Caddy (docker/caddy/Caddyfile), que sí ofrece zstd. Si Next comprimiera primero, Caddy
+  // recibiría gzip y lo dejaría pasar tal cual.
+  compress: false,
   output: "standalone",
   outputFileTracingRoot: RAIZ_REPO,
   // /denunciar comprueba si existen estos archivos; solo los sirve public/, sin duplicarlos.
