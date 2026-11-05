@@ -1,0 +1,85 @@
+/* Clases del tablero. La CSP prohíbe style= en línea: los SVG usan estas clases y atributos.
+   Escala de un solo tono construida con los tokens de globals.css, en claro y oscuro. */
+
+.nivel-0 {
+  fill: var(--superficie);
+  stroke: var(--borde-fuerte);
+  stroke-width: 1;
+}
+.nivel-1 {
+  fill: color-mix(in srgb, var(--marca) 12%, var(--superficie));
+  stroke: var(--borde-fuerte);
+  stroke-width: 1;
+}
+.nivel-2 {
+  fill: color-mix(in srgb, var(--marca) 28%, var(--superficie));
+}
+.nivel-3 {
+  fill: color-mix(in srgb, var(--marca) 45%, var(--superficie));
+}
+.nivel-4 {
+  fill: color-mix(in srgb, var(--marca) 80%, var(--superficie));
+}
+.nivel-5 {
+  fill: var(--marca);
+}
+
+/* Lo oculto se distingue por el contorno punteado, no solo por el color. */
+.nivel-oculto {
+  fill: var(--papel);
+  stroke: var(--tinta-suave);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+
+.texto-casilla {
+  fill: var(--tinta);
+  font-size: 15px;
+  text-anchor: middle;
+}
+.texto-casilla-abrev {
+  font-weight: 600;
+}
+.texto-nivel-4,
+.texto-nivel-5 {
+  fill: var(--marca-tinta);
+}
+
+@media (max-width: 480px) {
+  .texto-casilla {
+    font-size: 19px;
+  }
+}
+
+.casilla:hover rect {
+  stroke: var(--tinta);
+  stroke-width: 2;
+  stroke-dasharray: none;
+}
+.casilla:focus {
+  outline: none;
+}
+.casilla:focus-visible rect {
+  stroke: var(--foco);
+  stroke-width: 5;
+  stroke-dasharray: none;
+}
+.casilla-activa rect {
+  stroke: var(--tinta);
+  stroke-width: 4;
+  stroke-dasharray: none;
+}
+
+.barra {
+  fill: var(--marca);
+}
+.barra-oculta {
+  fill: var(--papel);
+  stroke: var(--tinta-suave);
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+}
+.barra-fondo {
+  fill: var(--borde);
+  opacity: 0.35;
+}
