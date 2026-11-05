@@ -1,26 +1,90 @@
 @import "tailwindcss";
 
+/* Tokens de diseño. Todas las parejas de texto/fondo cumplen WCAG AA.
+   Solo fuentes del sistema: cero descargas, carga rápida con poca señal. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --papel: #f7f5f0;
+  --superficie: #ffffff;
+  --tinta: #1b2733;
+  --tinta-suave: #4c5a67;
+  --borde: #d6d2c8;
+  --borde-fuerte: #7b8691;
+  --marca: #0b5563;
+  --marca-tinta: #ffffff;
+  --marca-suave: #dcecef;
+  --aviso: #8a4b00;
+  --aviso-suave: #fbeed9;
+  --peligro: #a3241d;
+  --peligro-suave: #fae3e1;
+  --exito: #1f6b3a;
+  --exito-suave: #dff1e5;
+  --foco: #0b5563;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --papel: #11181f;
+    --superficie: #1a232c;
+    --tinta: #eef1f3;
+    --tinta-suave: #b3bec8;
+    --borde: #36424e;
+    --borde-fuerte: #84919d;
+    --marca: #7fd0de;
+    --marca-tinta: #0a2228;
+    --marca-suave: #143840;
+    --aviso: #f3c17b;
+    --aviso-suave: #3b2a12;
+    --peligro: #f5a29c;
+    --peligro-suave: #431b18;
+    --exito: #8fd8a8;
+    --exito-suave: #16321f;
+    --foco: #7fd0de;
   }
 }
 
+@theme inline {
+  --color-papel: var(--papel);
+  --color-superficie: var(--superficie);
+  --color-tinta: var(--tinta);
+  --color-tinta-suave: var(--tinta-suave);
+  --color-borde: var(--borde);
+  --color-borde-fuerte: var(--borde-fuerte);
+  --color-marca: var(--marca);
+  --color-marca-tinta: var(--marca-tinta);
+  --color-marca-suave: var(--marca-suave);
+  --color-aviso: var(--aviso);
+  --color-aviso-suave: var(--aviso-suave);
+  --color-peligro: var(--peligro);
+  --color-peligro-suave: var(--peligro-suave);
+  --color-exito: var(--exito);
+  --color-exito-suave: var(--exito-suave);
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--font-sans);
+  line-height: 1.55;
+}
+
+:focus-visible {
+  outline: 3px solid var(--foco);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

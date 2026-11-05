@@ -2,7 +2,7 @@
 
 Buzón anónimo de denuncias para el S5. Las denuncias se envían sin cuentas, correo ni teléfono, y se consultan mediante una frase de recuperación de seis palabras generada en el dispositivo.
 
-La planeación y los requerimientos están en [`docs/`](./docs).
+La planeación y los requerimientos están en [`docs/`](./docs). Las decisiones técnicas vigentes están en [`docs/decisiones-arquitectura.md`](./docs/decisiones-arquitectura.md).
 
 ## Stack
 
@@ -21,6 +21,7 @@ La planeación y los requerimientos están en [`docs/`](./docs).
 ├── apps/
 │   ├── backend/              # API con Express + TypeScript
 │   └── frontend/dashboard/   # Aplicación Next.js
+├── packages/shared/          # Contratos de la API, catálogos, frase y sellado
 ├── docs/                     # Requerimientos y planeación
 ├── docker-compose.yml        # PostgreSQL para desarrollo local
 └── package.json              # Raíz de npm workspaces
@@ -35,8 +36,9 @@ La planeación y los requerimientos están en [`docs/`](./docs).
 ## Primeros pasos
 
 ```bash
-npm install
+npm ci
 docker compose up -d      # PostgreSQL en localhost:5432
+npm run migrate           # Crea las tablas
 npm run dev:backend       # http://localhost:4000
 npm run dev:frontend      # http://localhost:3000
 ```
@@ -62,6 +64,8 @@ DATABASE_URL=postgres://dataton:dataton@localhost:5433/dataton npm run dev:backe
 | `npm run build`        | Compila todos los workspaces                   |
 | `npm run lint`         | Ejecuta ESLint en todos los workspaces         |
 | `npm run typecheck`    | Verifica tipos en todos los workspaces         |
+| `npm test`             | Ejecuta las pruebas de todos los workspaces    |
+| `npm run migrate`      | Aplica las migraciones de la base de datos     |
 | `npm run format`       | Formatea el repositorio con Prettier           |
 | `npm run format:check` | Verifica el formato sin escribir cambios       |
 

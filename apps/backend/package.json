@@ -9,7 +9,9 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "migrate": "tsx src/db/migrate.ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "argon2": "^0.45.1",
@@ -17,7 +19,14 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
-    "pg": "^8.23.1"
+    "pg": "^8.23.1",
+    "@dataton/shared": "*",
+    "altcha-lib": "^2.8.0",
+    "sharp": "^0.35.5",
+    "pdf-lib": "^1.17.1",
+    "jszip": "^3.10.2",
+    "file-type": "^22.3.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
@@ -28,6 +37,9 @@
     "eslint": "^9.39.1",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.4"
+    "typescript-eslint": "^8.46.4",
+    "vitest": "^5.1.0",
+    "supertest": "^7.1.0",
+    "@types/supertest": "^6.0.3"
   }
 }
