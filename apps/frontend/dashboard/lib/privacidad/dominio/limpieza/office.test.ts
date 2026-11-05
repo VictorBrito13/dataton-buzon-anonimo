@@ -265,6 +265,72 @@ describe("limpiarOffice: PPTX", () => {
   });
 });
 
+describe("limpiarOffice: partes que no se saben limpiar", () => {
+  it.each(["image1.tiff", "image2.gif", "image3.bmp", "image4.emf", "image5.wmf"])(
+    "rechaza una imagen %s en media/, que podría llevar ubicación",
+    async (nombre) => {
+      const zip = docx();
+      zip.file(`word/media/${nombre}`, "II*\0 EXIF GPSLatitude Artist=Autora Secreta");
+      await expect(limpiarOffice(await empacar(zip))).rejects.toThrow(/imagen/i);
+    },
+  );
+
+  it("rechaza una imagen cuyo contenido no coincide con un formato que se limpie", async () => {
+    const zip = docx();
+    zip.file("word/media/disfraz.png", "II*\0 EXIF GPSLatitude");
+    await expect(limpiarOffice(await empacar(zip))).rejects.toThrow(/imagen/i);
+  });
+
+  it.each(["Documento.docm", "Libro.xlsm", "Pres.pptm", "Plantilla.dotm", "anexo.pdf", "obj.bin"])(
+    "rechaza un objeto incrustado %s que no reprocesa",
+    async (nombre) => {
+      const zip = docx();
+      zip.file(`word/embeddings/${nombre}`, new Uint8Array([0x50, 0x4b, 3, 4, 1, 2, 3]));
+      await expect(limpiarOffice(await empacar(zip))).rejects.toThrow(/incrustado/i);
+    },
+  );
+
+  it("limpia los documentos de Office incrustados", async () => {
+    const zip = docx();
+    zip.file("word/embeddings/Hoja.xlsx", await empacar(xlsx()));
+    const { bytes, eliminados } = await limpiarOffice(await empacar(zip));
+    const incrustado = await (
+      await JSZip.loadAsync(bytes)
+    )
+      .file("word/embeddings/Hoja.xlsx")!
+      .async("uint8array");
+    const { todo, zip: interno } = await xmlDe(incrustado);
+    expect(interno.file("docProps/core.xml")).toBeNull();
+    expect(todo).not.toMatch(/Autora Secreta|absPath|maria/);
+    expect(eliminados).toContain("Metadatos de documentos incrustados");
+  });
+
+  it("vacía también los vínculos externos que no son http(s) y conserva su Id", async () => {
+    const zip = docx();
+    zip.file(
+      "word/_rels/document.xml.rels",
+      `<Relationships><Relationship Id="rId7" Type="hyperlink" Target="mailto:maria@ejemplo.org" TargetMode="External"/><Relationship Id="rId8" Type="hyperlink" Target="\\\\servidor\\maria\\anexo.pdf" TargetMode="External"/><Relationship Id="rId9" Type="hyperlink" Target="https://ejemplo.org/" TargetMode="External"/></Relationships>`,
+    );
+    const { bytes } = await limpiarOffice(await empacar(zip));
+    const { partes } = await xmlDe(bytes);
+    const rels = partes["word/_rels/document.xml.rels"]!;
+    expect(rels).not.toMatch(/maria|servidor|mailto/);
+    expect(rels).toContain('Id="rId7"');
+    expect(rels).toContain('Id="rId8"');
+    expect(rels).toContain('Target="https://ejemplo.org/"');
+  });
+
+  it("rechaza en vez de aceptar si tras limpiar sobrevive una ruta local en un XML", async () => {
+    const zip = docx();
+    // Una parte poco habitual donde Office también puede dejar una ruta absoluta.
+    zip.file(
+      "word/webSettings.xml",
+      `<w:webSettings><w:divs path="C:\\Users\\maria\\"/></w:webSettings>`,
+    );
+    await expect(limpiarOffice(await empacar(zip))).rejects.toThrow(ErrorLimpieza);
+  });
+});
+
 describe("limpiarOffice: rechazos", () => {
   it("rechaza un ZIP que no es de Office", async () => {
     const zip = new JSZip();
