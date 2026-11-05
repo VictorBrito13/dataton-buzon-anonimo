@@ -84,6 +84,11 @@ describe("sello", () => {
     expect(new TextDecoder().decode(a)).not.toContain("relato");
   });
 
+  it("base64url no desborda la pila con un sello cercano al límite del contrato", () => {
+    const bytes = new Uint8Array(200_000).fill(251);
+    expect(deBase64Url(aBase64Url(bytes))).toEqual(bytes);
+  });
+
   it("base64url ida y vuelta", () => {
     const bytes = crypto.getRandomValues(new Uint8Array(301));
     expect(deBase64Url(aBase64Url(bytes))).toEqual(bytes);
