@@ -1,31 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SimboloLogo } from "@/components/logo";
 
-export const metadata: Metadata = { title: "Página no encontrada" };
+export const metadata = {
+  title: "Página no encontrada",
+} satisfies Metadata;
 
-export default function NoEncontrada() {
+export default function NotFound() {
   return (
-    <div className="mx-auto flex max-w-xl flex-col items-start gap-4 py-8 sm:py-16">
-      <SimboloLogo className="size-16" />
-      <h1 className="text-3xl font-semibold sm:text-4xl">No encontramos esta página</h1>
-      <p className="text-lg">El enlace puede estar incompleto o haber cambiado.</p>
-      <div className="flex w-full flex-col gap-3 sm:flex-row">
-        <Link
-          prefetch={false}
-          href="/"
-          className="inline-flex min-h-11 items-center justify-center rounded-sm bg-marca px-5 py-2 font-semibold text-marca-tinta no-underline hover:underline"
-        >
-          Ir al inicio
-        </Link>
-        <Link
-          prefetch={false}
-          href="/seguimiento"
-          className="inline-flex min-h-11 items-center justify-center rounded-sm border border-borde-fuerte bg-superficie px-4 py-2 font-medium text-tinta no-underline hover:bg-marca-suave"
-        >
-          Ver una denuncia que ya hice
-        </Link>
-      </div>
+    <div className="max-w-2xl">
+      <h1 className="text-3xl font-bold text-tinta">No encontramos esta página</h1>
+      <p className="mt-3 text-lg text-tinta-suave">
+        Puede que el enlace esté incompleto o que la dirección haya cambiado.
+      </p>
+      <Link
+        href="/"
+        className="mt-6 inline-flex min-h-12 items-center justify-center rounded-sm bg-marca px-6 py-3 text-lg font-semibold text-marca-tinta no-underline hover:underline"
+      >
+        Volver al inicio
+      </Link>
     </div>
   );
 }

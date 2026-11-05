@@ -25,7 +25,7 @@ atribuidos al proyecto Buzón Anónimo.
 | `apps/frontend/dashboard/app/apple-icon.png`                  | Pantalla de inicio de iOS: 180 px, a sangre.        |
 | `apps/frontend/dashboard/public/iconos/icono-192.png`, `-512` | Manifiesto web.                                     |
 | `apps/frontend/dashboard/public/iconos/icono-mascara-512.png` | Icono adaptable de Android.                         |
-| `apps/frontend/dashboard/components/logo.tsx`                 | Encabezado, inicio y 404. Usa los tokens del tema.  |
+| `apps/frontend/dashboard/components/logo.tsx`                 | Encabezado e inicio. Usa los tokens del tema.       |
 
 Los binarios se regeneran desde `icon.svg` con
 `node apps/frontend/dashboard/scripts/generar-iconos.mjs`.

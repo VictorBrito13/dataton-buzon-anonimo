@@ -45,8 +45,9 @@ export function ComoProtegemos({ metodologia }: { metodologia: RespuestaMetodolo
         «1 denuncia de cohecho» casi le pone nombre. Por eso ninguna cifra menor que {k} se publica.
         Pero ocultarla no basta.
       </p>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="space-y-2">
+      {/* min-w-0: la tabla se desplaza dentro de su recuadro en vez de ensanchar la página. */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="min-w-0 space-y-2">
           <h3 className="font-semibold">El ataque: una resta</h3>
           <TablaEjemplo titulo="Ejemplo sin supresión complementaria" filas={sinProteccion} k={k} />
           <p className="text-sm">
@@ -54,7 +55,7 @@ export function ComoProtegemos({ metodologia }: { metodologia: RespuestaMetodolo
             total reveló lo que la celda ocultaba.
           </p>
         </div>
-        <div className="space-y-2">
+        <div className="min-w-0 space-y-2">
           <h3 className="font-semibold">Por qué aquí falla</h3>
           <TablaEjemplo titulo="El mismo ejemplo, protegido por el motor" filas={protegida} k={k} />
           <p className="text-sm">

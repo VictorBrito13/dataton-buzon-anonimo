@@ -28,7 +28,7 @@ export function Panel({
   return (
     <section
       id={id}
-      className="scroll-mt-4 rounded-md border border-borde bg-superficie p-4"
+      className="min-w-0 scroll-mt-4 rounded-md border border-borde bg-superficie p-4"
       aria-label={titulo}
     >
       <Encabezado className="text-lg font-semibold">{titulo}</Encabezado>
