@@ -44,6 +44,8 @@ jobs:
       - name: Dependencias entre capas (D10)
         run: npm run verificar:arquitectura
       - run: npm run build
+      - name: Presupuesto de JavaScript por ruta
+        run: npm run verificar:presupuesto
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run format:check
