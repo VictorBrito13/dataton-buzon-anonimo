@@ -26,7 +26,7 @@ export function SalidaRapida() {
       href={SITIO_NEUTRO}
       rel="noreferrer"
       onClick={alHacerClic}
-      className="inline-flex min-h-11 items-center gap-2 rounded-sm bg-peligro px-3 py-2 text-sm font-semibold text-superficie no-underline hover:underline"
+      className="salida-rapida inline-flex min-h-11 items-center gap-2 rounded-sm bg-peligro px-3 py-2 text-sm font-semibold text-superficie no-underline hover:underline"
     >
       Salida rápida
       <span className="hidden font-normal md:inline">(Esc 3 veces)</span>

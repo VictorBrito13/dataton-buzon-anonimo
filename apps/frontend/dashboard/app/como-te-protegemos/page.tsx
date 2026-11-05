@@ -142,7 +142,8 @@ export default function ComoTeProtegemos() {
           </li>
           <li>
             En <strong>Aplicación</strong> o <strong>Almacenamiento</strong>, revisa las cookies y
-            el almacenamiento local. Deben estar vacíos, salvo que hayas activado el borrador.
+            el almacenamiento local. Deben estar vacíos, salvo que hayas activado el borrador o
+            elegido un tema, que solo guarda esa preferencia.
           </li>
           <li>
             Al enviar una denuncia de prueba, abre esa petición en la pestaña <strong>Red</strong>:

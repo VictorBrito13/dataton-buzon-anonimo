@@ -60,54 +60,63 @@ export function MapaEstados({
 
   return (
     <>
-      <svg
-        viewBox={`0 0 ${COLUMNAS * PASO} ${FILAS * PASO}`}
-        role="group"
-        aria-label="Mapa de cuadrícula de México. Cada casilla es un estado; elige una para ver sus municipios."
-        className="block h-auto w-full"
+      {/* Por debajo de 30rem las casillas bajarían de 44 px: el mapa se desplaza dentro de su región. */}
+      <div
+        role="region"
+        aria-label="Mapa de estados, con desplazamiento propio"
+        tabIndex={0}
+        className="overflow-x-auto"
       >
-        {CLAVES_ESTADO.map((estado: ClaveEstado) => {
-          const { columna, fila, abreviatura } = CUADRICULA_ESTADOS[estado];
-          const celda = leer(estado);
-          const valor = etiquetaConteo(celda, k);
-          const activa = estado === seleccionado;
-          const x = columna * PASO + SEPARACION / 2;
-          const y = fila * PASO + SEPARACION / 2;
-          return (
-            <a
-              key={estado}
-              href={`/tablero?periodo=${periodo}&estado=${estado}#municipios`}
-              aria-current={activa ? "true" : undefined}
-              className={`casilla ${activa ? "casilla-activa" : ""}`}
-            >
-              {/* Da el nombre accesible y el aviso al pasar el cursor. */}
-              <title>{`${ESTADOS[estado]}: ${valor}. Ver municipios.`}</title>
-              <rect
-                className={claseNivel(celda, cortes)}
-                x={x}
-                y={y}
-                width={CASILLA}
-                height={CASILLA}
-                rx="3"
-              />
-              <text
-                className={`texto-casilla texto-casilla-abrev ${textoNivel(celda, cortes)}`}
-                x={x + CASILLA / 2}
-                y={y + 25}
+        <svg
+          viewBox={`0 0 ${COLUMNAS * PASO} ${FILAS * PASO}`}
+          role="group"
+          aria-label="Mapa de cuadrícula de México. Cada casilla es un estado; elige una para ver sus municipios."
+          className="mx-auto block h-auto w-full max-w-4xl min-w-[30rem]"
+        >
+          {CLAVES_ESTADO.map((estado: ClaveEstado) => {
+            const { columna, fila, abreviatura } = CUADRICULA_ESTADOS[estado];
+            const celda = leer(estado);
+            const valor = etiquetaConteo(celda, k);
+            const activa = estado === seleccionado;
+            const x = columna * PASO + SEPARACION / 2;
+            const y = fila * PASO + SEPARACION / 2;
+            return (
+              <a
+                key={estado}
+                href={`/tablero?periodo=${periodo}&estado=${estado}#municipios`}
+                aria-current={activa ? "true" : undefined}
+                className={`casilla ${activa ? "casilla-activa" : ""}`}
               >
-                {abreviatura}
-              </text>
-              <text
-                className={`texto-casilla ${textoNivel(celda, cortes)}`}
-                x={x + CASILLA / 2}
-                y={y + 47}
-              >
-                {valor === "Oculta" ? "—" : valor}
-              </text>
-            </a>
-          );
-        })}
-      </svg>
+                {/* Da el nombre accesible y el aviso al pasar el cursor. */}
+                <title>{`${ESTADOS[estado]}: ${valor}. Ver municipios.`}</title>
+                <rect
+                  className={claseNivel(celda, cortes)}
+                  x={x}
+                  y={y}
+                  width={CASILLA}
+                  height={CASILLA}
+                  rx="3"
+                />
+                <text
+                  className={`texto-casilla texto-casilla-abrev ${textoNivel(celda, cortes)}`}
+                  x={x + CASILLA / 2}
+                  y={y + 25}
+                >
+                  {abreviatura}
+                </text>
+                <text
+                  className={`texto-casilla ${textoNivel(celda, cortes)}`}
+                  x={x + CASILLA / 2}
+                  y={y + 47}
+                >
+                  {valor === "Oculta" ? "—" : valor}
+                </text>
+              </a>
+            );
+          })}
+        </svg>
+      </div>
+      <p className="text-xs text-tinta-suave sm:hidden">Desliza de lado para ver todo el mapa.</p>
       <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-tinta-suave" aria-label="Leyenda">
         {leyenda.map((texto, i) => (
           <Muestra key={texto} clase={`nivel-${i + 1}`} texto={texto} />

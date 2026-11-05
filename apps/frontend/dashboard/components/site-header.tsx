@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { Logo } from "@/components/logo";
 import { SalidaRapida } from "@/components/salida-rapida";
+import { SelectorTema } from "@/components/selector-tema";
 
 const ENLACES = [
   { href: "/denunciar", texto: "Denunciar" },
@@ -12,20 +14,21 @@ const ENLACES = [
 export function SiteHeader() {
   return (
     <>
-      <header className="sticky top-0 z-10 border-b border-borde bg-superficie">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-2">
+      <header className="encabezado-fijo sticky top-0 z-10 border-b border-borde bg-superficie">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-2 gap-y-1 px-4 py-2 sm:gap-x-3">
           <Link
             prefetch={false}
             href="/"
-            className="inline-flex min-h-11 items-center font-semibold text-tinta no-underline"
+            className="mr-auto inline-flex min-h-11 items-center text-tinta no-underline"
           >
-            Buzón Anónimo
+            <Logo />
           </Link>
+          <SelectorTema />
           <SalidaRapida />
         </div>
       </header>
       <nav aria-label="Principal" className="border-b border-borde bg-superficie">
-        <ul className="mx-auto flex max-w-5xl flex-wrap gap-x-5 px-4 text-sm">
+        <ul className="mx-auto grid max-w-7xl grid-cols-[repeat(auto-fit,minmax(8.25rem,1fr))] gap-x-3 px-4 text-sm sm:flex sm:flex-wrap sm:gap-x-6">
           {ENLACES.map((enlace) => (
             <li key={enlace.href}>
               <Link

@@ -40,7 +40,7 @@ export function ComoProtegemos({ metodologia }: { metodologia: RespuestaMetodolo
   );
   return (
     <div className="space-y-4">
-      <p>
+      <p className="max-w-prose">
         Una cifra pequeña puede señalar a quien denunció. En un municipio con una sola dependencia,
         «1 denuncia de cohecho» casi le pone nombre. Por eso ninguna cifra menor que {k} se publica.
         Pero ocultarla no basta.

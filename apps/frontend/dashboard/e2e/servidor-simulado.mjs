@@ -11,6 +11,7 @@ import {
 } from "@dataton/shared";
 import { createChallenge, verifySolution } from "altcha-lib";
 import { deriveKey } from "altcha-lib/algorithms/pbkdf2";
+import { responderPublico } from "./datos-publicos.mjs";
 
 const PUERTO = Number(process.env.PUERTO_SIMULADO ?? 4100);
 const SECRETO = "secreto-solo-para-pruebas";
@@ -67,6 +68,10 @@ const servidor = createServer(async (peticion, respuesta) => {
   bitacora.push({ metodo: peticion.method, url: peticion.url, cuerpo: texto });
 
   if (ruta === "/__bitacora") return responder(200, bitacora);
+  if (peticion.method === "GET" && ruta.startsWith("/publico/")) {
+    const datos = responderPublico(ruta, url.searchParams);
+    if (datos) return responder(200, datos);
+  }
   if (peticion.method === "GET" && ruta === "/configuracion") {
     return responder(200, {
       clavePublicaAutoridad: publica,
